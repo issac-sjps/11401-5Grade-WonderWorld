@@ -56,6 +56,11 @@
             margin-right: auto;
         }
         
+        .unit-selection.with-teacher {
+            grid-template-columns: repeat(3, 1fr);
+            max-width: 900px;
+        }
+        
         .unit-btn {
             background: linear-gradient(45deg, #ff6b6b, #ee5a24);
             color: white;
@@ -84,6 +89,83 @@
         
         .unit-btn.unit4 {
             background: linear-gradient(45deg, #e67e22, #d35400);
+        }
+        
+        .unit-btn.teacher-btn {
+            background: linear-gradient(45deg, #6366f1, #4f46e5);
+            grid-column: span 2;
+            justify-self: center;
+            max-width: 300px;
+        }
+        
+        .teacher-login {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 300px;
+        }
+        
+        .login-card {
+            background: linear-gradient(45deg, #6366f1, #4f46e5);
+            color: white;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+            max-width: 400px;
+            width: 100%;
+        }
+        
+        .login-card h2 {
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+        }
+        
+        .login-card p {
+            margin-bottom: 25px;
+            opacity: 0.9;
+        }
+        
+        .login-card input {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            text-align: center;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+        }
+        
+        .login-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+        
+        .login-btn, .cancel-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .login-btn {
+            background: white;
+            color: #4f46e5;
+        }
+        
+        .cancel-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+        }
+        
+        .login-btn:hover, .cancel-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
         
         .quiz-container {
@@ -287,6 +369,134 @@
         .bottom-btn.restart-btn {
             background: linear-gradient(45deg, #f59e0b, #d97706);
         }
+        
+        .teacher-section {
+            padding: 20px 0;
+        }
+        
+        .teacher-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(45deg, #6366f1, #4f46e5);
+            color: white;
+            border-radius: 15px;
+        }
+        
+        .teacher-header h2 {
+            margin-bottom: 10px;
+            font-size: 1.8rem;
+        }
+        
+        .teacher-header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+        
+        .units-container {
+            display: grid;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .unit-section {
+            background: #f8fafc;
+            border-radius: 15px;
+            padding: 25px;
+            border: 2px solid #e2e8f0;
+        }
+        
+        .unit-title {
+            text-align: center;
+            font-size: 1.5rem;
+            margin-bottom: 25px;
+            padding: 15px;
+            border-radius: 10px;
+            color: white;
+        }
+        
+        .unit-title.midterm {
+            background: linear-gradient(45deg, #10b981, #059669);
+        }
+        
+        .unit-title.final {
+            background: linear-gradient(45deg, #8b5cf6, #7c3aed);
+        }
+        
+        .unit-block {
+            margin-bottom: 25px;
+        }
+        
+        .unit-block h4 {
+            color: #4a5568;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .words-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+        }
+        
+        .word-card {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+        
+        .word-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+        }
+        
+        .word-info {
+            flex: 1;
+        }
+        
+        .word-english {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #2d3748;
+            margin-bottom: 5px;
+        }
+        
+        .word-chinese {
+            font-size: 0.95rem;
+            color: #718096;
+        }
+        
+        .word-speak-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        }
+        
+        .word-speak-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        
+        .teacher-bottom {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 2px solid #e2e8f0;
+        }
     </style>
 </head>
 <body>
@@ -317,6 +527,64 @@
                 📚 單元四<br>
                 <small>學科 & 所有格</small>
             </button>
+            <button class="unit-btn teacher-btn" onclick="showTeacherLogin()">
+                <strong>👩‍🏫 教師教學區</strong><br>
+                📖 單字教學<br>
+                <small>需要密碼進入</small>
+            </button>
+        </div>
+        
+        <div class="teacher-login" id="teacherLogin" style="display: none;">
+            <div class="login-card">
+                <h2>🔐 教師教學區</h2>
+                <p>請輸入密碼進入教學模式</p>
+                <input type="password" id="teacherPassword" placeholder="請輸入密碼" maxlength="6">
+                <div class="login-buttons">
+                    <button class="login-btn" onclick="checkTeacherPassword()">進入教學區</button>
+                    <button class="cancel-btn" onclick="backToMenu()">取消</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="teacher-section" id="teacherSection" style="display: none;">
+            <div class="teacher-header">
+                <h2>👩‍🏫 教師教學區 - 單字教學</h2>
+                <p>點擊發音按鈕讓學生聽單字發音</p>
+            </div>
+            
+            <div class="units-container">
+                <div class="unit-section">
+                    <h3 class="unit-title midterm">📚 期中考範圍</h3>
+                    
+                    <div class="unit-block">
+                        <h4>☕ 單元一：飲料 & 自然發音</h4>
+                        <div class="words-grid" id="unit1Words"></div>
+                    </div>
+                    
+                    <div class="unit-block">
+                        <h4>🍎 單元二：水果 & 自然發音</h4>
+                        <div class="words-grid" id="unit2Words"></div>
+                    </div>
+                </div>
+                
+                <div class="unit-section">
+                    <h3 class="unit-title final">📚 期末考範圍</h3>
+                    
+                    <div class="unit-block">
+                        <h4>📅 單元三：星期 & 自然發音</h4>
+                        <div class="words-grid" id="unit3Words"></div>
+                    </div>
+                    
+                    <div class="unit-block">
+                        <h4>📚 單元四：學科 & 所有格</h4>
+                        <div class="words-grid" id="unit4Words"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="teacher-bottom">
+                <button class="bottom-btn home-btn" onclick="backToMenu()">🏠 回到首頁</button>
+            </div>
         </div>
         
         <div class="quiz-container" id="quizContainer">
@@ -653,7 +921,60 @@
         function backToMenu() {
             document.getElementById('resultCard').style.display = 'none';
             document.getElementById('quizContainer').style.display = 'none';
+            document.getElementById('teacherLogin').style.display = 'none';
+            document.getElementById('teacherSection').style.display = 'none';
             document.getElementById('unitSelection').style.display = 'grid';
+            document.getElementById('teacherPassword').value = '';
+        }
+        
+        function showTeacherLogin() {
+            document.getElementById('unitSelection').style.display = 'none';
+            document.getElementById('teacherLogin').style.display = 'block';
+            document.getElementById('teacherPassword').focus();
+        }
+        
+        function checkTeacherPassword() {
+            const password = document.getElementById('teacherPassword').value;
+            if (password === '000000') {
+                document.getElementById('teacherLogin').style.display = 'none';
+                document.getElementById('teacherSection').style.display = 'block';
+                initTeacherSection();
+            } else {
+                alert('密碼錯誤，請重新輸入！');
+                document.getElementById('teacherPassword').value = '';
+                document.getElementById('teacherPassword').focus();
+            }
+        }
+        
+        function initTeacherSection() {
+            const allUnits = [
+                { words: unit1Words, containerId: 'unit1Words' },
+                { words: unit2Words, containerId: 'unit2Words' },
+                { words: unit3Words, containerId: 'unit3Words' },
+                { words: unit4Words, containerId: 'unit4Words' }
+            ];
+            
+            allUnits.forEach(unit => {
+                const container = document.getElementById(unit.containerId);
+                container.innerHTML = '';
+                
+                unit.words.forEach(word => {
+                    const wordCard = document.createElement('div');
+                    wordCard.className = 'word-card';
+                    
+                    wordCard.innerHTML = `
+                        <div class="word-info">
+                            <div class="word-english">${word.english}</div>
+                            <div class="word-chinese">${word.chinese}</div>
+                        </div>
+                        <button class="word-speak-btn" onclick="speakText('${word.english}')">
+                            🔊
+                        </button>
+                    `;
+                    
+                    container.appendChild(wordCard);
+                });
+            });
         }
 
         function restartQuiz() {
@@ -671,7 +992,15 @@
                     nextQuestion();
                 }
             }
+            
+            // 在密碼輸入框按下 Enter 鍵時檢查密碼
+            if (event.key === 'Enter') {
+                const passwordInput = document.getElementById('teacherPassword');
+                if (passwordInput && document.getElementById('teacherLogin').style.display !== 'none') {
+                    checkTeacherPassword();
+                }
+            }
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'992680cf6001074c',t:'MTc2MTEwOTk4My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'99268dc851ba074c',t:'MTc2MTExMDUxNC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
