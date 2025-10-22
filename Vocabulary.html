@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>11401-5Grade-WonderWorld 主題單字複習</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            box-sizing: border-box;
+            font-family: 'Microsoft JhengHei', sans-serif;
+        }
+        .category-card {
+            transition: all 0.3s ease;
+        }
+        .category-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        .progress-bar {
+            transition: width 0.5s ease;
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .bounce {
+            animation: bounce 0.6s ease;
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-full">
+    <div id="app" class="container mx-auto px-4 py-8 max-w-4xl">
+        <!-- 首頁 -->
+        <div id="homepage" class="text-center">
+            <h1 class="text-4xl font-bold text-indigo-800 mb-2">🎯 11401-5Grade-WonderWorld 主題單字複習</h1>
+            <p class="text-gray-600 mb-8">選擇一個類別開始練習吧！</p>
+            
+            <!-- 管理按鈕 -->
+            <div class="flex justify-center gap-4 mb-8">
+                <button id="show-records-btn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-lg shadow-lg transition-colors duration-200">
+                    📊 查看作答紀錄
+                </button>
+                <button id="clear-records-btn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-6 rounded-lg shadow-lg transition-colors duration-200">
+                    🗑️ 清除所有紀錄
+                </button>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- 類別卡片會動態生成 -->
+            </div>
+        </div>
+
+        <!-- 遊戲頁面 -->
+        <div id="gamepage" class="hidden">
+            <!-- 遊戲標題和進度 -->
+            <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 id="category-title" class="text-2xl font-bold text-indigo-800"></h2>
+                    <div class="flex items-center gap-4">
+                        <button id="show-bank-btn" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg shadow-lg transition-colors duration-200">
+                            顯示題庫 (教師用)
+                        </button>
+                        <div class="text-right">
+                            <div id="question-counter" class="text-lg font-semibold text-gray-700"></div>
+                            <div id="accuracy-rate" class="text-sm text-green-600"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 進度條 -->
+                <div class="w-full bg-gray-200 rounded-full h-3 mb-4">
+                    <div id="progress-bar" class="progress-bar bg-gradient-to-r from-green-400 to-blue-500 h-3 rounded-full" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <!-- 題目區域 -->
+            <div class="bg-white rounded-lg shadow-lg p-8 mb-6 text-center fade-in">
+                <div class="flex items-center justify-center gap-4 mb-6">
+                    <div id="question-word" class="text-4xl font-bold text-indigo-800"></div>
+                    <button id="question-pronunciation" class="bg-blue-500 hover:bg-blue-600 text-white rounded-full p-3 transition-colors duration-200 shadow-lg">
+                        🔊
+                    </button>
+                </div>
+                <div id="options-container" class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto">
+                    <!-- 選項會動態生成 -->
+                </div>
+            </div>
+
+            <!-- 結果顯示 -->
+            <div id="result-message" class="hidden bg-white rounded-lg shadow-lg p-6 mb-6 text-center">
+                <div id="result-text" class="text-xl font-semibold mb-4"></div>
+                <div id="correct-answer" class="text-gray-600 mb-4"></div>
+            </div>
+
+            <!-- 控制按鈕 -->
+            <div class="text-center">
+                <button id="next-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg transition-colors duration-200">
+                    下一題 (或按空白鍵)
+                </button>
+            </div>
+        </div>
+
+        <!-- 密碼輸入模態框 -->
+        <div id="password-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div class="bg-white rounded-lg shadow-xl p-8 max-w-md w-full mx-4">
+                <h3 class="text-2xl font-bold text-gray-800 mb-4 text-center">🔐 教師驗證</h3>
+                <p class="text-gray-600 mb-6 text-center">請輸入密碼以查看題庫</p>
+                <input type="password" id="password-input" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:outline-none text-center text-lg" placeholder="請輸入密碼" maxlength="6">
+                <div class="flex justify-center space-x-4 mt-6">
+                    <button id="password-confirm" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-6 rounded-lg transition-colors duration-200">
+                        確認
+                    </button>
+                    <button id="password-cancel" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-6 rounded-lg transition-colors duration-200">
+                        取消
+                    </button>
+                </div>
+                <div id="password-error" class="hidden text-red-500 text-center mt-4">密碼錯誤，請重新輸入</div>
+            </div>
+        </div>
+
+        <!-- 題庫顯示頁面 -->
+        <div id="question-bank" class="hidden">
+            <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 id="bank-category-title" class="text-2xl font-bold text-purple-800"></h2>
+                    <button id="close-bank-btn" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-200">
+                        關閉題庫
+                    </button>
+                </div>
+                <div id="word-list" class="space-y-3 max-h-96 overflow-y-auto">
+                    <!-- 單字列表會動態生成 -->
+                </div>
+            </div>
+        </div>
+
+        <!-- 作答紀錄頁面 -->
+        <div id="records-page" class="hidden">
+            <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-green-800">📊 學生作答紀錄</h2>
+                    <button id="close-records-btn" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-200">
+                        關閉紀錄
+                    </button>
+                </div>
+                
+                <!-- 統計摘要 -->
+                <div id="records-summary" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <!-- 統計卡片會動態生成 -->
+                </div>
+                
+                <!-- 詳細紀錄 -->
+                <div class="mb-4">
+                    <h3 class="text-lg font-semibold text-gray-700 mb-3">詳細作答紀錄</h3>
+                    <div id="records-list" class="space-y-3 max-h-96 overflow-y-auto">
+                        <!-- 紀錄列表會動態生成 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 清除確認模態框 -->
+        <div id="clear-confirm-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div class="bg-white rounded-lg shadow-xl p-8 max-w-md w-full mx-4">
+                <h3 class="text-2xl font-bold text-gray-800 mb-4 text-center">⚠️ 確認清除</h3>
+                <p class="text-gray-600 mb-6 text-center">確定要清除所有作答紀錄嗎？<br>此操作無法復原！</p>
+                <div class="flex justify-center space-x-4">
+                    <button id="confirm-clear" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-6 rounded-lg transition-colors duration-200">
+                        確認清除
+                    </button>
+                    <button id="cancel-clear" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-6 rounded-lg transition-colors duration-200">
+                        取消
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 結果頁面 -->
+        <div id="resultpage" class="hidden text-center">
+            <div class="bg-white rounded-lg shadow-lg p-8 mb-6">
+                <h2 class="text-3xl font-bold text-indigo-800 mb-4">🎉 遊戲完成！</h2>
+                <div id="final-category" class="text-xl text-gray-700 mb-4"></div>
+                <div id="final-score" class="text-2xl font-bold text-green-600 mb-6"></div>
+                
+                <div class="flex justify-center space-x-4">
+                    <button id="restart-btn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition-colors duration-200">
+                        重新作答
+                    </button>
+                    <button id="view-records-btn" class="bg-orange-600 hover:bg-orange-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition-colors duration-200">
+                        📊 查看紀錄
+                    </button>
+                    <button id="home-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition-colors duration-200">
+                        回到首頁
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 單字資料
+        const vocabulary = {
+            '節慶': [
+                { word: 'firecrackers', meaning: '鞭炮 (複數)' },
+                { word: 'lion dance', meaning: '舞獅' },
+                { word: 'lucky money', meaning: '壓歲錢' },
+                { word: 'rice cake', meaning: '年糕' },
+                { word: 'spring couplet', meaning: '春聯' },
+                { word: 'tangerines', meaning: '橘子 (複數)' }
+            ],
+            '感覺': [
+                { word: 'angry', meaning: '生氣的' },
+                { word: 'happy', meaning: '快樂的' },
+                { word: 'hungry', meaning: '飢餓的' },
+                { word: 'sad', meaning: '難過的' },
+                { word: 'thirsty', meaning: '口渴的' }
+            ],
+            '玩具': [
+                { word: 'ball', meaning: '球' },
+                { word: 'car', meaning: '車' },
+                { word: 'doll', meaning: '洋娃娃' },
+                { word: 'kite', meaning: '風箏' },
+                { word: 'robot', meaning: '機器人' },
+                { word: 'yo-yo', meaning: '溜溜球' }
+            ],
+            '顏色': [
+                { word: 'blue', meaning: '藍色' },
+                { word: 'green', meaning: '綠色' },
+                { word: 'pink', meaning: '粉紅色' },
+                { word: 'purple', meaning: '紫色' },
+                { word: 'red', meaning: '紅色' },
+                { word: 'yellow', meaning: '黃色' }
+            ],
+            '動物': [
+                { word: 'bird', meaning: '鳥' },
+                { word: 'bear', meaning: '熊' },
+                { word: 'cat', meaning: '貓' },
+                { word: 'dog', meaning: '狗' },
+                { word: 'frog', meaning: '青蛙' },
+                { word: 'lion', meaning: '獅子' },
+                { word: 'monkey', meaning: '猴子' },
+                { word: 'ox', meaning: '牛' },
+                { word: 'rabbit', meaning: '兔子' },
+                { word: 'tiger', meaning: '老虎' },
+                { word: 'zebra', meaning: '斑馬' }
+            ],
+            '動作': [
+                { word: 'cook', meaning: '下廚' },
+                { word: 'dance', meaning: '跳舞' },
+                { word: 'draw', meaning: '畫圖' },
+                { word: 'eat', meaning: '吃東西' },
+                { word: 'fly a kite', meaning: '放風箏' },
+                { word: 'read', meaning: '閱讀' },
+                { word: 'run', meaning: '跑步' },
+                { word: 'ride a bike', meaning: '騎腳踏車' },
+                { word: 'sleep', meaning: '睡覺' },
+                { word: 'sing', meaning: '唱歌' },
+                { word: 'swim', meaning: '游泳' },
+                { word: 'write', meaning: '寫字' }
+            ],
+            '親人': [
+                { word: 'grandfather (grandpa)', meaning: '爺爺；外公' },
+                { word: 'grandmother (grandma)', meaning: '奶奶；外婆' },
+                { word: 'father (dad)', meaning: '爸爸' },
+                { word: 'mother (mom)', meaning: '媽媽' },
+                { word: 'brother', meaning: '哥哥；弟弟' },
+                { word: 'sister', meaning: '姐姐；妹妹' }
+            ],
+            '職業': [
+                { word: 'cook', meaning: '廚師' },
+                { word: 'doctor', meaning: '醫師' },
+                { word: 'nurse', meaning: '護理師' },
+                { word: 'student', meaning: '學生' },
+                { word: 'teacher', meaning: '教師' }
+            ],
+            '天氣': [
+                { word: 'cloudy', meaning: '陰天的' },
+                { word: 'cold', meaning: '冷的' },
+                { word: 'hot', meaning: '熱的' },
+                { word: 'rainy', meaning: '下雨的' },
+                { word: 'sunny', meaning: '晴朗的' },
+                { word: 'windy', meaning: '颳風的' }
+            ],
+            '文具': [
+                { word: 'book', meaning: '書' },
+                { word: 'eraser', meaning: '橡皮擦' },
+                { word: 'marker', meaning: '馬克筆；彩色筆' },
+                { word: 'pen', meaning: '原子筆' },
+                { word: 'pencil', meaning: '鉛筆' },
+                { word: 'ruler', meaning: '尺' }
+            ],
+            '物品': [
+                { word: 'box', meaning: '盒子' },
+                { word: 'chair', meaning: '椅子' },
+                { word: 'desk', meaning: '書桌' }
+            ],
+            '介系詞': [
+                { word: 'in', meaning: '在...裡面' },
+                { word: 'on', meaning: '在...上面' },
+                { word: 'under', meaning: '在...下面' }
+            ],
+            '所有格': [
+                { word: 'my', meaning: '我的' },
+                { word: 'your', meaning: '你的；你們的' },
+                { word: 'his', meaning: '他的' },
+                { word: 'her', meaning: '她的' },
+                { word: 'our', meaning: '我們的' },
+                { word: 'their', meaning: '他們的' }
+            ],
+            '數字': [
+                { word: 'one', meaning: '一' },
+                { word: 'two', meaning: '二' },
+                { word: 'three', meaning: '三' },
+                { word: 'four', meaning: '四' },
+                { word: 'five', meaning: '五' },
+                { word: 'six', meaning: '六' },
+                { word: 'seven', meaning: '七' },
+                { word: 'eight', meaning: '八' },
+                { word: 'nine', meaning: '九' },
+                { word: 'ten', meaning: '十' },
+                { word: 'eleven', meaning: '十一' },
+                { word: 'twelve', meaning: '十二' },
+                { word: 'thirteen', meaning: '十三' },
+                { word: 'fourteen', meaning: '十四' },
+                { word: 'fifteen', meaning: '十五' },
+                { word: 'sixteen', meaning: '十六' },
+                { word: 'seventeen', meaning: '十七' },
+                { word: 'eighteen', meaning: '十八' },
+                { word: 'nineteen', meaning: '十九' },
+                { word: 'twenty', meaning: '二十' },
+                { word: 'twenty-five', meaning: '二十五' },
+                { word: 'thirty', meaning: '三十' },
+                { word: 'forty', meaning: '四十' },
+                { word: 'fifty', meaning: '五十' },
+                { word: 'sixty', meaning: '六十' },
+                { word: 'seventy', meaning: '七十' },
+                { word: 'eighty', meaning: '八十' },
+                { word: 'ninety', meaning: '九十' },
+                { word: 'one hundred', meaning: '一百' }
+            ],
+            '房屋': [
+                { word: 'bathroom', meaning: '浴室；洗手間' },
+                { word: 'bedroom', meaning: '臥室' },
+                { word: 'dining room', meaning: '飯廳' },
+                { word: 'kitchen', meaning: '廚房' },
+                { word: 'living room', meaning: '客廳' }
+            ],
+            '節慶2': [
+                { word: 'Christmas tree', meaning: '聖誕樹' },
+                { word: 'Santa Claus', meaning: '聖誕老人' },
+                { word: 'snowman', meaning: '雪人' },
+                { word: 'star', meaning: '星星' },
+                { word: 'stocking', meaning: '長筒襪' },
+                { word: 'card', meaning: '卡片' },
+                { word: 'flower', meaning: '花朵' },
+                { word: 'gift', meaning: '禮物' },
+                { word: 'hug', meaning: '擁抱' },
+                { word: 'kiss', meaning: '親吻' },
+                { word: 'ghost', meaning: '鬼魂' },
+                { word: 'jack-o\'-lantern', meaning: '南瓜燈' },
+                { word: 'mummy', meaning: '木乃伊' },
+                { word: 'vampire', meaning: '吸血鬼' },
+                { word: 'witch', meaning: '女巫' },
+                { word: 'sachet', meaning: '香包' },
+                { word: 'dragon boat race', meaning: '划龍舟比賽' },
+                { word: 'rice dumpling', meaning: '粽子' },
+                { word: 'stand an egg', meaning: '立蛋' },
+                { word: 'firecrackers', meaning: '鞭炮（複數）' },
+                { word: 'lion dance', meaning: '舞獅' },
+                { word: 'lucky money', meaning: '壓歲錢' },
+                { word: 'rice cake', meaning: '年糕' },
+                { word: 'spring couplet', meaning: '春聯' },
+                { word: 'tangerine', meaning: '橘子' }
+            ],
+            '食物與飲料': [
+                { word: 'apple', meaning: '蘋果' },
+                { word: 'banana', meaning: '香蕉' },
+                { word: 'bubble tea', meaning: '珍珠奶茶' },
+                { word: 'coffee', meaning: '咖啡' },
+                { word: 'cola', meaning: '可樂' },
+                { word: 'grape', meaning: '葡萄' },
+                { word: 'guava', meaning: '芭樂' },
+                { word: 'hamburger', meaning: '漢堡' },
+                { word: 'hot dog', meaning: '熱狗' },
+                { word: 'hot chocolate', meaning: '熱巧克力' },
+                { word: 'ice cream', meaning: '冰淇淋' },
+                { word: 'juice', meaning: '果汁' },
+                { word: 'lemonade', meaning: '檸檬水' },
+                { word: 'milk', meaning: '牛奶' },
+                { word: 'orange', meaning: '柳橙' },
+                { word: 'papaya', meaning: '木瓜' },
+                { word: 'pineapple', meaning: '鳳梨' },
+                { word: 'soy milk', meaning: '豆漿' },
+                { word: 'tea', meaning: '茶' },
+                { word: 'water', meaning: '水' }
+            ],
+            '星期': [
+                { word: 'Sunday', meaning: '星期日' },
+                { word: 'Monday', meaning: '星期一' },
+                { word: 'Tuesday', meaning: '星期二' },
+                { word: 'Wednesday', meaning: '星期三' },
+                { word: 'Thursday', meaning: '星期四' },
+                { word: 'Friday', meaning: '星期五' },
+                { word: 'Saturday', meaning: '星期六' }
+            ],
+            '科目': [
+                { word: 'art', meaning: '藝術；美術' },
+                { word: 'Chinese', meaning: '國語；中文' },
+                { word: 'English', meaning: '英語；英文' },
+                { word: 'math', meaning: '數學' },
+                { word: 'music', meaning: '音樂' },
+                { word: 'PE', meaning: '體育' },
+                { word: 'science', meaning: '自然科學；科學' },
+                { word: 'social studies', meaning: '社會' }
+            ]
+        };
+
+        // 遊戲狀態
+        let currentCategory = '';
+        let currentQuestions = [];
+        let currentQuestionIndex = 0;
+        let correctAnswers = 0;
+        let totalQuestions = 20;
+
+        // 類別圖示
+        const categoryIcons = {
+            '節慶': '🎊', '感覺': '😊', '玩具': '🧸', '顏色': '🎨', 
+            '動物': '🐾', '動作': '🏃', '親人': '👨‍👩‍👧‍👦', '職業': '👩‍💼', 
+            '天氣': '🌤️', '文具': '✏️', '物品': '📦', '介系詞': '📍', '所有格': '👤',
+            '數字': '🔢', '房屋': '🏠', '節慶2': '🎉', '食物與飲料': '🍎', 
+            '星期': '📅', '科目': '📚'
+        };
+
+        // 初始化遊戲
+        function initGame() {
+            generateCategoryCards();
+            setupEventListeners();
+        }
+
+        // 生成類別卡片
+        function generateCategoryCards() {
+            const container = document.querySelector('#homepage .grid');
+            container.innerHTML = '';
+
+            Object.keys(vocabulary).forEach(category => {
+                const card = document.createElement('div');
+                card.className = 'category-card bg-white rounded-lg shadow-lg p-6 cursor-pointer border-2 border-transparent hover:border-indigo-300';
+                card.innerHTML = `
+                    <div class="text-4xl mb-3">${categoryIcons[category]}</div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">${category}</h3>
+                    <p class="text-gray-600 text-sm">${vocabulary[category].length} 個單字</p>
+                `;
+                card.addEventListener('click', () => startGame(category));
+                container.appendChild(card);
+            });
+        }
+
+        // 開始遊戲
+        function startGame(category) {
+            currentCategory = category;
+            currentQuestionIndex = 0;
+            correctAnswers = 0;
+            
+            // 重置結果頁面的儲存標記
+            document.getElementById('resultpage').removeAttribute('data-saved');
+            
+            // 生成20題（重複使用單字直到達到20題）
+            currentQuestions = generateQuestions(category, totalQuestions);
+            
+            document.getElementById('homepage').classList.add('hidden');
+            document.getElementById('gamepage').classList.remove('hidden');
+            document.getElementById('category-title').textContent = `${categoryIcons[category]} ${category}`;
+            
+            showQuestion();
+        }
+
+        // 生成題目
+        function generateQuestions(category, count) {
+            const words = vocabulary[category];
+            const questions = [];
+            
+            for (let i = 0; i < count; i++) {
+                const word = words[i % words.length];
+                const wrongOptions = getRandomWrongOptions(category, word.meaning);
+                const options = [word.meaning, ...wrongOptions].sort(() => Math.random() - 0.5);
+                
+                questions.push({
+                    word: word.word,
+                    correct: word.meaning,
+                    options: options
+                });
+            }
+            
+            return questions;
+        }
+
+        // 獲取錯誤選項
+        function getRandomWrongOptions(category, correctAnswer) {
+            const allMeanings = [];
+            Object.values(vocabulary).forEach(words => {
+                words.forEach(word => {
+                    if (word.meaning !== correctAnswer) {
+                        allMeanings.push(word.meaning);
+                    }
+                });
+            });
+            
+            const shuffled = allMeanings.sort(() => Math.random() - 0.5);
+            return shuffled.slice(0, 3);
+        }
+
+        // 發音功能
+        function speakText(text) {
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.8;
+                utterance.pitch = 1;
+                speechSynthesis.speak(utterance);
+            }
+        }
+
+        // 顯示題目
+        function showQuestion() {
+            const question = currentQuestions[currentQuestionIndex];
+            
+            document.getElementById('question-word').textContent = question.word;
+            document.getElementById('question-counter').textContent = `第 ${currentQuestionIndex + 1} 題 / 共 ${totalQuestions} 題`;
+            document.getElementById('accuracy-rate').textContent = `答對率: ${Math.round((correctAnswers / Math.max(1, currentQuestionIndex)) * 100)}%`;
+            
+            // 設置題目發音按鈕
+            const questionPronunciationBtn = document.getElementById('question-pronunciation');
+            questionPronunciationBtn.onclick = () => speakText(question.word);
+            
+            // 更新進度條
+            const progress = ((currentQuestionIndex) / totalQuestions) * 100;
+            document.getElementById('progress-bar').style.width = `${progress}%`;
+            
+            // 生成選項
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
+            
+            question.options.forEach(option => {
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'relative';
+                
+                const button = document.createElement('button');
+                button.className = 'bg-gray-100 hover:bg-indigo-100 border-2 border-gray-300 hover:border-indigo-400 rounded-lg p-4 text-left transition-all duration-200 font-medium w-full pr-12';
+                button.textContent = option;
+                button.addEventListener('click', () => selectAnswer(option, question.correct));
+                
+                const pronunciationBtn = document.createElement('button');
+                pronunciationBtn.className = 'absolute right-2 top-1/2 transform -translate-y-1/2 bg-blue-500 hover:bg-blue-600 text-white rounded-full p-1 text-sm transition-colors duration-200';
+                pronunciationBtn.innerHTML = '🔊';
+                pronunciationBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    // 找到對應的英文單字來發音
+                    const englishWord = findEnglishWord(option);
+                    speakText(englishWord);
+                };
+                
+                optionDiv.appendChild(button);
+                optionDiv.appendChild(pronunciationBtn);
+                container.appendChild(optionDiv);
+            });
+            
+            // 隱藏結果和下一題按鈕
+            document.getElementById('result-message').classList.add('hidden');
+            document.getElementById('next-btn').classList.add('hidden');
+        }
+
+        // 根據中文意思找到對應的英文單字
+        function findEnglishWord(chineseMeaning) {
+            for (const category in vocabulary) {
+                for (const wordObj of vocabulary[category]) {
+                    if (wordObj.meaning === chineseMeaning) {
+                        return wordObj.word;
+                    }
+                }
+            }
+            return chineseMeaning; // 如果找不到就直接返回原文
+        }
+
+        // 選擇答案
+        function selectAnswer(selected, correct) {
+            const isCorrect = selected === correct;
+            if (isCorrect) correctAnswers++;
+            
+            // 禁用所有選項
+            const options = document.querySelectorAll('#options-container button');
+            options.forEach(option => {
+                option.disabled = true;
+                if (option.textContent === correct) {
+                    option.className = 'bg-green-100 border-2 border-green-400 rounded-lg p-4 text-left font-medium text-green-800';
+                } else if (option.textContent === selected && !isCorrect) {
+                    option.className = 'bg-red-100 border-2 border-red-400 rounded-lg p-4 text-left font-medium text-red-800';
+                } else {
+                    option.className = 'bg-gray-100 border-2 border-gray-300 rounded-lg p-4 text-left font-medium opacity-50';
+                }
+            });
+            
+            // 顯示結果
+            const resultDiv = document.getElementById('result-message');
+            const resultText = document.getElementById('result-text');
+            const correctAnswerDiv = document.getElementById('correct-answer');
+            
+            if (isCorrect) {
+                resultText.textContent = '🎉 答對了！';
+                resultText.className = 'text-xl font-semibold mb-4 text-green-600 bounce';
+                correctAnswerDiv.textContent = '';
+            } else {
+                resultText.textContent = '❌ 答錯了';
+                resultText.className = 'text-xl font-semibold mb-4 text-red-600';
+                correctAnswerDiv.textContent = `正確答案是：${correct}`;
+            }
+            
+            resultDiv.classList.remove('hidden');
+            document.getElementById('next-btn').classList.remove('hidden');
+            
+            // 更新統計
+            document.getElementById('accuracy-rate').textContent = `答對率: ${Math.round((correctAnswers / (currentQuestionIndex + 1)) * 100)}%`;
+        }
+
+        // 下一題
+        function nextQuestion() {
+            currentQuestionIndex++;
+            
+            if (currentQuestionIndex >= totalQuestions) {
+                showResults();
+            } else {
+                showQuestion();
+            }
+        }
+
+        // 顯示結果
+        function showResults() {
+            document.getElementById('gamepage').classList.add('hidden');
+            document.getElementById('resultpage').classList.remove('hidden');
+            
+            const accuracy = Math.round((correctAnswers / totalQuestions) * 100);
+            document.getElementById('final-category').textContent = `已完成「${currentCategory}」類別`;
+            document.getElementById('final-score').textContent = `答對 ${correctAnswers} / ${totalQuestions} 題 (${accuracy}%)`;
+            
+            // 儲存作答紀錄（只在第一次顯示結果時儲存）
+            if (!document.getElementById('resultpage').hasAttribute('data-saved')) {
+                saveGameRecord(currentCategory, correctAnswers, totalQuestions, accuracy);
+                document.getElementById('resultpage').setAttribute('data-saved', 'true');
+            }
+        }
+
+        // 儲存遊戲紀錄
+        function saveGameRecord(category, correct, total, accuracy) {
+            const record = {
+                id: Date.now(),
+                category: category,
+                correctAnswers: correct,
+                totalQuestions: total,
+                accuracy: accuracy,
+                date: new Date().toLocaleString('zh-TW'),
+                timestamp: Date.now()
+            };
+            
+            let records = JSON.parse(localStorage.getItem('gameRecords') || '[]');
+            records.push(record);
+            localStorage.setItem('gameRecords', JSON.stringify(records));
+        }
+
+        // 獲取所有紀錄
+        function getAllRecords() {
+            return JSON.parse(localStorage.getItem('gameRecords') || '[]');
+        }
+
+        // 清除所有紀錄
+        function clearAllRecords() {
+            localStorage.removeItem('gameRecords');
+        }
+
+        // 顯示作答紀錄
+        function showRecords() {
+            const records = getAllRecords();
+            
+            // 隱藏其他頁面，顯示紀錄頁面
+            document.getElementById('homepage').classList.add('hidden');
+            document.getElementById('resultpage').classList.add('hidden');
+            document.getElementById('records-page').classList.remove('hidden');
+            
+            // 生成統計摘要
+            generateRecordsSummary(records);
+            
+            // 生成詳細紀錄列表
+            generateRecordsList(records);
+        }
+
+        // 生成統計摘要
+        function generateRecordsSummary(records) {
+            const summaryContainer = document.getElementById('records-summary');
+            summaryContainer.innerHTML = '';
+            
+            if (records.length === 0) {
+                summaryContainer.innerHTML = '<div class="col-span-3 text-center text-gray-500 py-8">尚無作答紀錄</div>';
+                return;
+            }
+            
+            // 計算統計數據
+            const totalGames = records.length;
+            const averageAccuracy = Math.round(records.reduce((sum, record) => sum + record.accuracy, 0) / totalGames);
+            const categoryStats = {};
+            
+            records.forEach(record => {
+                if (!categoryStats[record.category]) {
+                    categoryStats[record.category] = { count: 0, totalAccuracy: 0 };
+                }
+                categoryStats[record.category].count++;
+                categoryStats[record.category].totalAccuracy += record.accuracy;
+            });
+            
+            const mostPlayedCategory = Object.keys(categoryStats).reduce((a, b) => 
+                categoryStats[a].count > categoryStats[b].count ? a : b, Object.keys(categoryStats)[0]);
+            
+            // 生成統計卡片
+            const summaryCards = [
+                { title: '總作答次數', value: totalGames, icon: '🎯', color: 'bg-blue-100 text-blue-800' },
+                { title: '平均答對率', value: `${averageAccuracy}%`, icon: '📊', color: 'bg-green-100 text-green-800' },
+                { title: '最常練習', value: mostPlayedCategory, icon: '⭐', color: 'bg-purple-100 text-purple-800' }
+            ];
+            
+            summaryCards.forEach(card => {
+                const cardElement = document.createElement('div');
+                cardElement.className = `${card.color} rounded-lg p-4 text-center`;
+                cardElement.innerHTML = `
+                    <div class="text-2xl mb-2">${card.icon}</div>
+                    <div class="text-sm font-medium mb-1">${card.title}</div>
+                    <div class="text-xl font-bold">${card.value}</div>
+                `;
+                summaryContainer.appendChild(cardElement);
+            });
+        }
+
+        // 生成詳細紀錄列表
+        function generateRecordsList(records) {
+            const listContainer = document.getElementById('records-list');
+            listContainer.innerHTML = '';
+            
+            if (records.length === 0) {
+                listContainer.innerHTML = '<div class="text-center text-gray-500 py-8">尚無作答紀錄</div>';
+                return;
+            }
+            
+            // 按時間倒序排列
+            const sortedRecords = records.sort((a, b) => b.timestamp - a.timestamp);
+            
+            sortedRecords.forEach((record, index) => {
+                const recordElement = document.createElement('div');
+                recordElement.className = 'bg-gray-50 rounded-lg p-4 border border-gray-200';
+                
+                const accuracyColor = record.accuracy >= 80 ? 'text-green-600' : 
+                                    record.accuracy >= 60 ? 'text-yellow-600' : 'text-red-600';
+                
+                recordElement.innerHTML = `
+                    <div class="flex justify-between items-center">
+                        <div class="flex-1">
+                            <div class="flex items-center gap-3 mb-2">
+                                <span class="text-lg font-bold text-gray-700">#${sortedRecords.length - index}</span>
+                                <span class="text-lg font-semibold text-indigo-700">${categoryIcons[record.category]} ${record.category}</span>
+                                <span class="text-sm text-gray-500">${record.date}</span>
+                            </div>
+                            <div class="flex items-center gap-4 text-sm">
+                                <span class="text-gray-600">答對 ${record.correctAnswers} / ${record.totalQuestions} 題</span>
+                                <span class="font-semibold ${accuracyColor}">答對率 ${record.accuracy}%</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                listContainer.appendChild(recordElement);
+            });
+        }
+
+        // 顯示題庫
+        function showQuestionBank() {
+            const words = vocabulary[currentCategory];
+            document.getElementById('bank-category-title').textContent = `${categoryIcons[currentCategory]} ${currentCategory} 題庫`;
+            
+            const wordList = document.getElementById('word-list');
+            wordList.innerHTML = '';
+            
+            words.forEach((wordObj, index) => {
+                const wordItem = document.createElement('div');
+                wordItem.className = 'bg-gray-50 rounded-lg p-4 flex items-center justify-between border border-gray-200';
+                
+                const wordContent = document.createElement('div');
+                wordContent.className = 'flex-1';
+                wordContent.innerHTML = `
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="text-lg font-bold text-purple-700">${index + 1}.</span>
+                        <span class="text-xl font-semibold text-gray-800">${wordObj.word}</span>
+                        <button class="word-pronunciation bg-blue-500 hover:bg-blue-600 text-white rounded-full p-2 transition-colors duration-200" data-word="${wordObj.word}">
+                            🔊
+                        </button>
+                    </div>
+                    <div class="text-gray-600 ml-8">${wordObj.meaning}</div>
+                `;
+                
+                wordItem.appendChild(wordContent);
+                wordList.appendChild(wordItem);
+            });
+            
+            // 為發音按鈕添加事件監聽器
+            document.querySelectorAll('.word-pronunciation').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const word = btn.getAttribute('data-word');
+                    speakText(word);
+                });
+            });
+            
+            document.getElementById('question-bank').classList.remove('hidden');
+        }
+
+        // 驗證密碼
+        function verifyPassword() {
+            const password = document.getElementById('password-input').value;
+            const errorDiv = document.getElementById('password-error');
+            
+            if (password === '000000') {
+                document.getElementById('password-modal').classList.add('hidden');
+                document.getElementById('password-input').value = '';
+                errorDiv.classList.add('hidden');
+                showQuestionBank();
+            } else {
+                errorDiv.classList.remove('hidden');
+                document.getElementById('password-input').value = '';
+                document.getElementById('password-input').focus();
+            }
+        }
+
+        // 設置事件監聽器
+        function setupEventListeners() {
+            document.getElementById('next-btn').addEventListener('click', nextQuestion);
+            document.getElementById('restart-btn').addEventListener('click', () => startGame(currentCategory));
+            document.getElementById('home-btn').addEventListener('click', () => {
+                document.getElementById('resultpage').classList.add('hidden');
+                document.getElementById('gamepage').classList.add('hidden');
+                document.getElementById('records-page').classList.add('hidden');
+                document.getElementById('homepage').classList.remove('hidden');
+            });
+            
+            // 題庫相關事件
+            document.getElementById('show-bank-btn').addEventListener('click', () => {
+                document.getElementById('password-modal').classList.remove('hidden');
+                document.getElementById('password-input').focus();
+            });
+            
+            document.getElementById('password-confirm').addEventListener('click', verifyPassword);
+            document.getElementById('password-cancel').addEventListener('click', () => {
+                document.getElementById('password-modal').classList.add('hidden');
+                document.getElementById('password-input').value = '';
+                document.getElementById('password-error').classList.add('hidden');
+            });
+            
+            document.getElementById('close-bank-btn').addEventListener('click', () => {
+                document.getElementById('question-bank').classList.add('hidden');
+            });
+            
+            // 作答紀錄相關事件
+            document.getElementById('show-records-btn').addEventListener('click', showRecords);
+            document.getElementById('view-records-btn').addEventListener('click', showRecords);
+            document.getElementById('close-records-btn').addEventListener('click', () => {
+                document.getElementById('records-page').classList.add('hidden');
+                document.getElementById('homepage').classList.remove('hidden');
+            });
+            
+            // 清除紀錄相關事件
+            document.getElementById('clear-records-btn').addEventListener('click', () => {
+                document.getElementById('clear-confirm-modal').classList.remove('hidden');
+            });
+            
+            document.getElementById('confirm-clear').addEventListener('click', () => {
+                clearAllRecords();
+                document.getElementById('clear-confirm-modal').classList.add('hidden');
+                // 如果正在查看紀錄頁面，重新載入
+                if (!document.getElementById('records-page').classList.contains('hidden')) {
+                    showRecords();
+                }
+            });
+            
+            document.getElementById('cancel-clear').addEventListener('click', () => {
+                document.getElementById('clear-confirm-modal').classList.add('hidden');
+            });
+            
+            // 密碼輸入框 Enter 鍵支援
+            document.getElementById('password-input').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    verifyPassword();
+                }
+            });
+            
+            // 空白鍵支援
+            document.addEventListener('keydown', (e) => {
+                if (e.code === 'Space' && !document.getElementById('next-btn').classList.contains('hidden')) {
+                    e.preventDefault();
+                    nextQuestion();
+                }
+            });
+        }
+
+        // 啟動遊戲
+        initGame();
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9926bb149266074c',t:'MTc2MTExMjM2OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
