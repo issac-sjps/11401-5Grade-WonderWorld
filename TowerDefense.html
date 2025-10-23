@@ -348,6 +348,14 @@
             75% { transform: translateX(2px); }
         }
 
+        @keyframes hackConvert {
+            0% { transform: scale(1) rotate(0deg); filter: hue-rotate(0deg); }
+            25% { transform: scale(1.2) rotate(90deg); filter: hue-rotate(90deg); }
+            50% { transform: scale(0.8) rotate(180deg); filter: hue-rotate(180deg); }
+            75% { transform: scale(1.1) rotate(270deg); filter: hue-rotate(270deg); }
+            100% { transform: scale(1) rotate(360deg); filter: hue-rotate(360deg); }
+        }
+
         .hp-bar {
             position: absolute;
             top: -8px;
@@ -1114,9 +1122,19 @@
 
         // 初始化遊戲
         function initGame() {
-            gameState.coins = 0;
-            // 每關塔樓血量增加50：第1關100，第2關150，...，第10關550
-            const baseHp = 50 + (gameState.currentLevel * 50);
+            // 應用金幣修改器
+            gameState.coins = gameModifiers.richMode ? 100 : 0;
+            
+            // 應用血量修改器
+            let baseHp;
+            if (gameModifiers.tankMode) {
+                // 血量模式：500起始，每關+50
+                baseHp = 450 + (gameState.currentLevel * 50);
+            } else {
+                // 正常模式：100起始，每關+50
+                baseHp = 50 + (gameState.currentLevel * 50);
+            }
+            
             gameState.playerHp = baseHp;
             gameState.enemyHp = baseHp;
             gameState.gameOver = false;
@@ -1606,6 +1624,15 @@
                 id: Date.now() + Math.random()
             };
 
+            // 駭客模式：為敵方單位添加點擊事件
+            if (!isPlayer && gameModifiers.hackMode) {
+                monster.style.cursor = 'pointer';
+                monster.title = '點擊轉換為我方單位';
+                monster.addEventListener('click', function() {
+                    hackConvertEnemy(monsterData);
+                });
+            }
+
             if (isPlayer) {
                 monster.style.left = '0px';
             } else {
@@ -1616,6 +1643,47 @@
             activeMonsters.push(monsterData);
 
             return monsterData;
+        }
+
+        // 駭客模式：轉換敵方單位為我方
+        function hackConvertEnemy(enemyMonster) {
+            if (!gameModifiers.hackMode || enemyMonster.isPlayer) return;
+            
+            // 停止戰鬥狀態
+            if (enemyMonster.fighting && enemyMonster.fightTarget) {
+                enemyMonster.fightTarget.fighting = false;
+                enemyMonster.fightTarget.fightTarget = null;
+                enemyMonster.fightTarget.element.classList.remove('fighting');
+            }
+            
+            // 轉換為我方單位
+            enemyMonster.isPlayer = true;
+            enemyMonster.fighting = false;
+            enemyMonster.fightTarget = null;
+            
+            // 更新視覺效果
+            enemyMonster.element.className = 'monster player-monster';
+            enemyMonster.element.classList.remove('fighting');
+            enemyMonster.element.style.cursor = '';
+            enemyMonster.element.title = '';
+            
+            // 重新定位（從右側移動到左側邏輯）
+            const battlefield = document.getElementById('battlefield');
+            const battlefieldWidth = battlefield.offsetWidth;
+            enemyMonster.position = battlefieldWidth - 40 - enemyMonster.position;
+            enemyMonster.element.style.right = '';
+            enemyMonster.element.style.left = enemyMonster.position + 'px';
+            
+            // 移除點擊事件監聽器
+            const newElement = enemyMonster.element.cloneNode(true);
+            enemyMonster.element.parentNode.replaceChild(newElement, enemyMonster.element);
+            enemyMonster.element = newElement;
+            
+            // 添加轉換特效
+            enemyMonster.element.style.animation = 'hackConvert 0.5s ease';
+            setTimeout(() => {
+                enemyMonster.element.style.animation = '';
+            }, 500);
         }
 
         // 遊戲結束
@@ -1664,9 +1732,19 @@
 
         // 重新開始遊戲
         function restartGame() {
-            gameState.coins = 0;
-            // 每關塔樓血量增加50：第1關100，第2關150，...，第10關550
-            const baseHp = 50 + (gameState.currentLevel * 50);
+            // 應用金幣修改器
+            gameState.coins = gameModifiers.richMode ? 100 : 0;
+            
+            // 應用血量修改器
+            let baseHp;
+            if (gameModifiers.tankMode) {
+                // 血量模式：500起始，每關+50
+                baseHp = 450 + (gameState.currentLevel * 50);
+            } else {
+                // 正常模式：100起始，每關+50
+                baseHp = 50 + (gameState.currentLevel * 50);
+            }
+            
             gameState.playerHp = baseHp;
             gameState.enemyHp = baseHp;
             gameState.gameOver = false;
@@ -2441,6 +2519,12 @@
             gameState.completedLevels = [];
             gameState.currentLevel = 1;
             
+            // 重置所有修改器
+            gameModifiers.unlockAll = false;
+            gameModifiers.richMode = false;
+            gameModifiers.tankMode = false;
+            gameModifiers.hackMode = false;
+            
             // 關閉確認對話框
             const modal = document.querySelector('.reset-confirmation-modal');
             if (modal) modal.remove();
@@ -2456,13 +2540,21 @@
             
             // 顯示重置成功訊息
             const messageDiv = document.getElementById('message');
-            messageDiv.innerHTML = '<div class="message success">🔄 遊戲進度已重置！回到第1關重新開始！</div>';
+            messageDiv.innerHTML = '<div class="message success">🔄 遊戲進度已重置！所有修改器已關閉！回到第1關重新開始！</div>';
             
             // 3秒後清除訊息
             setTimeout(() => {
                 messageDiv.innerHTML = '';
             }, 3000);
         }
+
+        // 遊戲修改器狀態
+        let gameModifiers = {
+            unlockAll: false,
+            richMode: false,
+            tankMode: false,
+            hackMode: false
+        };
 
         // 秘密代碼檢查功能
         function checkSecretCode(event) {
@@ -2479,6 +2571,7 @@
             if (code === 'sjps') {
                 // 解鎖所有關卡
                 gameState.completedLevels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+                gameModifiers.unlockAll = true;
                 
                 // 更新關卡按鈕顯示
                 initLevelButtons();
@@ -2490,6 +2583,68 @@
                 input.value = '';
                 input.placeholder = '🎉 已解鎖所有關卡！';
                 input.style.background = 'linear-gradient(45deg, #00b894, #00cec9)';
+                input.style.color = 'white';
+                
+                // 3秒後恢復原狀
+                setTimeout(() => {
+                    input.placeholder = '...';
+                    input.style.background = '';
+                    input.style.color = '';
+                }, 3000);
+            } else if (code === 'money') {
+                // 金幣模式：每關起始金幣100
+                gameModifiers.richMode = true;
+                
+                // 如果正在遊戲中，立即給予100金幣
+                if (document.getElementById('gameScreen').style.display !== 'none') {
+                    gameState.coins = 100;
+                    updateUI();
+                }
+                
+                // 顯示成功訊息
+                input.value = '';
+                input.placeholder = '💰 金幣模式已啟動！';
+                input.style.background = 'linear-gradient(45deg, #f39c12, #e67e22)';
+                input.style.color = 'white';
+                
+                // 3秒後恢復原狀
+                setTimeout(() => {
+                    input.placeholder = '...';
+                    input.style.background = '';
+                    input.style.color = '';
+                }, 3000);
+            } else if (code === 'heart') {
+                // 血量模式：基礎血量500起始
+                gameModifiers.tankMode = true;
+                
+                // 如果正在遊戲中，立即更新血量
+                if (document.getElementById('gameScreen').style.display !== 'none') {
+                    const baseHp = 450 + (gameState.currentLevel * 50); // 500起始，每關+50
+                    gameState.playerHp = baseHp;
+                    gameState.enemyHp = baseHp;
+                    updateUI();
+                }
+                
+                // 顯示成功訊息
+                input.value = '';
+                input.placeholder = '❤️ 血量模式已啟動！';
+                input.style.background = 'linear-gradient(45deg, #e74c3c, #c0392b)';
+                input.style.color = 'white';
+                
+                // 3秒後恢復原狀
+                setTimeout(() => {
+                    input.placeholder = '...';
+                    input.style.background = '';
+                    input.style.color = '';
+                }, 3000);
+            } else if (code === 'hack') {
+                // 駭客模式：點擊敵方單位轉換為我方
+                gameModifiers.hackMode = true;
+                
+                // 顯示成功訊息
+                input.value = '';
+                input.placeholder = '🔥 駭客模式已啟動！';
+                input.style.background = 'linear-gradient(45deg, #9b59b6, #8e44ad)';
                 input.style.color = 'white';
                 
                 // 3秒後恢復原狀
@@ -2529,5 +2684,5 @@
             document.getElementById('gameScreen').style.display = 'none';
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'992ef1f070d18f0c',t:'MTc2MTE5ODUwMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'992f03f3e1a46b60',t:'MTc2MTE5OTI0MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
