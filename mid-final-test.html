@@ -45,6 +45,121 @@
             color: #718096;
         }
         
+        .quiz-history {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .history-header h3 {
+            color: #4a5568;
+            margin: 0;
+            font-size: 1.4rem;
+        }
+        
+        .clear-history-btn {
+            background: linear-gradient(45deg, #ef4444, #dc2626);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+        }
+        
+        .clear-history-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+        }
+        
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .history-item {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+        
+        .history-item:hover {
+            border-color: #667eea;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.15);
+        }
+        
+        .history-info {
+            flex: 1;
+        }
+        
+        .history-unit {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #2d3748;
+            margin-bottom: 5px;
+        }
+        
+        .history-details {
+            font-size: 0.9rem;
+            color: #718096;
+        }
+        
+        .history-score {
+            text-align: right;
+        }
+        
+        .history-percentage {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .history-percentage.excellent {
+            color: #10b981;
+        }
+        
+        .history-percentage.good {
+            color: #3b82f6;
+        }
+        
+        .history-percentage.fair {
+            color: #f59e0b;
+        }
+        
+        .history-percentage.poor {
+            color: #ef4444;
+        }
+        
+        .history-time {
+            font-size: 0.8rem;
+            color: #9ca3af;
+        }
+        
+        .no-history {
+            text-align: center;
+            color: #9ca3af;
+            font-style: italic;
+            margin: 20px 0;
+        }
+        
         .unit-selection {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -506,6 +621,16 @@
             <p class="subtitle">選擇單元開始練習背單字！</p>
         </header>
         
+        <div class="quiz-history" id="quizHistory" style="display: none;">
+            <div class="history-header">
+                <h3>📊 答題記錄</h3>
+                <button class="clear-history-btn" onclick="clearHistory()">🗑️ 清空記錄</button>
+            </div>
+            <div class="history-list" id="historyList">
+                <p class="no-history">還沒有答題記錄，開始測驗吧！</p>
+            </div>
+        </div>
+        
         <div class="unit-selection" id="unitSelection">
             <button class="unit-btn" onclick="startQuiz(1)">
                 <strong>期中考</strong><br>
@@ -694,6 +819,7 @@
         let currentQuestion = 0;
         let score = 0;
         let questions = [];
+        let quizHistory = JSON.parse(localStorage.getItem('quizHistory')) || [];
 
         function speakText(text) {
             if ('speechSynthesis' in window) {
@@ -722,6 +848,7 @@
             questions = generateQuestions();
             
             document.getElementById('unitSelection').style.display = 'none';
+            document.getElementById('quizHistory').style.display = 'none';
             document.getElementById('quizContainer').style.display = 'block';
             
             showQuestion();
@@ -908,6 +1035,9 @@
                 unitName = '單元四 (學科 & 所有格)';
             }
             
+            // 保存答題記錄
+            saveQuizResult(currentUnit, unitName, score, questions.length, percentage);
+            
             document.getElementById('finalScore').innerHTML = `
                 <strong style="font-size: 1.3rem; color: #fff; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
                     📚 ${unitName} 測驗完成
@@ -917,6 +1047,80 @@
                 正確率：${percentage}%
             `;
         }
+        
+        function saveQuizResult(unit, unitName, score, total, percentage) {
+            const now = new Date();
+            const timeString = now.toLocaleString('zh-TW', {
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            
+            const result = {
+                unit: unit,
+                unitName: unitName,
+                score: score,
+                total: total,
+                percentage: percentage,
+                time: timeString,
+                timestamp: now.getTime()
+            };
+            
+            quizHistory.unshift(result); // 新記錄放在最前面
+            
+            // 只保留最近20筆記錄
+            if (quizHistory.length > 20) {
+                quizHistory = quizHistory.slice(0, 20);
+            }
+            
+            localStorage.setItem('quizHistory', JSON.stringify(quizHistory));
+        }
+        
+        function displayQuizHistory() {
+            const historyContainer = document.getElementById('quizHistory');
+            const historyList = document.getElementById('historyList');
+            
+            if (quizHistory.length === 0) {
+                historyContainer.style.display = 'none';
+                return;
+            }
+            
+            historyContainer.style.display = 'block';
+            historyList.innerHTML = '';
+            
+            quizHistory.forEach(record => {
+                const historyItem = document.createElement('div');
+                historyItem.className = 'history-item';
+                
+                let scoreClass = '';
+                if (record.percentage >= 90) scoreClass = 'excellent';
+                else if (record.percentage >= 70) scoreClass = 'good';
+                else if (record.percentage >= 50) scoreClass = 'fair';
+                else scoreClass = 'poor';
+                
+                historyItem.innerHTML = `
+                    <div class="history-info">
+                        <div class="history-unit">${record.unitName}</div>
+                        <div class="history-details">答對 ${record.score} 題，共 ${record.total} 題</div>
+                    </div>
+                    <div class="history-score">
+                        <div class="history-percentage ${scoreClass}">${record.percentage}%</div>
+                        <div class="history-time">${record.time}</div>
+                    </div>
+                `;
+                
+                historyList.appendChild(historyItem);
+            });
+        }
+        
+        function clearHistory() {
+            if (confirm('確定要清空所有答題記錄嗎？')) {
+                quizHistory = [];
+                localStorage.removeItem('quizHistory');
+                displayQuizHistory();
+            }
+        }
 
         function backToMenu() {
             document.getElementById('resultCard').style.display = 'none';
@@ -925,10 +1129,12 @@
             document.getElementById('teacherSection').style.display = 'none';
             document.getElementById('unitSelection').style.display = 'grid';
             document.getElementById('teacherPassword').value = '';
+            displayQuizHistory();
         }
         
         function showTeacherLogin() {
             document.getElementById('unitSelection').style.display = 'none';
+            document.getElementById('quizHistory').style.display = 'none';
             document.getElementById('teacherLogin').style.display = 'block';
             document.getElementById('teacherPassword').focus();
         }
@@ -1001,6 +1207,14 @@
                 }
             }
         });
+        
+        // 頁面載入時顯示答題記錄
+        document.addEventListener('DOMContentLoaded', function() {
+            displayQuizHistory();
+        });
+        
+        // 頁面載入完成後立即顯示記錄
+        displayQuizHistory();
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'99268dc851ba074c',t:'MTc2MTExMDUxNC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'992df96ce3bf4a63',t:'MTc2MTE4ODMyMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
