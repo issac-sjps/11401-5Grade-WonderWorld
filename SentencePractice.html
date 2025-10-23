@@ -1,0 +1,1731 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>英語句型訓練系統</title>
+    <style>
+        body {
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100%;
+            color: #333;
+        }
+        
+        html, body {
+            height: 100%;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .title {
+            font-size: 2.5rem;
+            color: #4a5568;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            color: #718096;
+        }
+        
+        /* 首頁樣式 */
+        .home-page {
+            display: block;
+        }
+        
+        .unit-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .unit-card {
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            border: none;
+            font-size: 1rem;
+        }
+        
+        .unit-blue {
+            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+        }
+        
+        .unit-blue:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(66, 153, 225, 0.4);
+        }
+        
+        .unit-purple {
+            background: linear-gradient(135deg, #805ad5 0%, #6b46c1 100%);
+        }
+        
+        .unit-purple:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(128, 90, 213, 0.4);
+        }
+        
+        .unit-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .unit-description {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin-bottom: 15px;
+        }
+        
+        .unit-example {
+            font-size: 0.9rem;
+            font-style: italic;
+            opacity: 0.8;
+        }
+        
+        /* 遊戲頁面樣式 */
+        .game-page {
+            display: none;
+        }
+        
+        .game-area {
+            background: #f7fafc;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border: 2px solid #e2e8f0;
+        }
+        
+        .question-section {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .question-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .question {
+            font-size: 1.8rem;
+            color: #2d3748;
+            font-weight: 600;
+        }
+        
+        .speak-btn {
+            background: #48bb78;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+        
+        .speak-btn:hover {
+            background: #38a169;
+            transform: scale(1.1);
+        }
+        
+        .options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .option-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .option-btn {
+            background: #4299e1;
+            color: white;
+            border: none;
+            padding: 15px 20px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            flex: 1;
+            min-height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            line-height: 1.3;
+        }
+        
+        .option-btn:hover {
+            background: #3182ce;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(66, 153, 225, 0.4);
+        }
+        
+        .option-btn.correct {
+            background: #48bb78;
+        }
+        
+        .option-btn.wrong {
+            background: #f56565;
+        }
+        
+        .feedback {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            min-height: 30px;
+        }
+        
+        .feedback.correct {
+            color: #38a169;
+        }
+        
+        .feedback.wrong {
+            color: #e53e3e;
+        }
+        
+        .score-board {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #edf2f7;
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .score {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #4a5568;
+        }
+        
+        .answer-record {
+            background: #f0f4f8;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 2px solid #e2e8f0;
+        }
+        
+        .record-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #4a5568;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .record-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+            gap: 8px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .record-item {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+            border: 2px solid #e2e8f0;
+            background: white;
+            color: #718096;
+        }
+        
+        .record-item.correct {
+            background: #48bb78;
+            color: white;
+            border-color: #38a169;
+        }
+        
+        .record-item.wrong {
+            background: #f56565;
+            color: white;
+            border-color: #e53e3e;
+        }
+        
+        .record-item.current {
+            background: #4299e1;
+            color: white;
+            border-color: #3182ce;
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        .control-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        .btn {
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: #805ad5;
+        }
+        
+        .btn-primary:hover {
+            background: #6b46c1;
+        }
+        
+        .btn-secondary {
+            background: #718096;
+        }
+        
+        .btn-secondary:hover {
+            background: #4a5568;
+        }
+        
+        .btn:disabled {
+            background: #a0aec0;
+            cursor: not-allowed;
+        }
+        
+        /* 首頁答題記錄樣式 */
+        .history-section {
+            background: #f8fafc;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            border: 2px solid #e2e8f0;
+        }
+        
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .history-title {
+            font-size: 1.3rem;
+            color: #4a5568;
+            margin: 0;
+            font-weight: 600;
+        }
+        
+        .btn-clear {
+            background: #f56565;
+            font-size: 0.9rem;
+            padding: 8px 15px;
+        }
+        
+        .btn-clear:hover {
+            background: #e53e3e;
+        }
+        
+        .history-list {
+            display: grid;
+            gap: 10px;
+        }
+        
+        .history-item {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            border: 2px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+        
+        .history-item:hover {
+            border-color: #cbd5e0;
+            transform: translateY(-1px);
+        }
+        
+        .history-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .history-unit {
+            font-weight: 600;
+            color: #4a5568;
+            font-size: 1.1rem;
+        }
+        
+        .history-score {
+            font-size: 1rem;
+            color: #718096;
+        }
+        
+        .history-percentage {
+            font-weight: 600;
+            font-size: 1.2rem;
+            padding: 5px 12px;
+            border-radius: 20px;
+            color: white;
+        }
+        
+        .percentage-excellent {
+            background: #48bb78;
+        }
+        
+        .percentage-good {
+            background: #4299e1;
+        }
+        
+        .percentage-fair {
+            background: #ed8936;
+        }
+        
+        .percentage-poor {
+            background: #f56565;
+        }
+        
+        .history-time {
+            font-size: 0.8rem;
+            color: #a0aec0;
+            margin-top: 5px;
+        }
+        
+        .pattern-info {
+            background: #e6fffa;
+            border: 2px solid #81e6d9;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .pattern-title {
+            font-weight: 600;
+            color: #234e52;
+            margin-bottom: 8px;
+        }
+        
+        .pattern-example {
+            color: #2c7a7b;
+            font-style: italic;
+        }
+        
+        .translation {
+            background: #f0fff4;
+            border: 2px solid #9ae6b4;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 0;
+            text-align: center;
+            font-size: 1.3rem;
+            color: #2f855a;
+            font-weight: 600;
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .score-board {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .options {
+                grid-template-columns: 1fr;
+            }
+            
+            .question {
+                font-size: 1.4rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="container">
+        <header class="header">
+            <h1 class="title">🎯 11401-5Grade-WonderWorld 句型練習</h1>
+            <p class="subtitle">選擇單元開始練習英語句型</p>
+        </header>
+        
+        <!-- 首頁 -->
+        <div class="home-page" id="home-page">
+            <!-- 答題記錄區域 -->
+            <div class="history-section" id="history-section" style="display: none;">
+                <div class="history-header">
+                    <h3 class="history-title">📊 最近答題記錄</h3>
+                    <button class="btn btn-clear" onclick="clearHistory()">🗑️ 清空記錄</button>
+                </div>
+                <div class="history-list" id="history-list"></div>
+            </div>
+            
+            <div class="unit-grid">
+                <button class="unit-card unit-blue" onclick="startUnit(1)">
+                    <div class="unit-title">第一單元</div>
+                    <div class="unit-description">Do you like...? / Does he/she like...?</div>
+                    <div class="unit-example">練習喜好問答句型</div>
+                </button>
+                
+                <button class="unit-card unit-blue" onclick="startUnit(2)">
+                    <div class="unit-title">第二單元</div>
+                    <div class="unit-description">How many...? / I need... / He/She needs...</div>
+                    <div class="unit-example">練習數量問答句型</div>
+                </button>
+                
+                <button class="unit-card unit-purple" onclick="startUnit(3)">
+                    <div class="unit-title">第三單元</div>
+                    <div class="unit-description">What day is it? / Is it...?</div>
+                    <div class="unit-example">練習星期問答句型</div>
+                </button>
+                
+                <button class="unit-card unit-purple" onclick="startUnit(4)">
+                    <div class="unit-title">第四單元</div>
+                    <div class="unit-description">What's your/his/her favorite subject?</div>
+                    <div class="unit-example">練習最喜歡科目問答句型</div>
+                </button>
+            </div>
+        </div>
+        
+        <!-- 遊戲頁面 -->
+        <div class="game-page" id="game-page">
+            <div class="pattern-info" id="pattern-info">
+                <div class="pattern-title">📚 句型練習：</div>
+                <div class="pattern-example" id="pattern-example"></div>
+            </div>
+            
+            <div class="score-board">
+                <div class="score">第 <span id="current-question">1</span> 題 / 共 <span id="total-questions">20</span> 題</div>
+                <div class="score">答對率: <span id="accuracy">0</span>%</div>
+                <div class="score">剩餘: <span id="remaining">20</span> 題</div>
+            </div>
+            
+            <div class="game-area">
+                <div class="question-section">
+                    <div class="question-container">
+                        <div class="question" id="question"></div>
+                        <button class="speak-btn" id="question-speak" onclick="speakText(this.dataset.text)">🔊</button>
+                    </div>
+                    <div class="options" id="options"></div>
+                    <div class="translation" id="translation"></div>
+                    <div class="feedback" id="feedback"></div>
+                </div>
+            </div>
+            
+            <div class="answer-record" id="answer-record">
+                <div class="record-title">📊 答題記錄</div>
+                <div class="record-grid" id="record-grid"></div>
+            </div>
+            
+            <div class="control-buttons">
+                <button class="btn btn-secondary" onclick="goHome()">返回首頁</button>
+                <button class="btn btn-primary" id="next-btn" onclick="nextQuestion()" disabled>下一題 (空白鍵)</button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let currentUnit = 1;
+        let currentQuestion = 0;
+        let correctAnswers = 0;
+        let totalQuestions = 0;
+        let answered = false;
+        let currentQuestions = [];
+        let answerRecord = [];
+        let answerHistory = [];
+
+        const units = {
+            1: {
+                title: "Do you like...? / Does he/she like...?",
+                example: "A: Do you like cola? → Yes, I do. / No, I don't. I like soy milk.<br>B: Does he/she like tea? → Yes, he/she does. / No, he/she doesn't. He/She likes coffee.",
+                questions: [
+                    {
+                        question: "Do you like apples?",
+                        translation: "你喜歡蘋果嗎？",
+                        options: ["Yes, I do.", "Yes, he does.", "No, she doesn't.", "Does he like apples?"],
+                        correct: 0,
+                        explanation: "正確！回答 'Do you' 的問題要用 'I do/don't'"
+                    },
+                    {
+                        question: "Does she like milk?",
+                        translation: "她喜歡牛奶嗎？",
+                        options: ["Yes, I do.", "No, I don't.", "Yes, she does.", "Do you like milk?"],
+                        correct: 2,
+                        explanation: "正確！回答 'Does she' 的問題要用 'she does/doesn't'"
+                    },
+                    {
+                        question: "Do you like water?",
+                        translation: "你喜歡水嗎？",
+                        options: ["No, I don't. I like juice.", "No, she doesn't.", "Yes, he does.", "Does she like water?"],
+                        correct: 0,
+                        explanation: "正確！可以說不喜歡並說出自己喜歡的東西"
+                    },
+                    {
+                        question: "Does he like juice?",
+                        translation: "他喜歡果汁嗎？",
+                        options: ["Yes, I do.", "No, he doesn't. He likes milk.", "No, I don't.", "Do you like juice?"],
+                        correct: 1,
+                        explanation: "正確！可以說他不喜歡並說出他喜歡的東西"
+                    },
+                    {
+                        question: "Do you like cake?",
+                        translation: "你喜歡蛋糕嗎？",
+                        options: ["Yes, she does.", "Does he like it?", "No, I don't.", "Yes, he does."],
+                        correct: 2,
+                        explanation: "正確！回答 'Do you' 用 'I do/don't'"
+                    },
+                    {
+                        question: "Does she like ice cream?",
+                        translation: "她喜歡冰淇淋嗎？",
+                        options: ["Yes, I do.", "Yes, she does.", "Do you like it?", "No, I don't."],
+                        correct: 1,
+                        explanation: "正確！回答 'Does she' 用 'she does/doesn't'"
+                    },
+                    {
+                        question: "Do you like hot dogs?",
+                        translation: "你喜歡熱狗嗎？",
+                        options: ["No, she doesn't.", "Yes, I do.", "Yes, he does.", "Does she like them?"],
+                        correct: 1,
+                        explanation: "正確！回答 'Do you' 的問題要用 'I do/don't'"
+                    },
+                    {
+                        question: "Does he like oranges?",
+                        translation: "他喜歡橘子嗎？",
+                        options: ["Yes, I do.", "Do you like oranges?", "No, he doesn't. He likes apples.", "No, I don't."],
+                        correct: 2,
+                        explanation: "正確！說明他不喜歡什麼，但喜歡什麼"
+                    },
+                    {
+                        question: "Do you like bananas?",
+                        translation: "你喜歡香蕉嗎？",
+                        options: ["Yes, I do.", "Yes, she does.", "No, he doesn't.", "Does she like bananas?"],
+                        correct: 0,
+                        explanation: "正確！回答 'Do you' 的問題要用 'I do/don't'"
+                    },
+                    {
+                        question: "Does he like cookies?",
+                        translation: "他喜歡餅乾嗎？",
+                        options: ["No, I don't.", "Yes, he does.", "Yes, I do.", "Do you like cookies?"],
+                        correct: 1,
+                        explanation: "正確！回答 'Does he' 的問題要用 'he does/doesn't'"
+                    },
+                    {
+                        question: "Do you like bread?",
+                        translation: "你喜歡麵包嗎？",
+                        options: ["No, I don't. I like rice.", "No, she doesn't.", "Yes, he does.", "Does he like bread?"],
+                        correct: 0,
+                        explanation: "正確！可以說不喜歡並說出自己喜歡的東西"
+                    },
+                    {
+                        question: "Does she like eggs?",
+                        translation: "她喜歡蛋嗎？",
+                        options: ["Yes, I do.", "No, he doesn't.", "No, she doesn't.", "Do you like eggs?"],
+                        correct: 2,
+                        explanation: "正確！回答 'Does she' 的問題要用 'she does/doesn't'"
+                    },
+                    {
+                        question: "Do you like rice?",
+                        translation: "你喜歡米飯嗎？",
+                        options: ["Yes, I do.", "Yes, she does.", "No, he doesn't.", "Does she like rice?"],
+                        correct: 0,
+                        explanation: "正確！回答 'Do you' 的問題要用 'I do/don't'"
+                    },
+                    {
+                        question: "Does he like fish?",
+                        translation: "他喜歡魚嗎？",
+                        options: ["No, I don't.", "Yes, I do.", "Yes, he does.", "Do you like fish?"],
+                        correct: 2,
+                        explanation: "正確！回答 'Does he' 的問題要用 'he does/doesn't'"
+                    },
+                    {
+                        question: "Do you like meat?",
+                        translation: "你喜歡肉嗎？",
+                        options: ["No, I don't.", "Yes, she does.", "No, he doesn't.", "Does she like meat?"],
+                        correct: 0,
+                        explanation: "正確！回答 'Do you' 的問題要用 'I do/don't'"
+                    },
+                    {
+                        question: "Does she like chicken?",
+                        translation: "她喜歡雞肉嗎？",
+                        options: ["Yes, I do.", "No, she doesn't. She likes fish.", "No, I don't.", "Do you like chicken?"],
+                        correct: 1,
+                        explanation: "正確！可以說她不喜歡並說出她喜歡的東西"
+                    },
+                    {
+                        question: "Do you like soup?",
+                        translation: "你喜歡湯嗎？",
+                        options: ["Yes, she does.", "No, he doesn't.", "Yes, I do.", "Does he like soup?"],
+                        correct: 2,
+                        explanation: "正確！回答 'Do you' 的問題要用 'I do/don't'"
+                    },
+                    {
+                        question: "Does he like candy?",
+                        translation: "他喜歡糖果嗎？",
+                        options: ["Yes, I do.", "No, he doesn't.", "No, I don't.", "Do you like candy?"],
+                        correct: 1,
+                        explanation: "正確！回答 'Does he' 的問題要用 'he does/doesn't'"
+                    },
+                    {
+                        question: "Do you like pizza?",
+                        translation: "你喜歡披薩嗎？",
+                        options: ["No, I don't. I like sandwiches.", "Yes, she does.", "No, he doesn't.", "Does she like pizza?"],
+                        correct: 0,
+                        explanation: "正確！可以說不喜歡並說出自己喜歡的東西"
+                    },
+                    {
+                        question: "Does she like tea?",
+                        translation: "她喜歡茶嗎？",
+                        options: ["Yes, I do.", "Yes, she does.", "No, I don't.", "Do you like tea?"],
+                        correct: 1,
+                        explanation: "正確！回答 'Does she' 的問題要用 'she does/doesn't'"
+                    }
+                ]
+            },
+            2: {
+                title: "How many...? / I need... / He/She needs...",
+                example: "A: How many apples do you need? → I need two apples.<br>B: How many oranges does he/she need? → He/She needs seven oranges.",
+                questions: [
+                    {
+                        question: "How many apples do you need?",
+                        translation: "你需要多少顆蘋果？",
+                        options: ["I need two apples.", "He needs two apples.", "She needs two apples.", "How many apples?"],
+                        correct: 0,
+                        explanation: "正確！回答 'How many... do you need?' 要用 'I need...'"
+                    },
+                    {
+                        question: "How many oranges does she need?",
+                        translation: "她需要多少顆橘子？",
+                        options: ["I need five oranges.", "You need five oranges.", "She needs five oranges.", "How many oranges?"],
+                        correct: 2,
+                        explanation: "正確！回答 'How many... does she need?' 要用 'She needs...'"
+                    },
+                    {
+                        question: "How many books do you need?",
+                        translation: "你需要多少本書？",
+                        options: ["I need three books.", "He needs three books.", "She needs three books.", "How many books?"],
+                        correct: 0,
+                        explanation: "正確！回答 'How many... do you need?' 要用 'I need...'"
+                    },
+                    {
+                        question: "How many pencils does he need?",
+                        translation: "他需要多少支鉛筆？",
+                        options: ["I need four pencils.", "He needs four pencils.", "You need four pencils.", "How many pencils?"],
+                        correct: 1,
+                        explanation: "正確！回答 'How many... does he need?' 要用 'He needs...'"
+                    },
+                    {
+                        question: "How many cookies do you need?",
+                        translation: "你需要多少片餅乾？",
+                        options: ["She needs six cookies.", "I need six cookies.", "He needs six cookies.", "How many cookies?"],
+                        correct: 1,
+                        explanation: "正確！回答 'How many... do you need?' 要用 'I need...'"
+                    },
+                    {
+                        question: "How many eggs does she need?",
+                        translation: "她需要多少顆蛋？",
+                        options: ["I need eight eggs.", "She needs eight eggs.", "You need eight eggs.", "How many eggs?"],
+                        correct: 1,
+                        explanation: "正確！回答 'How many... does she need?' 要用 'She needs...'"
+                    },
+                    {
+                        question: "How many chairs do you need?",
+                        translation: "你需要多少張椅子？",
+                        options: ["I need ten chairs.", "He needs ten chairs.", "She needs ten chairs.", "How many chairs?"],
+                        correct: 0,
+                        explanation: "正確！回答 'How many... do you need?' 要用 'I need...'"
+                    },
+                    {
+                        question: "How many cups does he need?",
+                        translation: "他需要多少個杯子？",
+                        options: ["I need one cup.", "You need one cup.", "He needs one cup.", "How many cups?"],
+                        correct: 2,
+                        explanation: "正確！回答 'How many... does he need?' 要用 'He needs...'"
+                    },
+                    {
+                        question: "How many bags do you need?",
+                        translation: "你需要多少個袋子？",
+                        options: ["She needs two bags.", "I need two bags.", "He needs two bags.", "How many bags?"],
+                        correct: 1,
+                        explanation: "正確！回答 'How many... do you need?' 要用 'I need...'"
+                    },
+                    {
+                        question: "How many bottles does she need?",
+                        translation: "她需要多少個瓶子？",
+                        options: ["I need three bottles.", "She needs three bottles.", "You need three bottles.", "How many bottles?"],
+                        correct: 1,
+                        explanation: "正確！回答 'How many... does she need?' 要用 'She needs...'"
+                    },
+                    {
+                        question: "How many plates do you need?",
+                        translation: "你需要多少個盤子？",
+                        options: ["I need four plates.", "He needs four plates.", "She needs four plates.", "How many plates?"],
+                        correct: 0,
+                        explanation: "正確！回答 'How many... do you need?' 要用 'I need...'"
+                    },
+                    {
+                        question: "How many spoons does he need?",
+                        translation: "他需要多少支湯匙？",
+                        options: ["I need five spoons.", "He needs five spoons.", "You need five spoons.", "How many spoons?"],
+                        correct: 1,
+                        explanation: "正確！回答 'How many... does he need?' 要用 'He needs...'"
+                    },
+                    {
+                        question: "How many toys do you need?",
+                        translation: "你需要多少個玩具？",
+                        options: ["She needs six toys.", "I need six toys.", "He needs six toys.", "How many toys?"],
+                        correct: 1,
+                        explanation: "正確！回答 'How many... do you need?' 要用 'I need...'"
+                    },
+                    {
+                        question: "How many flowers does she need?",
+                        translation: "她需要多少朵花？",
+                        options: ["I need seven flowers.", "She needs seven flowers.", "You need seven flowers.", "How many flowers?"],
+                        correct: 1,
+                        explanation: "正確！回答 'How many... does she need?' 要用 'She needs...'"
+                    },
+                    {
+                        question: "How many keys do you need?",
+                        translation: "你需要多少把鑰匙？",
+                        options: ["I need one key.", "He needs one key.", "She needs one key.", "How many keys?"],
+                        correct: 0,
+                        explanation: "正確！回答 'How many... do you need?' 要用 'I need...'"
+                    },
+                    {
+                        question: "How many boxes does he need?",
+                        translation: "他需要多少個盒子？",
+                        options: ["I need nine boxes.", "He needs nine boxes.", "You need nine boxes.", "How many boxes?"],
+                        correct: 1,
+                        explanation: "正確！回答 'How many... does he need?' 要用 'He needs...'"
+                    },
+                    {
+                        question: "How many cards do you need?",
+                        translation: "你需要多少張卡片？",
+                        options: ["She needs ten cards.", "I need ten cards.", "He needs ten cards.", "How many cards?"],
+                        correct: 1,
+                        explanation: "正確！回答 'How many... do you need?' 要用 'I need...'"
+                    },
+                    {
+                        question: "How many balls does she need?",
+                        translation: "她需要多少顆球？",
+                        options: ["I need two balls.", "She needs two balls.", "You need two balls.", "How many balls?"],
+                        correct: 1,
+                        explanation: "正確！回答 'How many... does she need?' 要用 'She needs...'"
+                    },
+                    {
+                        question: "How many shoes do you need?",
+                        translation: "你需要多少雙鞋子？",
+                        options: ["I need one pair of shoes.", "He needs one pair of shoes.", "She needs one pair of shoes.", "How many shoes?"],
+                        correct: 0,
+                        explanation: "正確！回答 'How many... do you need?' 要用 'I need...'"
+                    },
+                    {
+                        question: "How many hats does he need?",
+                        translation: "他需要多少頂帽子？",
+                        options: ["I need three hats.", "He needs three hats.", "You need three hats.", "How many hats?"],
+                        correct: 1,
+                        explanation: "正確！回答 'How many... does he need?' 要用 'He needs...'"
+                    }
+                ]
+            },
+            3: {
+                title: "What day is it? / Is it...?",
+                example: "A: What day is today? → It's Sunday.<br>B: Is it Monday today? → Yes, it is. / No, it isn't. It's Tuesday.",
+                questions: [
+                    {
+                        question: "What day is today?",
+                        translation: "今天是星期幾？",
+                        options: ["It's Sunday.", "Is it Sunday?", "Yes, it is.", "No, it isn't."],
+                        correct: 0,
+                        explanation: "正確！回答 'What day is today?' 要用 'It's + 星期'"
+                    },
+                    {
+                        question: "Is it Monday today?",
+                        translation: "今天是星期一嗎？",
+                        options: ["It's Monday.", "Yes, it is.", "What day is it?", "It's Tuesday."],
+                        correct: 1,
+                        explanation: "正確！回答 'Is it...?' 的問題要用 'Yes, it is.' 或 'No, it isn't.'"
+                    },
+                    {
+                        question: "What day is today?",
+                        translation: "今天是星期幾？",
+                        options: ["Yes, it is.", "Is it Friday?", "It's Friday.", "No, it isn't."],
+                        correct: 2,
+                        explanation: "正確！回答 'What day is today?' 要用 'It's + 星期'"
+                    },
+                    {
+                        question: "Is it Wednesday today?",
+                        translation: "今天是星期三嗎？",
+                        options: ["It's Wednesday.", "No, it isn't. It's Thursday.", "What day is it?", "Yes, it is."],
+                        correct: 1,
+                        explanation: "正確！可以說不是並說出正確的星期"
+                    },
+                    {
+                        question: "What day is today?",
+                        translation: "今天是星期幾？",
+                        options: ["Is it Saturday?", "It's Saturday.", "Yes, it is.", "No, it isn't."],
+                        correct: 1,
+                        explanation: "正確！回答 'What day is today?' 要用 'It's + 星期'"
+                    },
+                    {
+                        question: "Is it Tuesday today?",
+                        translation: "今天是星期二嗎？",
+                        options: ["It's Tuesday.", "What day is it?", "Yes, it is.", "It's Monday."],
+                        correct: 2,
+                        explanation: "正確！回答 'Is it...?' 的問題要用 'Yes, it is.'"
+                    },
+                    {
+                        question: "What day is today?",
+                        translation: "今天是星期幾？",
+                        options: ["No, it isn't.", "It's Thursday.", "Is it Thursday?", "Yes, it is."],
+                        correct: 1,
+                        explanation: "正確！回答 'What day is today?' 要用 'It's + 星期'"
+                    },
+                    {
+                        question: "Is it Sunday today?",
+                        translation: "今天是星期天嗎？",
+                        options: ["It's Sunday.", "No, it isn't.", "What day is it?", "It's Monday."],
+                        correct: 1,
+                        explanation: "正確！回答 'Is it...?' 的問題要用 'No, it isn't.'"
+                    },
+                    {
+                        question: "What day is today?",
+                        translation: "今天是星期幾？",
+                        options: ["Yes, it is.", "It's Wednesday.", "Is it Wednesday?", "No, it isn't."],
+                        correct: 1,
+                        explanation: "正確！回答 'What day is today?' 要用 'It's + 星期'"
+                    },
+                    {
+                        question: "Is it Friday today?",
+                        translation: "今天是星期五嗎？",
+                        options: ["What day is it?", "It's Friday.", "No, it isn't. It's Saturday.", "Yes, it is."],
+                        correct: 3,
+                        explanation: "正確！回答 'Is it...?' 的問題要用 'Yes, it is.'"
+                    },
+                    {
+                        question: "What day is today?",
+                        translation: "今天是星期幾？",
+                        options: ["It's Tuesday.", "Is it Tuesday?", "Yes, it is.", "No, it isn't."],
+                        correct: 0,
+                        explanation: "正確！回答 'What day is today?' 要用 'It's + 星期'"
+                    },
+                    {
+                        question: "Is it Thursday today?",
+                        translation: "今天是星期四嗎？",
+                        options: ["It's Thursday.", "Yes, it is.", "What day is it?", "It's Friday."],
+                        correct: 1,
+                        explanation: "正確！回答 'Is it...?' 的問題要用 'Yes, it is.'"
+                    },
+                    {
+                        question: "What day is today?",
+                        translation: "今天是星期幾？",
+                        options: ["No, it isn't.", "Is it Monday?", "It's Monday.", "Yes, it is."],
+                        correct: 2,
+                        explanation: "正確！回答 'What day is today?' 要用 'It's + 星期'"
+                    },
+                    {
+                        question: "Is it Saturday today?",
+                        translation: "今天是星期六嗎？",
+                        options: ["It's Saturday.", "No, it isn't. It's Sunday.", "What day is it?", "Yes, it is."],
+                        correct: 1,
+                        explanation: "正確！可以說不是並說出正確的星期"
+                    },
+                    {
+                        question: "What day is today?",
+                        translation: "今天是星期幾？",
+                        options: ["Yes, it is.", "It's Sunday.", "Is it Sunday?", "No, it isn't."],
+                        correct: 1,
+                        explanation: "正確！回答 'What day is today?' 要用 'It's + 星期'"
+                    },
+                    {
+                        question: "Is it Wednesday today?",
+                        translation: "今天是星期三嗎？",
+                        options: ["It's Wednesday.", "What day is it?", "No, it isn't.", "It's Thursday."],
+                        correct: 2,
+                        explanation: "正確！回答 'Is it...?' 的問題要用 'No, it isn't.'"
+                    },
+                    {
+                        question: "What day is today?",
+                        translation: "今天是星期幾？",
+                        options: ["It's Friday.", "Is it Friday?", "Yes, it is.", "No, it isn't."],
+                        correct: 0,
+                        explanation: "正確！回答 'What day is today?' 要用 'It's + 星期'"
+                    },
+                    {
+                        question: "Is it Monday today?",
+                        translation: "今天是星期一嗎？",
+                        options: ["It's Monday.", "Yes, it is.", "What day is it?", "It's Tuesday."],
+                        correct: 1,
+                        explanation: "正確！回答 'Is it...?' 的問題要用 'Yes, it is.'"
+                    },
+                    {
+                        question: "What day is today?",
+                        translation: "今天是星期幾？",
+                        options: ["No, it isn't.", "It's Thursday.", "Is it Thursday?", "Yes, it is."],
+                        correct: 1,
+                        explanation: "正確！回答 'What day is today?' 要用 'It's + 星期'"
+                    },
+                    {
+                        question: "Is it Tuesday today?",
+                        translation: "今天是星期二嗎？",
+                        options: ["It's Tuesday.", "No, it isn't. It's Wednesday.", "What day is it?", "Yes, it is."],
+                        correct: 1,
+                        explanation: "正確！可以說不是並說出正確的星期"
+                    }
+                ]
+            },
+            4: {
+                title: "What's your/his/her favorite subject?",
+                example: "A: What's your favorite subject? → My favorite subject is English.<br>B: What's his/her favorite subject? → His/Her favorite subject is science.",
+                questions: [
+                    {
+                        question: "What's your favorite subject?",
+                        translation: "你最喜歡的科目是什麼？",
+                        options: ["My favorite subject is English.", "His favorite subject is English.", "Her favorite subject is English.", "What's your favorite subject?"],
+                        correct: 0,
+                        explanation: "正確！回答 'What's your favorite subject?' 要用 'My favorite subject is...'"
+                    },
+                    {
+                        question: "What's his favorite subject?",
+                        translation: "他最喜歡的科目是什麼？",
+                        options: ["My favorite subject is math.", "Your favorite subject is math.", "His favorite subject is math.", "What's his favorite subject?"],
+                        correct: 2,
+                        explanation: "正確！回答 'What's his favorite subject?' 要用 'His favorite subject is...'"
+                    },
+                    {
+                        question: "What's your favorite subject?",
+                        translation: "你最喜歡的科目是什麼？",
+                        options: ["Her favorite subject is science.", "My favorite subject is science.", "His favorite subject is science.", "What's your favorite subject?"],
+                        correct: 1,
+                        explanation: "正確！回答 'What's your favorite subject?' 要用 'My favorite subject is...'"
+                    },
+                    {
+                        question: "What's her favorite subject?",
+                        translation: "她最喜歡的科目是什麼？",
+                        options: ["My favorite subject is art.", "His favorite subject is art.", "Her favorite subject is art.", "What's her favorite subject?"],
+                        correct: 2,
+                        explanation: "正確！回答 'What's her favorite subject?' 要用 'Her favorite subject is...'"
+                    },
+                    {
+                        question: "What's your favorite subject?",
+                        translation: "你最喜歡的科目是什麼？",
+                        options: ["My favorite subject is Chinese.", "His favorite subject is Chinese.", "Her favorite subject is Chinese.", "What's your favorite subject?"],
+                        correct: 0,
+                        explanation: "正確！回答 'What's your favorite subject?' 要用 'My favorite subject is...'"
+                    },
+                    {
+                        question: "What's his favorite subject?",
+                        translation: "他最喜歡的科目是什麼？",
+                        options: ["My favorite subject is PE.", "Your favorite subject is PE.", "His favorite subject is PE.", "What's his favorite subject?"],
+                        correct: 2,
+                        explanation: "正確！回答 'What's his favorite subject?' 要用 'His favorite subject is...'"
+                    },
+                    {
+                        question: "What's your favorite subject?",
+                        translation: "你最喜歡的科目是什麼？",
+                        options: ["Her favorite subject is music.", "My favorite subject is music.", "His favorite subject is music.", "What's your favorite subject?"],
+                        correct: 1,
+                        explanation: "正確！回答 'What's your favorite subject?' 要用 'My favorite subject is...'"
+                    },
+                    {
+                        question: "What's her favorite subject?",
+                        translation: "她最喜歡的科目是什麼？",
+                        options: ["My favorite subject is social studies.", "His favorite subject is social studies.", "Her favorite subject is social studies.", "What's her favorite subject?"],
+                        correct: 2,
+                        explanation: "正確！回答 'What's her favorite subject?' 要用 'Her favorite subject is...'"
+                    },
+                    {
+                        question: "What's your favorite subject?",
+                        translation: "你最喜歡的科目是什麼？",
+                        options: ["My favorite subject is computer.", "His favorite subject is computer.", "Her favorite subject is computer.", "What's your favorite subject?"],
+                        correct: 0,
+                        explanation: "正確！回答 'What's your favorite subject?' 要用 'My favorite subject is...'"
+                    },
+                    {
+                        question: "What's his favorite subject?",
+                        translation: "他最喜歡的科目是什麼？",
+                        options: ["My favorite subject is health.", "Your favorite subject is health.", "His favorite subject is health.", "What's his favorite subject?"],
+                        correct: 2,
+                        explanation: "正確！回答 'What's his favorite subject?' 要用 'His favorite subject is...'"
+                    },
+                    {
+                        question: "What's your favorite subject?",
+                        translation: "你最喜歡的科目是什麼？",
+                        options: ["Her favorite subject is nature.", "My favorite subject is nature.", "His favorite subject is nature.", "What's your favorite subject?"],
+                        correct: 1,
+                        explanation: "正確！回答 'What's your favorite subject?' 要用 'My favorite subject is...'"
+                    },
+                    {
+                        question: "What's her favorite subject?",
+                        translation: "她最喜歡的科目是什麼？",
+                        options: ["My favorite subject is reading.", "His favorite subject is reading.", "Her favorite subject is reading.", "What's her favorite subject?"],
+                        correct: 2,
+                        explanation: "正確！回答 'What's her favorite subject?' 要用 'Her favorite subject is...'"
+                    },
+                    {
+                        question: "What's your favorite subject?",
+                        translation: "你最喜歡的科目是什麼？",
+                        options: ["My favorite subject is writing.", "His favorite subject is writing.", "Her favorite subject is writing.", "What's your favorite subject?"],
+                        correct: 0,
+                        explanation: "正確！回答 'What's your favorite subject?' 要用 'My favorite subject is...'"
+                    },
+                    {
+                        question: "What's his favorite subject?",
+                        translation: "他最喜歡的科目是什麼？",
+                        options: ["My favorite subject is history.", "Your favorite subject is history.", "His favorite subject is history.", "What's his favorite subject?"],
+                        correct: 2,
+                        explanation: "正確！回答 'What's his favorite subject?' 要用 'His favorite subject is...'"
+                    },
+                    {
+                        question: "What's your favorite subject?",
+                        translation: "你最喜歡的科目是什麼？",
+                        options: ["Her favorite subject is geography.", "My favorite subject is geography.", "His favorite subject is geography.", "What's your favorite subject?"],
+                        correct: 1,
+                        explanation: "正確！回答 'What's your favorite subject?' 要用 'My favorite subject is...'"
+                    },
+                    {
+                        question: "What's her favorite subject?",
+                        translation: "她最喜歡的科目是什麼？",
+                        options: ["My favorite subject is drawing.", "His favorite subject is drawing.", "Her favorite subject is drawing.", "What's her favorite subject?"],
+                        correct: 2,
+                        explanation: "正確！回答 'What's her favorite subject?' 要用 'Her favorite subject is...'"
+                    },
+                    {
+                        question: "What's your favorite subject?",
+                        translation: "你最喜歡的科目是什麼？",
+                        options: ["My favorite subject is singing.", "His favorite subject is singing.", "Her favorite subject is singing.", "What's your favorite subject?"],
+                        correct: 0,
+                        explanation: "正確！回答 'What's your favorite subject?' 要用 'My favorite subject is...'"
+                    },
+                    {
+                        question: "What's his favorite subject?",
+                        translation: "他最喜歡的科目是什麼？",
+                        options: ["My favorite subject is dancing.", "Your favorite subject is dancing.", "His favorite subject is dancing.", "What's his favorite subject?"],
+                        correct: 2,
+                        explanation: "正確！回答 'What's his favorite subject?' 要用 'His favorite subject is...'"
+                    },
+                    {
+                        question: "What's your favorite subject?",
+                        translation: "你最喜歡的科目是什麼？",
+                        options: ["Her favorite subject is sports.", "My favorite subject is sports.", "His favorite subject is sports.", "What's your favorite subject?"],
+                        correct: 1,
+                        explanation: "正確！回答 'What's your favorite subject?' 要用 'My favorite subject is...'"
+                    },
+                    {
+                        question: "What's her favorite subject?",
+                        translation: "她最喜歡的科目是什麼？",
+                        options: ["My favorite subject is games.", "His favorite subject is games.", "Her favorite subject is games.", "What's her favorite subject?"],
+                        correct: 2,
+                        explanation: "正確！回答 'What's her favorite subject?' 要用 'Her favorite subject is...'"
+                    }
+                ]
+            }
+        };
+
+        function startUnit(unitNumber) {
+            currentUnit = unitNumber;
+            currentQuestion = 0;
+            correctAnswers = 0;
+            totalQuestions = 0;
+            answered = false;
+            answerRecord = [];
+            gameCompleted = false; // 重置遊戲完成標記
+            
+            currentQuestions = [...units[unitNumber].questions];
+            shuffleArray(currentQuestions);
+            
+            document.getElementById('home-page').style.display = 'none';
+            document.getElementById('game-page').style.display = 'block';
+            document.getElementById('next-btn').style.display = 'inline-block'; // 確保按鈕顯示
+            
+            document.getElementById('pattern-example').innerHTML = units[unitNumber].example;
+            
+            initializeAnswerRecord();
+            displayQuestion();
+        }
+
+        function goHome() {
+            document.getElementById('home-page').style.display = 'block';
+            document.getElementById('game-page').style.display = 'none';
+            loadAnswerHistory();
+            displayAnswerHistory();
+        }
+        
+        function loadAnswerHistory() {
+            const saved = localStorage.getItem('englishPracticeHistory');
+            if (saved) {
+                answerHistory = JSON.parse(saved);
+            }
+        }
+        
+        function saveAnswerHistory() {
+            localStorage.setItem('englishPracticeHistory', JSON.stringify(answerHistory));
+        }
+        
+        function addToHistory(unitNumber, correct, total) {
+            const percentage = Math.round((correct / total) * 100);
+            const now = new Date();
+            const timeString = now.toLocaleString('zh-TW', {
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            
+            const historyItem = {
+                unit: unitNumber,
+                correct: correct,
+                total: total,
+                percentage: percentage,
+                time: timeString,
+                timestamp: now.getTime()
+            };
+            
+            answerHistory.unshift(historyItem); // 新記錄放在最前面
+            
+            // 只保留最近10筆記錄
+            if (answerHistory.length > 10) {
+                answerHistory = answerHistory.slice(0, 10);
+            }
+            
+            saveAnswerHistory();
+        }
+        
+        function displayAnswerHistory() {
+            const historySection = document.getElementById('history-section');
+            const historyList = document.getElementById('history-list');
+            
+            if (answerHistory.length === 0) {
+                historySection.style.display = 'none';
+                return;
+            }
+            
+            historySection.style.display = 'block';
+            historyList.innerHTML = '';
+            
+            answerHistory.forEach(item => {
+                const historyItem = document.createElement('div');
+                historyItem.className = 'history-item';
+                
+                let percentageClass = 'percentage-poor';
+                if (item.percentage >= 90) percentageClass = 'percentage-excellent';
+                else if (item.percentage >= 80) percentageClass = 'percentage-good';
+                else if (item.percentage >= 60) percentageClass = 'percentage-fair';
+                
+                historyItem.innerHTML = `
+                    <div class="history-info">
+                        <div class="history-unit">第${item.unit}單元</div>
+                        <div class="history-score">
+                            ${item.correct}/${item.total} 題正確
+                            <div class="history-time">${item.time}</div>
+                        </div>
+                    </div>
+                    <div class="history-percentage ${percentageClass}">
+                        ${item.percentage}%
+                    </div>
+                `;
+                
+                historyList.appendChild(historyItem);
+            });
+        }
+        
+        function clearHistory() {
+            if (answerHistory.length === 0) return;
+            
+            // 使用自定義確認對話框
+            const confirmDialog = document.createElement('div');
+            confirmDialog.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.5);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 1000;
+            `;
+            
+            confirmDialog.innerHTML = `
+                <div style="background: white; padding: 30px; border-radius: 15px; text-align: center; max-width: 400px; margin: 20px;">
+                    <h3 style="color: #4a5568; margin-bottom: 15px;">🗑️ 確認清空記錄</h3>
+                    <p style="color: #718096; margin-bottom: 25px;">確定要清空所有答題記錄嗎？此操作無法復原。</p>
+                    <div style="display: flex; gap: 15px; justify-content: center;">
+                        <button onclick="this.parentElement.parentElement.parentElement.remove()" 
+                                style="background: #718096; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer;">
+                            取消
+                        </button>
+                        <button onclick="confirmClearHistory(); this.parentElement.parentElement.parentElement.remove()" 
+                                style="background: #f56565; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer;">
+                            確定清空
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(confirmDialog);
+        }
+        
+        function confirmClearHistory() {
+            answerHistory = [];
+            saveAnswerHistory();
+            displayAnswerHistory();
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function speakText(text) {
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.8;
+                speechSynthesis.speak(utterance);
+            }
+        }
+
+        function getAnswerTranslation(answer) {
+            const translations = {
+                // 第一單元翻譯
+                "Yes, I do.": "是的，我喜歡。",
+                "No, I don't.": "不，我不喜歡。",
+                "Yes, he does.": "是的，他喜歡。",
+                "No, he doesn't.": "不，他不喜歡。",
+                "Yes, she does.": "是的，她喜歡。",
+                "No, she doesn't.": "不，她不喜歡。",
+                "No, I don't. I like juice.": "不，我不喜歡。我喜歡果汁。",
+                "No, he doesn't. He likes milk.": "不，他不喜歡。他喜歡牛奶。",
+                "No, he doesn't. He likes apples.": "不，他不喜歡。他喜歡蘋果。",
+                "No, I don't. I like rice.": "不，我不喜歡。我喜歡米飯。",
+                "No, she doesn't. She likes fish.": "不，她不喜歡。她喜歡魚。",
+                "No, I don't. I like sandwiches.": "不，我不喜歡。我喜歡三明治。",
+                
+                // 問句翻譯
+                "Do you like pizza?": "你喜歡披薩嗎？",
+                "Does he like pizza?": "他喜歡披薩嗎？",
+                "Do you like coffee?": "你喜歡咖啡嗎？",
+                "Does she like tea?": "她喜歡茶嗎？",
+                "Do you like it?": "你喜歡它嗎？",
+                "Does he like it?": "他喜歡它嗎？",
+                "Does she like them?": "她喜歡它們嗎？",
+                "Do you like juice?": "你喜歡果汁嗎？",
+                "Do you like bananas?": "你喜歡香蕉嗎？",
+                "Does he like milk?": "他喜歡牛奶嗎？",
+                "Do you like cookies?": "你喜歡餅乾嗎？",
+                "Does she like rice?": "她喜歡米飯嗎？",
+                "Do you like noodles?": "你喜歡麵條嗎？",
+                "Does she like fish?": "她喜歡魚嗎？",
+                "Do you like chicken?": "你喜歡雞肉嗎？",
+                "Does he like vegetables?": "他喜歡蔬菜嗎？",
+                "Do you like bread?": "你喜歡麵包嗎？",
+                "Does she like cake?": "她喜歡蛋糕嗎？",
+                "Do you like soup?": "你喜歡湯嗎？",
+                "How many apples?": "多少顆蘋果？",
+                "How many oranges?": "多少顆橘子？",
+                "How many books?": "多少本書？",
+                "How many pencils?": "多少支鉛筆？",
+                "How many cookies?": "多少片餅乾？",
+                "How many eggs?": "多少顆蛋？",
+                "How many chairs?": "多少張椅子？",
+                "How many cups?": "多少個杯子？",
+                "How many bags?": "多少個袋子？",
+                "How many bottles?": "多少個瓶子？",
+                "How many plates?": "多少個盤子？",
+                "How many spoons?": "多少支湯匙？",
+                "How many toys?": "多少個玩具？",
+                "How many flowers?": "多少朵花？",
+                "How many keys?": "多少把鑰匙？",
+                "How many boxes?": "多少個盒子？",
+                "How many cards?": "多少張卡片？",
+                "How many balls?": "多少顆球？",
+                "How many shoes?": "多少雙鞋子？",
+                "How many hats?": "多少頂帽子？",
+                "Is it Sunday?": "今天是星期天嗎？",
+                "Is it Monday?": "今天是星期一嗎？",
+                "Is it Tuesday?": "今天是星期二嗎？",
+                "Is it Wednesday?": "今天是星期三嗎？",
+                "Is it Thursday?": "今天是星期四嗎？",
+                "Is it Friday?": "今天是星期五嗎？",
+                "Is it Saturday?": "今天是星期六嗎？",
+                "What day is it?": "今天是星期幾？",
+                "What's your favorite subject?": "你最喜歡的科目是什麼？",
+                "What's his favorite subject?": "他最喜歡的科目是什麼？",
+                "What's her favorite subject?": "她最喜歡的科目是什麼？",
+                
+                // 第二單元翻譯
+                "I need two apples.": "我需要兩顆蘋果。",
+                "He needs two apples.": "他需要兩顆蘋果。",
+                "She needs two apples.": "她需要兩顆蘋果。",
+                "I need five oranges.": "我需要五顆橘子。",
+                "You need five oranges.": "你需要五顆橘子。",
+                "She needs five oranges.": "她需要五顆橘子。",
+                "I need three books.": "我需要三本書。",
+                "He needs three books.": "他需要三本書。",
+                "She needs three books.": "她需要三本書。",
+                "I need four pencils.": "我需要四支鉛筆。",
+                "He needs four pencils.": "他需要四支鉛筆。",
+                "You need four pencils.": "你需要四支鉛筆。",
+                "She needs six cookies.": "她需要六片餅乾。",
+                "I need six cookies.": "我需要六片餅乾。",
+                "He needs six cookies.": "他需要六片餅乾。",
+                "I need eight eggs.": "我需要八顆蛋。",
+                "She needs eight eggs.": "她需要八顆蛋。",
+                "You need eight eggs.": "你需要八顆蛋。",
+                "I need ten chairs.": "我需要十張椅子。",
+                "He needs ten chairs.": "他需要十張椅子。",
+                "She needs ten chairs.": "她需要十張椅子。",
+                "I need one cup.": "我需要一個杯子。",
+                "He needs one cup.": "他需要一個杯子。",
+                "You need one cup.": "你需要一個杯子。",
+                "She needs two bags.": "她需要兩個袋子。",
+                "I need two bags.": "我需要兩個袋子。",
+                "He needs two bags.": "他需要兩個袋子。",
+                "I need three bottles.": "我需要三個瓶子。",
+                "She needs three bottles.": "她需要三個瓶子。",
+                "You need three bottles.": "你需要三個瓶子。",
+                "I need four plates.": "我需要四個盤子。",
+                "He needs four plates.": "他需要四個盤子。",
+                "She needs four plates.": "她需要四個盤子。",
+                "I need five spoons.": "我需要五支湯匙。",
+                "He needs five spoons.": "他需要五支湯匙。",
+                "You need five spoons.": "你需要五支湯匙。",
+                "She needs six toys.": "她需要六個玩具。",
+                "I need six toys.": "我需要六個玩具。",
+                "He needs six toys.": "他需要六個玩具。",
+                "I need seven flowers.": "我需要七朵花。",
+                "She needs seven flowers.": "她需要七朵花。",
+                "You need seven flowers.": "你需要七朵花。",
+                "I need one key.": "我需要一把鑰匙。",
+                "He needs one key.": "他需要一把鑰匙。",
+                "She needs one key.": "她需要一把鑰匙。",
+                "I need nine boxes.": "我需要九個盒子。",
+                "He needs nine boxes.": "他需要九個盒子。",
+                "You need nine boxes.": "你需要九個盒子。",
+                "I need ten cards.": "我需要十張卡片。",
+                "She needs ten cards.": "她需要十張卡片。",
+                "He needs ten cards.": "他需要十張卡片。",
+                "I need two balls.": "我需要兩顆球。",
+                "She needs two balls.": "她需要兩顆球。",
+                "You need two balls.": "你需要兩顆球。",
+                "I need one pair of shoes.": "我需要一雙鞋子。",
+                "He needs one pair of shoes.": "他需要一雙鞋子。",
+                "She needs one pair of shoes.": "她需要一雙鞋子。",
+                "I need three hats.": "我需要三頂帽子。",
+                "He needs three hats.": "他需要三頂帽子。",
+                "You need three hats.": "你需要三頂帽子。",
+                
+                // 第三單元翻譯
+                "It's Sunday.": "今天是星期天。",
+                "It's Monday.": "今天是星期一。",
+                "It's Tuesday.": "今天是星期二。",
+                "It's Wednesday.": "今天是星期三。",
+                "It's Thursday.": "今天是星期四。",
+                "It's Friday.": "今天是星期五。",
+                "It's Saturday.": "今天是星期六。",
+                "Yes, it is.": "是的，沒錯。",
+                "No, it isn't.": "不，不是。",
+                "No, it isn't. It's Thursday.": "不，不是。今天是星期四。",
+                "No, it isn't. It's Saturday.": "不，不是。今天是星期六。",
+                "No, it isn't. It's Sunday.": "不，不是。今天是星期天。",
+                "No, it isn't. It's Wednesday.": "不，不是。今天是星期三。",
+                
+                // 第四單元翻譯
+                "My favorite subject is English.": "我最喜歡的科目是英語。",
+                "His favorite subject is English.": "他最喜歡的科目是英語。",
+                "Her favorite subject is English.": "她最喜歡的科目是英語。",
+                "My favorite subject is math.": "我最喜歡的科目是數學。",
+                "Your favorite subject is math.": "你最喜歡的科目是數學。",
+                "His favorite subject is math.": "他最喜歡的科目是數學。",
+                "My favorite subject is science.": "我最喜歡的科目是科學。",
+                "His favorite subject is science.": "他最喜歡的科目是科學。",
+                "Her favorite subject is science.": "她最喜歡的科目是科學。",
+                "My favorite subject is art.": "我最喜歡的科目是藝術。",
+                "His favorite subject is art.": "他最喜歡的科目是藝術。",
+                "Her favorite subject is art.": "她最喜歡的科目是藝術。",
+                "My favorite subject is Chinese.": "我最喜歡的科目是中文。",
+                "His favorite subject is Chinese.": "他最喜歡的科目是中文。",
+                "Her favorite subject is Chinese.": "她最喜歡的科目是中文。",
+                "My favorite subject is PE.": "我最喜歡的科目是體育。",
+                "Your favorite subject is PE.": "你最喜歡的科目是體育。",
+                "His favorite subject is PE.": "他最喜歡的科目是體育。",
+                "My favorite subject is music.": "我最喜歡的科目是音樂。",
+                "His favorite subject is music.": "他最喜歡的科目是音樂。",
+                "Her favorite subject is music.": "她最喜歡的科目是音樂。",
+                "My favorite subject is social studies.": "我最喜歡的科目是社會。",
+                "His favorite subject is social studies.": "他最喜歡的科目是社會。",
+                "Her favorite subject is social studies.": "她最喜歡的科目是社會。",
+                "My favorite subject is computer.": "我最喜歡的科目是電腦。",
+                "His favorite subject is computer.": "他最喜歡的科目是電腦。",
+                "Her favorite subject is computer.": "她最喜歡的科目是電腦。",
+                "My favorite subject is health.": "我最喜歡的科目是健康。",
+                "Your favorite subject is health.": "你最喜歡的科目是健康。",
+                "His favorite subject is health.": "他最喜歡的科目是健康。",
+                "My favorite subject is nature.": "我最喜歡的科目是自然。",
+                "His favorite subject is nature.": "他最喜歡的科目是自然。",
+                "Her favorite subject is nature.": "她最喜歡的科目是自然。",
+                "My favorite subject is reading.": "我最喜歡的科目是閱讀。",
+                "His favorite subject is reading.": "他最喜歡的科目是閱讀。",
+                "Her favorite subject is reading.": "她最喜歡的科目是閱讀。",
+                "My favorite subject is writing.": "我最喜歡的科目是寫作。",
+                "His favorite subject is writing.": "他最喜歡的科目是寫作。",
+                "Her favorite subject is writing.": "她最喜歡的科目是寫作。",
+                "My favorite subject is history.": "我最喜歡的科目是歷史。",
+                "Your favorite subject is history.": "你最喜歡的科目是歷史。",
+                "His favorite subject is history.": "他最喜歡的科目是歷史。",
+                "My favorite subject is geography.": "我最喜歡的科目是地理。",
+                "His favorite subject is geography.": "他最喜歡的科目是地理。",
+                "Her favorite subject is geography.": "她最喜歡的科目是地理。",
+                "My favorite subject is drawing.": "我最喜歡的科目是繪畫。",
+                "His favorite subject is drawing.": "他最喜歡的科目是繪畫。",
+                "Her favorite subject is drawing.": "她最喜歡的科目是繪畫。",
+                "My favorite subject is singing.": "我最喜歡的科目是唱歌。",
+                "His favorite subject is singing.": "他最喜歡的科目是唱歌。",
+                "Her favorite subject is singing.": "她最喜歡的科目是唱歌。",
+                "My favorite subject is dancing.": "我最喜歡的科目是跳舞。",
+                "Your favorite subject is dancing.": "你最喜歡的科目是跳舞。",
+                "His favorite subject is dancing.": "他最喜歡的科目是跳舞。",
+                "My favorite subject is sports.": "我最喜歡的科目是運動。",
+                "His favorite subject is sports.": "他最喜歡的科目是運動。",
+                "Her favorite subject is sports.": "她最喜歡的科目是運動。",
+                "My favorite subject is games.": "我最喜歡的科目是遊戲。",
+                "His favorite subject is games.": "他最喜歡的科目是遊戲。",
+                "Her favorite subject is games.": "她最喜歡的科目是遊戲。"
+            };
+            
+            return translations[answer] || "";
+        }
+
+        function initializeAnswerRecord() {
+            const recordGrid = document.getElementById('record-grid');
+            recordGrid.innerHTML = '';
+            
+            for (let i = 0; i < currentQuestions.length; i++) {
+                const recordItem = document.createElement('div');
+                recordItem.className = 'record-item';
+                recordItem.textContent = i + 1;
+                recordItem.id = `record-${i}`;
+                recordGrid.appendChild(recordItem);
+                answerRecord.push(null);
+            }
+            
+            updateCurrentQuestion();
+        }
+
+        function updateAnswerRecord(questionIndex, isCorrect) {
+            answerRecord[questionIndex] = isCorrect;
+            const recordItem = document.getElementById(`record-${questionIndex}`);
+            recordItem.classList.remove('current');
+            recordItem.classList.add(isCorrect ? 'correct' : 'wrong');
+            recordItem.textContent = isCorrect ? '✓' : '✗';
+        }
+
+        function updateCurrentQuestion() {
+            // 移除之前的 current 標記
+            document.querySelectorAll('.record-item.current').forEach(item => {
+                item.classList.remove('current');
+            });
+            
+            // 標記當前題目
+            if (currentQuestion < currentQuestions.length) {
+                const currentItem = document.getElementById(`record-${currentQuestion}`);
+                if (currentItem) {
+                    currentItem.classList.add('current');
+                }
+            }
+        }
+
+        function displayQuestion() {
+            if (currentQuestion >= currentQuestions.length) {
+                showFinalScore();
+                return;
+            }
+
+            const question = currentQuestions[currentQuestion];
+            document.getElementById('question').textContent = question.question;
+            document.getElementById('question-speak').dataset.text = question.question;
+            
+            const optionsContainer = document.getElementById('options');
+            optionsContainer.innerHTML = '';
+            
+            question.options.forEach((option, index) => {
+                const container = document.createElement('div');
+                container.className = 'option-container';
+                
+                const button = document.createElement('button');
+                button.className = 'option-btn';
+                button.textContent = option;
+                button.onclick = () => selectAnswer(index);
+                
+                const speakBtn = document.createElement('button');
+                speakBtn.className = 'speak-btn';
+                speakBtn.textContent = '🔊';
+                speakBtn.onclick = () => speakText(option);
+                
+                container.appendChild(button);
+                container.appendChild(speakBtn);
+                optionsContainer.appendChild(container);
+            });
+            
+            document.getElementById('feedback').textContent = '';
+            document.getElementById('feedback').className = 'feedback';
+            document.getElementById('translation').style.display = 'none';
+            document.getElementById('next-btn').disabled = true;
+            answered = false;
+            
+            updateScore();
+            updateCurrentQuestion();
+        }
+
+        function selectAnswer(selectedIndex) {
+            if (answered) return;
+            
+            answered = true;
+            totalQuestions++;
+            
+            const question = currentQuestions[currentQuestion];
+            const buttons = document.querySelectorAll('.option-btn');
+            const feedback = document.getElementById('feedback');
+            
+            buttons.forEach((button, index) => {
+                button.onclick = null;
+                const translation = getAnswerTranslation(question.options[index]);
+                button.innerHTML = `${question.options[index]}<br><small style="font-size: 0.8rem; opacity: 0.7; font-weight: normal;">${translation}</small>`;
+                
+                if (index === question.correct) {
+                    button.classList.add('correct');
+                } else if (index === selectedIndex) {
+                    button.classList.add('wrong');
+                }
+            });
+            
+            const isCorrect = selectedIndex === question.correct;
+            
+            if (isCorrect) {
+                correctAnswers++;
+                feedback.textContent = question.explanation;
+                feedback.className = 'feedback correct';
+            } else {
+                const correctAnswerTranslation = getAnswerTranslation(question.options[question.correct]);
+                feedback.innerHTML = `錯誤！正確答案是：${question.options[question.correct]}<br><small style="font-size: 0.9rem; opacity: 0.8;">${correctAnswerTranslation}</small>`;
+                feedback.className = 'feedback wrong';
+            }
+            
+            // 更新答題記錄
+            updateAnswerRecord(currentQuestion, isCorrect);
+            
+            const translationElement = document.getElementById('translation');
+            translationElement.textContent = `📝 題目翻譯：${question.translation}`;
+            translationElement.style.display = 'block';
+            
+            updateScore();
+            document.getElementById('next-btn').disabled = false;
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            displayQuestion();
+        }
+
+        function updateScore() {
+            document.getElementById('current-question').textContent = currentQuestion + 1;
+            document.getElementById('total-questions').textContent = currentQuestions.length;
+            document.getElementById('remaining').textContent = currentQuestions.length - currentQuestion - 1;
+            
+            const accuracy = totalQuestions > 0 ? Math.round((correctAnswers / totalQuestions) * 100) : 0;
+            document.getElementById('accuracy').textContent = accuracy;
+        }
+
+        let gameCompleted = false; // 新增標記變數
+        
+        function showFinalScore() {
+            if (gameCompleted) return; // 防止重複執行
+            gameCompleted = true;
+            
+            const percentage = Math.round((correctAnswers / totalQuestions) * 100);
+            
+            // 保存答題記錄
+            addToHistory(currentUnit, correctAnswers, totalQuestions);
+            
+            document.getElementById('question').textContent = `🎉 第${currentUnit}單元完成！`;
+            document.getElementById('options').innerHTML = `
+                <div style="text-align: center; font-size: 1.3rem; color: #4a5568; grid-column: 1/-1;">
+                    <p>你的成績：${correctAnswers}/${totalQuestions} (${percentage}%)</p>
+                    <div style="display: flex; gap: 15px; justify-content: center; margin-top: 15px;">
+                        <button class="btn btn-primary" onclick="startUnit(${currentUnit})">🔄 重新練習</button>
+                        <button class="btn btn-secondary" onclick="goHome()">🏠 返回首頁</button>
+                    </div>
+                </div>
+            `;
+            document.getElementById('feedback').textContent = percentage >= 80 ? '太棒了！你已經掌握了這些句型！' : '繼續練習，你會越來越好的！';
+            document.getElementById('feedback').className = 'feedback correct';
+            document.getElementById('next-btn').style.display = 'none';
+            
+            // 隱藏答題記錄中的 current 標記
+            document.querySelectorAll('.record-item.current').forEach(item => {
+                item.classList.remove('current');
+            });
+        }
+
+        // 鍵盤事件處理
+        document.addEventListener('keydown', function(event) {
+            if (event.code === 'Space' && !document.getElementById('next-btn').disabled) {
+                event.preventDefault();
+                nextQuestion();
+            }
+        });
+        
+        // 頁面載入時顯示答題記錄
+        document.addEventListener('DOMContentLoaded', function() {
+            loadAnswerHistory();
+            displayAnswerHistory();
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'992dec25b322074c',t:'MTc2MTE4Nzc3OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
