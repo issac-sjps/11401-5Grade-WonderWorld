@@ -1419,43 +1419,54 @@
             document.getElementById('enemyTowerHp').textContent = gameState.enemyHp;
             document.getElementById('levelInfo').textContent = `第${gameState.currentLevel}關`;
 
-            // 更新召喚按鈕狀態
-            document.getElementById('summonBasic').disabled = gameState.coins < 10;
-            document.getElementById('summonStrong').disabled = gameState.coins < 20;
-            document.getElementById('summonElite').disabled = gameState.coins < 30;
+            // 更新召喚按鈕狀態 - 檢查按鈕是否可見且金幣是否足夠
+            const basicBtn = document.getElementById('summonBasic');
+            if (basicBtn && basicBtn.style.display !== 'none') {
+                basicBtn.disabled = gameState.coins < 10;
+            }
+            
+            const strongBtn = document.getElementById('summonStrong');
+            if (strongBtn && strongBtn.style.display !== 'none') {
+                strongBtn.disabled = gameState.coins < 20;
+            }
+            
+            const eliteBtn = document.getElementById('summonElite');
+            if (eliteBtn && eliteBtn.style.display !== 'none') {
+                eliteBtn.disabled = gameState.coins < 30;
+            }
             
             const legendaryBtn = document.getElementById('summonLegendary');
-            if (legendaryBtn.style.display !== 'none') {
+            if (legendaryBtn && legendaryBtn.style.display !== 'none') {
                 legendaryBtn.disabled = gameState.coins < 40;
             }
             
             const mythicalBtn = document.getElementById('summonMythical');
-            if (mythicalBtn.style.display !== 'none') {
+            if (mythicalBtn && mythicalBtn.style.display !== 'none') {
                 mythicalBtn.disabled = gameState.coins < 50;
             }
             
             const divineBtn = document.getElementById('summonDivine');
-            if (divineBtn.style.display !== 'none') {
+            if (divineBtn && divineBtn.style.display !== 'none') {
                 divineBtn.disabled = gameState.coins < 60;
             }
             
             const cosmicBtn = document.getElementById('summonCosmic');
-            if (cosmicBtn.style.display !== 'none') {
+            if (cosmicBtn && cosmicBtn.style.display !== 'none') {
                 cosmicBtn.disabled = gameState.coins < 70;
             }
             
             const eternalBtn = document.getElementById('summonEternal');
-            if (eternalBtn.style.display !== 'none') {
+            if (eternalBtn && eternalBtn.style.display !== 'none') {
                 eternalBtn.disabled = gameState.coins < 80;
             }
             
             const supremeBtn = document.getElementById('summonSupreme');
-            if (supremeBtn.style.display !== 'none') {
+            if (supremeBtn && supremeBtn.style.display !== 'none') {
                 supremeBtn.disabled = gameState.coins < 90;
             }
             
             const ultimateBtn = document.getElementById('summonUltimate');
-            if (ultimateBtn.style.display !== 'none') {
+            if (ultimateBtn && ultimateBtn.style.display !== 'none') {
                 ultimateBtn.disabled = gameState.coins < 100;
             }
         }
@@ -2579,6 +2590,9 @@
                 // 更新召喚按鈕（解鎖所有召喚物）
                 updateSummonButtons();
                 
+                // 立即更新UI以正確顯示按鈕狀態
+                updateUI();
+                
                 // 顯示成功訊息
                 input.value = '';
                 input.placeholder = '🎉 已解鎖所有關卡！';
@@ -2684,5 +2698,5 @@
             document.getElementById('gameScreen').style.display = 'none';
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'992f03f3e1a46b60',t:'MTc2MTE5OTI0MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'992f12e297bb6b6f',t:'MTc2MTE5OTg1Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
