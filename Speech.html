@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>英語語音辨識訓練</title>
+    <style>
+        body {
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100%;
+            color: #333;
+        }
+        
+        html {
+            height: 100%;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #4a5568;
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #718096;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+        
+        .page {
+            display: none;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        /* 首頁樣式 */
+        .home-actions {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+        
+        .action-btn {
+            background: #805ad5;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(128, 90, 213, 0.3);
+        }
+        
+        .action-btn:hover {
+            background: #6b46c1;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(128, 90, 213, 0.4);
+        }
+        
+        .action-btn.danger {
+            background: #f56565;
+            box-shadow: 0 4px 15px rgba(245, 101, 101, 0.3);
+        }
+        
+        .action-btn.danger:hover {
+            background: #e53e3e;
+            box-shadow: 0 6px 20px rgba(245, 101, 101, 0.4);
+        }
+        
+        .groups-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .group-card {
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            border: 3px solid #e2e8f0;
+            border-radius: 20px;
+            padding: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        
+        .group-card:hover {
+            border-color: #4299e1;
+            background: linear-gradient(135deg, #ebf8ff 0%, #bee3f8 100%);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(66, 153, 225, 0.2);
+        }
+        
+        .group-title {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #2d3748;
+            margin-bottom: 15px;
+        }
+        
+        .group-patterns {
+            font-size: 1.1rem;
+            color: #4a5568;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        .group-examples {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+        
+        .example-word {
+            background: #4299e1;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        .group-stats {
+            font-size: 0.9rem;
+            color: #718096;
+            font-style: italic;
+        }
+        
+        /* 作答頁面樣式 */
+        .quiz-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f7fafc;
+            border-radius: 15px;
+        }
+        
+        .quiz-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #4a5568;
+            margin-bottom: 10px;
+        }
+        
+        .quiz-patterns {
+            font-size: 1.1rem;
+            color: #718096;
+        }
+        
+        .training-area {
+            text-align: center;
+            margin: 40px 0;
+        }
+        
+        .current-word {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #2d3748;
+            margin: 20px 0;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .current-word.hidden {
+            color: transparent;
+            user-select: none;
+        }
+        
+        .current-word.hidden::before {
+            content: "🎵 聽發音選答案";
+            color: #718096;
+            font-size: 1.5rem;
+            font-style: italic;
+        }
+        
+        .play-btn {
+            background: #48bb78;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            margin: 20px auto;
+            display: block;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(72, 187, 120, 0.3);
+        }
+        
+        .play-btn:hover {
+            background: #38a169;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(72, 187, 120, 0.4);
+        }
+        
+        .options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin: 30px 0;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .option-btn {
+            background: #f7fafc;
+            border: 3px solid #e2e8f0;
+            padding: 15px 10px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 1.3rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            color: #4a5568;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .option-sound-btn {
+            background: #4299e1;
+            color: white;
+            border: none;
+            padding: 6px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 60px;
+        }
+        
+        .option-sound-btn:hover {
+            background: #3182ce;
+            transform: scale(1.05);
+        }
+        
+        .option-btn:hover {
+            border-color: #4299e1;
+            background: #ebf8ff;
+            transform: translateY(-2px);
+        }
+        
+        .option-btn.correct {
+            background: #c6f6d5;
+            border-color: #48bb78;
+            color: #22543d;
+        }
+        
+        .option-btn.incorrect {
+            background: #fed7d7;
+            border-color: #f56565;
+            color: #742a2a;
+        }
+        
+        .feedback {
+            margin: 20px 0;
+            font-size: 1.2rem;
+            font-weight: 600;
+            min-height: 30px;
+        }
+        
+        .feedback.correct {
+            color: #48bb78;
+        }
+        
+        .feedback.incorrect {
+            color: #f56565;
+        }
+        
+        .score {
+            background: #edf2f7;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #4a5568;
+        }
+        
+        .quiz-actions {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: #4299e1;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #3182ce;
+            transform: translateY(-2px);
+        }
+        
+        .btn-primary:disabled {
+            background: #a0aec0;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #4a5568;
+        }
+        
+        .btn-secondary:hover {
+            background: #cbd5e0;
+            transform: translateY(-2px);
+        }
+        
+        .btn-success {
+            background: #48bb78;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #38a169;
+            transform: translateY(-2px);
+        }
+        
+        /* 彈窗樣式 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80%;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .modal-title {
+            margin: 0;
+            color: #4a5568;
+            font-size: 1.5rem;
+        }
+        
+        .close-btn {
+            background: #f56565;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .current-word {
+                font-size: 2.5rem;
+            }
+            
+            .options {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .groups-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 首頁 -->
+        <div id="homePage" class="page active">
+            <h1>🎵 11401-5Grade-WonderWorld 英語語音辨識訓練</h1>
+            <p class="subtitle">選擇組別開始練習，聽發音選擇正確的拼寫組合</p>
+            
+            <div class="home-actions">
+                <button class="action-btn" id="homeRecordBtn">📊 查看記錄</button>
+                <button class="action-btn danger" id="homeClearBtn">🗑️ 清除記錄</button>
+            </div>
+            
+            <div class="groups-grid" id="groupsGrid">
+                <!-- 組別卡片將由 JavaScript 生成 -->
+            </div>
+        </div>
+        
+        <!-- 作答頁面 -->
+        <div id="quizPage" class="page">
+            <div class="quiz-header">
+                <div class="quiz-title" id="quizTitle">Group 1</div>
+                <div class="quiz-patterns" id="quizPatterns">a_e, ai, ay</div>
+            </div>
+            
+            <div class="training-area">
+                <div class="score">
+                    <span>進度: <span id="progress">0/20</span></span> | 
+                    <span>正確: <span id="correct">0</span></span> | 
+                    <span>準確率: <span id="accuracy">0%</span></span>
+                </div>
+                
+                <div class="current-word" id="currentWord">準備開始訓練</div>
+                <button class="play-btn" id="playBtn">🔊 播放發音</button>
+                
+                <div class="options" id="options"></div>
+                
+                <div class="feedback" id="feedback"></div>
+                
+                <div style="text-align: center;">
+                    <button class="btn btn-primary" id="nextBtn" disabled>下一題 (或按下空白鍵)</button>
+                </div>
+            </div>
+            
+            <div class="quiz-actions">
+                <button class="btn btn-secondary" id="backHomeBtn">🏠 回到首頁</button>
+                <button class="btn btn-success" id="restartBtn">🔄 重新開始</button>
+            </div>
+        </div>
+        
+        <!-- 答題記錄彈窗 -->
+        <div id="recordModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title">📊 答題記錄</h2>
+                    <button id="closeModal" class="close-btn">✕</button>
+                </div>
+                <div id="recordContent"></div>
+            </div>
+        </div>
+        
+        <!-- 清除記錄確認彈窗 -->
+        <div id="clearModal" class="modal">
+            <div class="modal-content" style="max-width: 400px; text-align: center;">
+                <h3 style="margin: 0 0 20px 0; color: #4a5568;">⚠️ 確認清除記錄</h3>
+                <p style="margin: 0 0 20px 0; color: #718096;">確定要清除所有答題記錄嗎？<br>此操作無法復原！</p>
+                <div style="display: flex; gap: 10px; justify-content: center;">
+                    <button id="confirmClear" class="btn" style="background: #f56565; color: white;">確定清除</button>
+                    <button id="cancelClear" class="btn btn-secondary">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const phonicsGroups = [
+            {
+                name: "a_e, ai, ay",
+                patterns: ["a_e", "ai", "ay"],
+                words: [
+                    {word: "cake", pattern: "a_e", phonetic: "keɪk", chinese: "蛋糕"},
+                    {word: "rain", pattern: "ai", phonetic: "reɪn", chinese: "雨"},
+                    {word: "play", pattern: "ay", phonetic: "pleɪ", chinese: "玩"},
+                    {word: "make", pattern: "a_e", phonetic: "meɪk", chinese: "製作"},
+                    {word: "train", pattern: "ai", phonetic: "treɪn", chinese: "火車"},
+                    {word: "day", pattern: "ay", phonetic: "deɪ", chinese: "天"},
+                    {word: "name", pattern: "a_e", phonetic: "neɪm", chinese: "名字"},
+                    {word: "mail", pattern: "ai", phonetic: "meɪl", chinese: "郵件"},
+                    {word: "way", pattern: "ay", phonetic: "weɪ", chinese: "方法"},
+                    {word: "late", pattern: "a_e", phonetic: "leɪt", chinese: "遲到"},
+                    {word: "pain", pattern: "ai", phonetic: "peɪn", chinese: "疼痛"},
+                    {word: "say", pattern: "ay", phonetic: "seɪ", chinese: "說"},
+                    {word: "gate", pattern: "a_e", phonetic: "geɪt", chinese: "門"},
+                    {word: "wait", pattern: "ai", phonetic: "weɪt", chinese: "等待"},
+                    {word: "may", pattern: "ay", phonetic: "meɪ", chinese: "可能"},
+                    {word: "safe", pattern: "a_e", phonetic: "seɪf", chinese: "安全"},
+                    {word: "main", pattern: "ai", phonetic: "meɪn", chinese: "主要"},
+                    {word: "stay", pattern: "ay", phonetic: "steɪ", chinese: "停留"},
+                    {word: "face", pattern: "a_e", phonetic: "feɪs", chinese: "臉"},
+                    {word: "tail", pattern: "ai", phonetic: "teɪl", chinese: "尾巴"}
+                ]
+            },
+            {
+                name: "e_e, ea, ee",
+                patterns: ["e_e", "ea", "ee"],
+                words: [
+                    {word: "these", pattern: "e_e", phonetic: "ðiːz", chinese: "這些"},
+                    {word: "read", pattern: "ea", phonetic: "riːd", chinese: "閱讀"},
+                    {word: "tree", pattern: "ee", phonetic: "triː", chinese: "樹"},
+                    {word: "scene", pattern: "e_e", phonetic: "siːn", chinese: "場景"},
+                    {word: "meat", pattern: "ea", phonetic: "miːt", chinese: "肉"},
+                    {word: "free", pattern: "ee", phonetic: "friː", chinese: "自由"},
+                    {word: "theme", pattern: "e_e", phonetic: "θiːm", chinese: "主題"},
+                    {word: "team", pattern: "ea", phonetic: "tiːm", chinese: "團隊"},
+                    {word: "green", pattern: "ee", phonetic: "griːn", chinese: "綠色"},
+                    {word: "complete", pattern: "e_e", phonetic: "kəmˈpliːt", chinese: "完成"},
+                    {word: "sea", pattern: "ea", phonetic: "siː", chinese: "海"},
+                    {word: "see", pattern: "ee", phonetic: "siː", chinese: "看見"},
+                    {word: "delete", pattern: "e_e", phonetic: "dɪˈliːt", chinese: "刪除"},
+                    {word: "beat", pattern: "ea", phonetic: "biːt", chinese: "打敗"},
+                    {word: "bee", pattern: "ee", phonetic: "biː", chinese: "蜜蜂"},
+                    {word: "extreme", pattern: "e_e", phonetic: "ɪkˈstriːm", chinese: "極端"},
+                    {word: "heat", pattern: "ea", phonetic: "hiːt", chinese: "熱"},
+                    {word: "three", pattern: "ee", phonetic: "θriː", chinese: "三"},
+                    {word: "compete", pattern: "e_e", phonetic: "kəmˈpiːt", chinese: "競爭"},
+                    {word: "seat", pattern: "ea", phonetic: "siːt", chinese: "座位"}
+                ]
+            },
+            {
+                name: "i_e, ie, igh",
+                patterns: ["i_e", "ie", "igh"],
+                words: [
+                    {word: "bike", pattern: "i_e", phonetic: "baɪk", chinese: "腳踏車"},
+                    {word: "pie", pattern: "ie", phonetic: "paɪ", chinese: "派"},
+                    {word: "light", pattern: "igh", phonetic: "laɪt", chinese: "光"},
+                    {word: "time", pattern: "i_e", phonetic: "taɪm", chinese: "時間"},
+                    {word: "tie", pattern: "ie", phonetic: "taɪ", chinese: "領帶"},
+                    {word: "night", pattern: "igh", phonetic: "naɪt", chinese: "夜晚"},
+                    {word: "nine", pattern: "i_e", phonetic: "naɪn", chinese: "九"},
+                    {word: "lie", pattern: "ie", phonetic: "laɪ", chinese: "說謊"},
+                    {word: "right", pattern: "igh", phonetic: "raɪt", chinese: "右邊"},
+                    {word: "fine", pattern: "i_e", phonetic: "faɪn", chinese: "好的"},
+                    {word: "die", pattern: "ie", phonetic: "daɪ", chinese: "死亡"},
+                    {word: "sight", pattern: "igh", phonetic: "saɪt", chinese: "視力"},
+                    {word: "line", pattern: "i_e", phonetic: "laɪn", chinese: "線"},
+                    {word: "cry", pattern: "ie", phonetic: "kraɪ", chinese: "哭泣"},
+                    {word: "bright", pattern: "igh", phonetic: "braɪt", chinese: "明亮"},
+                    {word: "mine", pattern: "i_e", phonetic: "maɪn", chinese: "我的"},
+                    {word: "fly", pattern: "ie", phonetic: "flaɪ", chinese: "飛"},
+                    {word: "fight", pattern: "igh", phonetic: "faɪt", chinese: "戰鬥"},
+                    {word: "side", pattern: "i_e", phonetic: "saɪd", chinese: "邊"},
+                    {word: "high", pattern: "igh", phonetic: "haɪ", chinese: "高"}
+                ]
+            },
+            {
+                name: "o_e, oa, ow",
+                patterns: ["o_e", "oa", "ow"],
+                words: [
+                    {word: "home", pattern: "o_e", phonetic: "hoʊm", chinese: "家"},
+                    {word: "boat", pattern: "oa", phonetic: "boʊt", chinese: "船"},
+                    {word: "show", pattern: "ow", phonetic: "ʃoʊ", chinese: "表演"},
+                    {word: "note", pattern: "o_e", phonetic: "noʊt", chinese: "筆記"},
+                    {word: "coat", pattern: "oa", phonetic: "koʊt", chinese: "外套"},
+                    {word: "grow", pattern: "ow", phonetic: "groʊ", chinese: "成長"},
+                    {word: "hope", pattern: "o_e", phonetic: "hoʊp", chinese: "希望"},
+                    {word: "road", pattern: "oa", phonetic: "roʊd", chinese: "道路"},
+                    {word: "know", pattern: "ow", phonetic: "noʊ", chinese: "知道"},
+                    {word: "bone", pattern: "o_e", phonetic: "boʊn", chinese: "骨頭"},
+                    {word: "soap", pattern: "oa", phonetic: "soʊp", chinese: "肥皂"},
+                    {word: "slow", pattern: "ow", phonetic: "sloʊ", chinese: "慢"},
+                    {word: "phone", pattern: "o_e", phonetic: "foʊn", chinese: "電話"},
+                    {word: "goal", pattern: "oa", phonetic: "goʊl", chinese: "目標"},
+                    {word: "flow", pattern: "ow", phonetic: "floʊ", chinese: "流動"},
+                    {word: "stone", pattern: "o_e", phonetic: "stoʊn", chinese: "石頭"},
+                    {word: "load", pattern: "oa", phonetic: "loʊd", chinese: "負載"},
+                    {word: "blow", pattern: "ow", phonetic: "bloʊ", chinese: "吹"},
+                    {word: "close", pattern: "o_e", phonetic: "kloʊs", chinese: "關閉"},
+                    {word: "toast", pattern: "oa", phonetic: "toʊst", chinese: "吐司"}
+                ]
+            },
+            {
+                name: "u_e, ue, ui",
+                patterns: ["u_e", "ue", "ui"],
+                words: [
+                    {word: "cute", pattern: "u_e", phonetic: "kjuːt", chinese: "可愛"},
+                    {word: "blue", pattern: "ue", phonetic: "bluː", chinese: "藍色"},
+                    {word: "fruit", pattern: "ui", phonetic: "fruːt", chinese: "水果"},
+                    {word: "tube", pattern: "u_e", phonetic: "tuːb", chinese: "管子"},
+                    {word: "true", pattern: "ue", phonetic: "truː", chinese: "真實"},
+                    {word: "suit", pattern: "ui", phonetic: "suːt", chinese: "西裝"},
+                    {word: "huge", pattern: "u_e", phonetic: "hjuːdʒ", chinese: "巨大"},
+                    {word: "glue", pattern: "ue", phonetic: "gluː", chinese: "膠水"},
+                    {word: "juice", pattern: "ui", phonetic: "dʒuːs", chinese: "果汁"},
+                    {word: "use", pattern: "u_e", phonetic: "juːz", chinese: "使用"},
+                    {word: "due", pattern: "ue", phonetic: "duː", chinese: "到期"},
+                    {word: "cruise", pattern: "ui", phonetic: "kruːz", chinese: "巡航"},
+                    {word: "mute", pattern: "u_e", phonetic: "mjuːt", chinese: "靜音"},
+                    {word: "clue", pattern: "ue", phonetic: "kluː", chinese: "線索"},
+                    {word: "bruise", pattern: "ui", phonetic: "bruːz", chinese: "瘀傷"},
+                    {word: "pure", pattern: "u_e", phonetic: "pjʊr", chinese: "純淨"},
+                    {word: "value", pattern: "ue", phonetic: "væljuː", chinese: "價值"},
+                    {word: "ruin", pattern: "ui", phonetic: "ruːɪn", chinese: "毀壞"},
+                    {word: "cure", pattern: "u_e", phonetic: "kjʊr", chinese: "治癒"},
+                    {word: "rescue", pattern: "ue", phonetic: "reskjuː", chinese: "救援"}
+                ]
+            }
+        ];
+
+        let currentGroup = 0;
+        let currentWord = null;
+        let correctCount = 0;
+        let totalCount = 0;
+        let answered = false;
+        let groupStats = {};
+        let sessionStartTime = new Date();
+        let usedWords = [];
+        const MAX_QUESTIONS = 20;
+
+        // DOM 元素
+        const homePage = document.getElementById('homePage');
+        const quizPage = document.getElementById('quizPage');
+        const groupsGrid = document.getElementById('groupsGrid');
+        const quizTitle = document.getElementById('quizTitle');
+        const quizPatterns = document.getElementById('quizPatterns');
+        const currentWordEl = document.getElementById('currentWord');
+        const playBtn = document.getElementById('playBtn');
+        const optionsEl = document.getElementById('options');
+        const feedbackEl = document.getElementById('feedback');
+        const nextBtn = document.getElementById('nextBtn');
+        const correctEl = document.getElementById('correct');
+        const accuracyEl = document.getElementById('accuracy');
+        const progressEl = document.getElementById('progress');
+        const backHomeBtn = document.getElementById('backHomeBtn');
+        const restartBtn = document.getElementById('restartBtn');
+        const homeRecordBtn = document.getElementById('homeRecordBtn');
+        const homeClearBtn = document.getElementById('homeClearBtn');
+        const recordModal = document.getElementById('recordModal');
+        const closeModal = document.getElementById('closeModal');
+        const recordContent = document.getElementById('recordContent');
+        const clearModal = document.getElementById('clearModal');
+        const confirmClear = document.getElementById('confirmClear');
+        const cancelClear = document.getElementById('cancelClear');
+
+        // 初始化
+        function init() {
+            createGroupCards();
+            setupEventListeners();
+        }
+
+        function createGroupCards() {
+            groupsGrid.innerHTML = '';
+            phonicsGroups.forEach((group, index) => {
+                const card = document.createElement('div');
+                card.className = 'group-card';
+                card.addEventListener('click', () => startQuiz(index));
+                
+                const stats = getGroupStats(index);
+                const statsText = stats.total > 0 ? 
+                    `已練習 ${stats.total} 題，準確率 ${stats.accuracy}%` : 
+                    '尚未練習';
+                
+                card.innerHTML = `
+                    <div class="group-title">Group ${index + 1}</div>
+                    <div class="group-patterns">${group.name}</div>
+                    <div class="group-examples">
+                        ${group.patterns.map(pattern => {
+                            const example = group.words.find(w => w.pattern === pattern);
+                            return `<span class="example-word">${example.word}</span>`;
+                        }).join('')}
+                    </div>
+                    <div class="group-stats">${statsText}</div>
+                `;
+                
+                groupsGrid.appendChild(card);
+            });
+        }
+
+        function getGroupStats(groupIndex) {
+            const group = groupStats[groupIndex];
+            if (!group || group.sessions.length === 0) {
+                return { total: 0, correct: 0, accuracy: 0 };
+            }
+            
+            const total = group.sessions.reduce((sum, s) => sum + s.total, 0);
+            const correct = group.sessions.reduce((sum, s) => sum + s.correct, 0);
+            const accuracy = total > 0 ? Math.round((correct / total) * 100) : 0;
+            
+            return { total, correct, accuracy };
+        }
+
+        function setupEventListeners() {
+            playBtn.addEventListener('click', playSound);
+            nextBtn.addEventListener('click', nextQuestion);
+            backHomeBtn.addEventListener('click', goHome);
+            restartBtn.addEventListener('click', restartQuiz);
+            homeRecordBtn.addEventListener('click', showRecord);
+            homeClearBtn.addEventListener('click', showClearConfirm);
+            closeModal.addEventListener('click', hideRecord);
+            recordModal.addEventListener('click', (e) => {
+                if (e.target === recordModal) hideRecord();
+            });
+            confirmClear.addEventListener('click', clearAllRecords);
+            cancelClear.addEventListener('click', hideClearConfirm);
+            clearModal.addEventListener('click', (e) => {
+                if (e.target === clearModal) hideClearConfirm();
+            });
+
+            // 鍵盤事件
+            document.addEventListener('keydown', (e) => {
+                if (e.code === 'Space' && !nextBtn.disabled && quizPage.classList.contains('active')) {
+                    e.preventDefault();
+                    nextQuestion();
+                }
+            });
+        }
+
+        function startQuiz(groupIndex) {
+            // 儲存當前組別的統計資料
+            if (totalCount > 0) {
+                saveGroupStats();
+            }
+            
+            currentGroup = groupIndex;
+            const group = phonicsGroups[groupIndex];
+            
+            // 更新作答頁面標題
+            quizTitle.textContent = `Group ${groupIndex + 1}`;
+            quizPatterns.textContent = group.name;
+            
+            // 重置統計和已用單字
+            correctCount = 0;
+            totalCount = 0;
+            usedWords = [];
+            sessionStartTime = new Date();
+            updateScore();
+            
+            // 切換到作答頁面
+            showPage('quiz');
+            nextQuestion();
+        }
+
+        function showPage(page) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            if (page === 'home') {
+                homePage.classList.add('active');
+                createGroupCards(); // 更新統計資料
+            } else if (page === 'quiz') {
+                quizPage.classList.add('active');
+            }
+        }
+
+        function goHome() {
+            // 儲存當前組別的統計資料
+            if (totalCount > 0 && totalCount < MAX_QUESTIONS) {
+                saveGroupStats();
+            }
+            
+            // 重置顯示元素
+            playBtn.style.display = 'block';
+            optionsEl.style.display = 'grid';
+            nextBtn.style.display = 'block';
+            
+            showPage('home');
+        }
+
+        function restartQuiz() {
+            // 儲存當前組別的統計資料
+            if (totalCount > 0 && totalCount >= MAX_QUESTIONS) {
+                // 如果是完成測驗後重新開始，不需要再次儲存
+            } else if (totalCount > 0) {
+                saveGroupStats();
+            }
+            
+            // 重置統計和已用單字
+            correctCount = 0;
+            totalCount = 0;
+            usedWords = [];
+            sessionStartTime = new Date();
+            updateScore();
+            
+            // 重置顯示元素
+            playBtn.style.display = 'block';
+            optionsEl.style.display = 'grid';
+            nextBtn.style.display = 'block';
+            
+            nextQuestion();
+        }
+
+        function saveGroupStats() {
+            if (!groupStats[currentGroup]) {
+                groupStats[currentGroup] = {
+                    groupName: phonicsGroups[currentGroup].name,
+                    sessions: []
+                };
+            }
+            
+            if (totalCount > 0) {
+                const accuracy = Math.round((correctCount / totalCount) * 100);
+                const endTime = new Date();
+                const duration = Math.round((endTime - sessionStartTime) / 1000);
+                
+                groupStats[currentGroup].sessions.push({
+                    correct: correctCount,
+                    total: totalCount,
+                    accuracy: accuracy,
+                    startTime: sessionStartTime,
+                    endTime: endTime,
+                    duration: duration
+                });
+            }
+        }
+
+        function getRandomWord() {
+            const words = phonicsGroups[currentGroup].words;
+            const availableWords = words.filter(word => !usedWords.includes(word.word));
+            
+            // 如果所有單字都用過了，重置已用單字列表
+            if (availableWords.length === 0) {
+                usedWords = [];
+                return words[Math.floor(Math.random() * words.length)];
+            }
+            
+            const selectedWord = availableWords[Math.floor(Math.random() * availableWords.length)];
+            usedWords.push(selectedWord.word);
+            return selectedWord;
+        }
+
+        function nextQuestion() {
+            // 檢查是否已達到20題
+            if (totalCount >= MAX_QUESTIONS) {
+                showQuizComplete();
+                return;
+            }
+            
+            currentWord = getRandomWord();
+            currentWordEl.textContent = currentWord.word;
+            currentWordEl.classList.add('hidden');
+            answered = false;
+            nextBtn.disabled = true;
+            feedbackEl.textContent = '';
+            feedbackEl.className = 'feedback';
+            
+            createOptions();
+        }
+
+        function createOptions() {
+            const patterns = phonicsGroups[currentGroup].patterns;
+            optionsEl.innerHTML = '';
+            
+            patterns.forEach(pattern => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                
+                const patternText = document.createElement('div');
+                patternText.textContent = pattern;
+                patternText.style.fontSize = '1.3rem';
+                patternText.style.fontWeight = '600';
+                
+                const currentGroupWords = phonicsGroups[currentGroup].words;
+                const exampleWord = currentGroupWords.find(word => word.pattern === pattern);
+                const exampleText = document.createElement('div');
+                exampleText.textContent = `ex: ${exampleWord.word}`;
+                exampleText.style.fontSize = '0.9rem';
+                exampleText.style.color = '#718096';
+                exampleText.style.fontStyle = 'italic';
+                exampleText.style.marginTop = '4px';
+                
+                const soundBtn = document.createElement('button');
+                soundBtn.className = 'option-sound-btn';
+                soundBtn.textContent = '🔊 聽音';
+                soundBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    playPatternSound(pattern);
+                });
+                
+                btn.appendChild(patternText);
+                btn.appendChild(exampleText);
+                btn.appendChild(soundBtn);
+                btn.addEventListener('click', () => selectOption(pattern, btn));
+                optionsEl.appendChild(btn);
+            });
+        }
+
+        function selectOption(selectedPattern, btnElement) {
+            if (answered) return;
+            
+            answered = true;
+            totalCount++;
+            
+            const isCorrect = selectedPattern === currentWord.pattern;
+            
+            document.querySelectorAll('.option-btn').forEach(btn => {
+                btn.classList.remove('correct', 'incorrect');
+            });
+            
+            currentWordEl.classList.remove('hidden');
+            currentWordEl.innerHTML = `${currentWord.word} <span style="font-size: 1.5rem; color: #718096; margin-left: 15px;">(${currentWord.chinese})</span>`;
+            
+            if (isCorrect) {
+                correctCount++;
+                btnElement.classList.add('correct');
+                feedbackEl.textContent = '🎉 正確！很棒！';
+                feedbackEl.className = 'feedback correct';
+            } else {
+                btnElement.classList.add('incorrect');
+                document.querySelectorAll('.option-btn').forEach(btn => {
+                    if (btn.textContent === currentWord.pattern) {
+                        btn.classList.add('correct');
+                    }
+                });
+                feedbackEl.textContent = `❌ 不對喔！正確答案是 "${currentWord.pattern}"`;
+                feedbackEl.className = 'feedback incorrect';
+            }
+            
+            updateScore();
+            nextBtn.disabled = false;
+        }
+
+        function updateScore() {
+            correctEl.textContent = correctCount;
+            progressEl.textContent = `${totalCount}/${MAX_QUESTIONS}`;
+            const accuracy = totalCount > 0 ? Math.round((correctCount / totalCount) * 100) : 0;
+            accuracyEl.textContent = accuracy + '%';
+        }
+
+        function showQuizComplete() {
+            // 自動儲存統計資料
+            saveGroupStats();
+            
+            const accuracy = Math.round((correctCount / totalCount) * 100);
+            let message = '';
+            let emoji = '';
+            
+            if (accuracy >= 90) {
+                message = '太棒了！你是發音高手！';
+                emoji = '🏆';
+            } else if (accuracy >= 80) {
+                message = '很好！繼續保持！';
+                emoji = '🎉';
+            } else if (accuracy >= 70) {
+                message = '不錯！還有進步空間！';
+                emoji = '👍';
+            } else {
+                message = '加油！多練習會更好！';
+                emoji = '💪';
+            }
+            
+            currentWordEl.innerHTML = `
+                <div style="font-size: 2rem; margin-bottom: 20px;">${emoji}</div>
+                <div style="font-size: 1.5rem; color: #4a5568; margin-bottom: 10px;">測驗完成！</div>
+                <div style="font-size: 1.2rem; color: #718096;">${message}</div>
+            `;
+            currentWordEl.classList.remove('hidden');
+            
+            feedbackEl.innerHTML = `
+                <div style="font-size: 1.1rem; color: #4a5568;">
+                    最終成績：${correctCount}/${totalCount} 題正確 (${accuracy}%)
+                </div>
+            `;
+            feedbackEl.className = 'feedback';
+            
+            // 隱藏播放按鈕和選項
+            playBtn.style.display = 'none';
+            optionsEl.style.display = 'none';
+            nextBtn.style.display = 'none';
+            
+            // 更新首頁的統計資料
+            createGroupCards();
+        }
+
+        function playSound() {
+            if (!currentWord) return;
+            
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(currentWord.word);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.8;
+                utterance.pitch = 1;
+                speechSynthesis.speak(utterance);
+            } else {
+                feedbackEl.textContent = '抱歉，您的瀏覽器不支援語音播放功能';
+                feedbackEl.className = 'feedback incorrect';
+            }
+        }
+        
+        function playPatternSound(pattern) {
+            const currentGroupWords = phonicsGroups[currentGroup].words;
+            const exampleWord = currentGroupWords.find(word => word.pattern === pattern);
+            
+            if (exampleWord && 'speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(exampleWord.word);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.7;
+                utterance.pitch = 1;
+                speechSynthesis.speak(utterance);
+            } else if (!('speechSynthesis' in window)) {
+                feedbackEl.textContent = '抱歉，您的瀏覽器不支援語音播放功能';
+                feedbackEl.className = 'feedback incorrect';
+            }
+        }
+
+        function showRecord() {
+            // 先儲存當前組別的資料
+            if (totalCount > 0 && quizPage.classList.contains('active')) {
+                saveGroupStats();
+            }
+            
+            let html = '<div style="margin-bottom: 20px; padding: 15px; background: #f7fafc; border-radius: 10px;">';
+            html += '<h3 style="margin: 0 0 10px 0; color: #4a5568;">📈 總體統計</h3>';
+            
+            let totalSessions = 0;
+            let totalQuestions = 0;
+            let totalCorrect = 0;
+            
+            Object.values(groupStats).forEach(group => {
+                totalSessions += group.sessions.length;
+                group.sessions.forEach(session => {
+                    totalQuestions += session.total;
+                    totalCorrect += session.correct;
+                });
+            });
+            
+            const overallAccuracy = totalQuestions > 0 ? Math.round((totalCorrect / totalQuestions) * 100) : 0;
+            html += `<p style="margin: 5px 0;">總練習次數: ${totalSessions} 次</p>`;
+            html += `<p style="margin: 5px 0;">總題數: ${totalQuestions} 題</p>`;
+            html += `<p style="margin: 5px 0;">總體準確率: ${overallAccuracy}%</p>`;
+            html += '</div>';
+            
+            for (let groupIndex = 0; groupIndex < phonicsGroups.length; groupIndex++) {
+                const group = groupStats[groupIndex];
+                html += `<div style="margin-bottom: 20px; padding: 15px; border: 2px solid #e2e8f0; border-radius: 10px;">`;
+                html += `<h3 style="margin: 0 0 15px 0; color: #4a5568;">Group ${groupIndex + 1}: ${phonicsGroups[groupIndex].name}</h3>`;
+                
+                if (!group || group.sessions.length === 0) {
+                    html += '<p style="color: #718096; font-style: italic;">尚未練習此組別</p>';
+                } else {
+                    group.sessions.forEach((session, index) => {
+                        const startTime = session.startTime.toLocaleString('zh-TW');
+                        const minutes = Math.floor(session.duration / 60);
+                        const seconds = session.duration % 60;
+                        const durationText = minutes > 0 ? `${minutes}分${seconds}秒` : `${seconds}秒`;
+                        
+                        html += `<div style="margin-bottom: 10px; padding: 10px; background: ${session.accuracy >= 80 ? '#c6f6d5' : session.accuracy >= 60 ? '#fef5e7' : '#fed7d7'}; border-radius: 8px;">`;
+                        html += `<div style="font-weight: 600;">第 ${index + 1} 次練習</div>`;
+                        html += `<div style="font-size: 0.9rem; color: #4a5568;">`;
+                        html += `時間: ${startTime}<br>`;
+                        html += `答對: ${session.correct}/${session.total} 題 (${session.accuracy}%)<br>`;
+                        html += `用時: ${durationText}`;
+                        html += `</div></div>`;
+                    });
+                    
+                    const groupTotal = group.sessions.reduce((sum, s) => sum + s.total, 0);
+                    const groupCorrect = group.sessions.reduce((sum, s) => sum + s.correct, 0);
+                    const groupAccuracy = groupTotal > 0 ? Math.round((groupCorrect / groupTotal) * 100) : 0;
+                    
+                    html += `<div style="margin-top: 10px; padding: 10px; background: #edf2f7; border-radius: 8px; font-weight: 600;">`;
+                    html += `本組總計: ${group.sessions.length} 次練習，${groupCorrect}/${groupTotal} 題正確 (${groupAccuracy}%)`;
+                    html += `</div>`;
+                }
+                
+                html += '</div>';
+            }
+            
+            recordContent.innerHTML = html;
+            recordModal.style.display = 'flex';
+        }
+        
+        function hideRecord() {
+            recordModal.style.display = 'none';
+        }
+        
+        function showClearConfirm() {
+            clearModal.style.display = 'flex';
+        }
+        
+        function hideClearConfirm() {
+            clearModal.style.display = 'none';
+        }
+        
+        function clearAllRecords() {
+            groupStats = {};
+            
+            if (quizPage.classList.contains('active')) {
+                correctCount = 0;
+                totalCount = 0;
+                sessionStartTime = new Date();
+                updateScore();
+            }
+            
+            hideClearConfirm();
+            
+            if (homePage.classList.contains('active')) {
+                createGroupCards();
+            }
+            
+            feedbackEl.textContent = '✅ 所有答題記錄已清除！';
+            feedbackEl.className = 'feedback correct';
+            
+            setTimeout(() => {
+                feedbackEl.textContent = '';
+                feedbackEl.className = 'feedback';
+            }, 3000);
+        }
+
+        // 啟動應用程式
+        init();
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'992e4e71b613074c',t:'MTc2MTE5MTgwNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
