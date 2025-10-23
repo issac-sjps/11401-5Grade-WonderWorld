@@ -650,18 +650,44 @@
         <div class="home-screen" id="homeScreen">
             <h1 class="game-title">🏰 英文單字塔防遊戲</h1>
             
-            <div class="rules-card">
-                <h2 class="rules-title">🎮 遊戲規則</h2>
-                <div class="rules-list">
-                    • 答對題目獲得金幣，用來召喚怪獸攻擊敵方塔樓<br>
-                    • 摧毀敵方塔樓即可獲勝，保護好自己的塔樓<br>
-                    • 共有10個關卡，難度逐漸增加<br>
-                    • 敵人生成速度：第1關10秒、第2關9秒...第10關1秒<br>
-                    • 通關後解鎖下一關，挑戰更高難度！
-                </div>
-            </div>
-
             <div class="unit-selection">
+                <div class="exam-section">
+                    <h3 class="exam-title">📊 遊戲資訊</h3>
+                    <div class="exam-units">
+                        <div class="unit-card" onclick="showGameRules()">
+                            <h3 class="unit-title">🎮 遊戲規則</h3>
+                            <div class="unit-description">
+                                了解遊戲基本玩法和獲勝條件<br>
+                                掌握關卡機制和戰鬥系統
+                            </div>
+                        </div>
+                        
+                        <div class="unit-card" onclick="showProbabilityTable()">
+                            <h3 class="unit-title">🎯 各關卡敵人出現機率表</h3>
+                            <div class="unit-description">
+                                查看每一關卡中不同敵人的出現機率分布<br>
+                                了解遊戲平衡機制和戰略規劃
+                            </div>
+                        </div>
+                        
+                        <div class="unit-card" onclick="togglePlayerEncyclopedia()">
+                            <h3 class="unit-title">⚔️ 我方召喚圖鑑</h3>
+                            <div class="unit-description">
+                                查看所有可召喚的戰鬥單位詳細資料<br>
+                                包含攻擊力、生命值、花費和解鎖條件
+                            </div>
+                        </div>
+                        
+                        <div class="unit-card" onclick="toggleEnemyEncyclopedia()">
+                            <h3 class="unit-title">👹 敵方怪獸圖鑑</h3>
+                            <div class="unit-description">
+                                了解各種敵方怪獸的能力和特性<br>
+                                制定最佳戰略來對抗不同類型的敵人
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
                 <div class="exam-section">
                     <h3 class="exam-title">📝 期中考範圍</h3>
                     <div class="exam-units">
@@ -710,7 +736,9 @@
         <div class="game-screen" id="gameScreen">
             <header class="game-header">
                 <div class="header-top">
-                    <button class="back-btn" onclick="backToHome()">🏠 返回首頁</button>
+                    <div style="display: flex; flex-direction: column; gap: 5px;">
+                        <button class="back-btn" onclick="backToHome()">🏠 返回首頁</button>
+                    </div>
                     <div class="level-selector">
                         <span style="font-weight: bold; color: #2c3e50;">關卡選擇：</span>
                         <div id="levelButtons"></div>
@@ -724,11 +752,16 @@
                             <span>📖</span>
                             <span>敵方圖鑑</span>
                         </button>
+                        <button class="encyclopedia-btn" onclick="showResetConfirmation()" style="background: linear-gradient(45deg, #e17055, #d63031);">
+                            <span>🔄</span>
+                            <span>重置進度</span>
+                        </button>
                     </div>
                 </div>
                 <div class="stats">
                     <div class="stat-item coins">
-                        <span>💰</span>
+                        <input type="text" id="secretInput" placeholder="..." style="width: 60px; padding: 2px 4px; border: 1px solid #ddd; border-radius: 4px; font-size: 10px; opacity: 0.3; transition: opacity 0.3s ease; margin-right: 8px;" onkeypress="checkSecretCode(event)" onfocus="this.style.opacity='1'" onblur="this.style.opacity='0.3'">
+                        <span onclick="triggerSecretCode()" style="cursor: pointer; transition: all 0.2s ease; user-select: none;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'" title="點擊執行秘密代碼">💰</span>
                         <span id="coins">0</span>
                     </div>
                     <div class="stat-item hp">
@@ -776,7 +809,7 @@
                         <div class="monster-info">
                             <div class="monster-header">
                                 <span>🐻</span>
-                                <span>召喚熊 (25金)</span>
+                                <span>召喚熊 (20金)</span>
                             </div>
                             <div class="monster-stats">
                                 <span>⚔️ 12</span>
@@ -788,7 +821,7 @@
                         <div class="monster-info">
                             <div class="monster-header">
                                 <span>🐉</span>
-                                <span>召喚龍 (50金)</span>
+                                <span>召喚龍 (30金)</span>
                             </div>
                             <div class="monster-stats">
                                 <span>⚔️ 20</span>
@@ -800,7 +833,7 @@
                         <div class="monster-info">
                             <div class="monster-header">
                                 <span>🦅</span>
-                                <span>召喚鷹 (80金)</span>
+                                <span>召喚鷹 (40金)</span>
                             </div>
                             <div class="monster-stats">
                                 <span>⚔️ 30</span>
@@ -812,7 +845,7 @@
                         <div class="monster-info">
                             <div class="monster-header">
                                 <span>🦄</span>
-                                <span>召喚獨角獸 (120金)</span>
+                                <span>召喚獨角獸 (50金)</span>
                             </div>
                             <div class="monster-stats">
                                 <span>⚔️ 40</span>
@@ -824,11 +857,59 @@
                         <div class="monster-info">
                             <div class="monster-header">
                                 <span>👼</span>
-                                <span>召喚天使 (200金)</span>
+                                <span>召喚天使 (60金)</span>
                             </div>
                             <div class="monster-stats">
                                 <span>⚔️ 60</span>
                                 <span>❤️ 250</span>
+                            </div>
+                        </div>
+                    </button>
+                    <button class="summon-btn" id="summonCosmic" onclick="summonMonster('cosmic')" style="display: none;">
+                        <div class="monster-info">
+                            <div class="monster-header">
+                                <span>🌟</span>
+                                <span>召喚星靈 (70金)</span>
+                            </div>
+                            <div class="monster-stats">
+                                <span>⚔️ 80</span>
+                                <span>❤️ 350</span>
+                            </div>
+                        </div>
+                    </button>
+                    <button class="summon-btn" id="summonEternal" onclick="summonMonster('eternal')" style="display: none;">
+                        <div class="monster-info">
+                            <div class="monster-header">
+                                <span>⚡</span>
+                                <span>召喚雷神 (80金)</span>
+                            </div>
+                            <div class="monster-stats">
+                                <span>⚔️ 120</span>
+                                <span>❤️ 500</span>
+                            </div>
+                        </div>
+                    </button>
+                    <button class="summon-btn" id="summonSupreme" onclick="summonMonster('supreme')" style="display: none;">
+                        <div class="monster-info">
+                            <div class="monster-header">
+                                <span>🔥</span>
+                                <span>召喚火神 (90金)</span>
+                            </div>
+                            <div class="monster-stats">
+                                <span>⚔️ 160</span>
+                                <span>❤️ 700</span>
+                            </div>
+                        </div>
+                    </button>
+                    <button class="summon-btn" id="summonUltimate" onclick="summonMonster('ultimate')" style="display: none;">
+                        <div class="monster-info">
+                            <div class="monster-header">
+                                <span>💎</span>
+                                <span>召喚鑽石王 (100金)</span>
+                            </div>
+                            <div class="monster-stats">
+                                <span>⚔️ 250</span>
+                                <span>❤️ 1000</span>
                             </div>
                         </div>
                     </button>
@@ -879,17 +960,25 @@
         // 怪獸類型
         const monsterTypes = {
             basic: { cost: 10, damage: 15, emoji: '🐺', hp: 30, attack: 8 },
-            strong: { cost: 25, damage: 25, emoji: '🐻', hp: 50, attack: 12 },
-            elite: { cost: 50, damage: 40, emoji: '🐉', hp: 80, attack: 20 },
-            legendary: { cost: 80, damage: 60, emoji: '🦅', hp: 120, attack: 30 },
-            mythical: { cost: 120, damage: 80, emoji: '🦄', hp: 180, attack: 40 },
-            divine: { cost: 200, damage: 120, emoji: '👼', hp: 250, attack: 60 },
+            strong: { cost: 20, damage: 25, emoji: '🐻', hp: 50, attack: 12 },
+            elite: { cost: 30, damage: 40, emoji: '🐉', hp: 80, attack: 20 },
+            legendary: { cost: 40, damage: 60, emoji: '🦅', hp: 120, attack: 30 },
+            mythical: { cost: 50, damage: 80, emoji: '🦄', hp: 180, attack: 40 },
+            divine: { cost: 60, damage: 120, emoji: '👼', hp: 250, attack: 60 },
+            cosmic: { cost: 70, damage: 180, emoji: '🌟', hp: 350, attack: 80 },
+            eternal: { cost: 80, damage: 250, emoji: '⚡', hp: 500, attack: 120 },
+            supreme: { cost: 90, damage: 350, emoji: '🔥', hp: 700, attack: 160 },
+            ultimate: { cost: 100, damage: 500, emoji: '💎', hp: 1000, attack: 250 },
             enemyBasic: { damage: 12, emoji: '👹', hp: 25, attack: 6 },
             enemyStrong: { damage: 20, emoji: '👺', hp: 40, attack: 10 },
             enemyElite: { damage: 35, emoji: '🧌', hp: 60, attack: 15 },
             enemyLegendary: { damage: 50, emoji: '👻', hp: 90, attack: 22 },
             enemyMythical: { damage: 70, emoji: '🐙', hp: 130, attack: 30 },
-            enemyDivine: { damage: 100, emoji: '💀', hp: 200, attack: 45 }
+            enemyDivine: { damage: 100, emoji: '💀', hp: 200, attack: 45 },
+            enemyCosmic: { damage: 140, emoji: '🌌', hp: 280, attack: 65 },
+            enemyEternal: { damage: 200, emoji: '⚫', hp: 400, attack: 90 },
+            enemySupreme: { damage: 280, emoji: '🔴', hp: 550, attack: 130 },
+            enemyUltimate: { damage: 400, emoji: '👿', hp: 800, attack: 200 }
         };
 
         // 活躍怪獸列表
@@ -1026,8 +1115,10 @@
         // 初始化遊戲
         function initGame() {
             gameState.coins = 0;
-            gameState.playerHp = 100;
-            gameState.enemyHp = 100;
+            // 每關塔樓血量增加50：第1關100，第2關150，...，第10關550
+            const baseHp = 50 + (gameState.currentLevel * 50);
+            gameState.playerHp = baseHp;
+            gameState.enemyHp = baseHp;
             gameState.gameOver = false;
             gameState.questionAnswered = false;
             
@@ -1057,28 +1148,38 @@
 
         // 更新召喚按鈕顯示
         function updateSummonButtons() {
-            const maxLevel = Math.max(gameState.currentLevel, ...gameState.completedLevels);
+            // 計算最高可用關卡：當前關卡和已完成關卡中的最大值
+            const maxLevel = Math.max(gameState.currentLevel, ...gameState.completedLevels, 0);
             
-            // 第4關解鎖鷹
-            if (maxLevel >= 4) {
-                document.getElementById('summonLegendary').style.display = 'flex';
-            } else {
-                document.getElementById('summonLegendary').style.display = 'none';
-            }
+            // 第1關：只有狼
+            document.getElementById('summonBasic').style.display = maxLevel >= 1 ? 'flex' : 'none';
             
-            // 第7關解鎖獨角獸
-            if (maxLevel >= 7) {
-                document.getElementById('summonMythical').style.display = 'flex';
-            } else {
-                document.getElementById('summonMythical').style.display = 'none';
-            }
+            // 第2關：解鎖熊
+            document.getElementById('summonStrong').style.display = maxLevel >= 2 ? 'flex' : 'none';
             
-            // 第10關解鎖天使
-            if (maxLevel >= 10) {
-                document.getElementById('summonDivine').style.display = 'flex';
-            } else {
-                document.getElementById('summonDivine').style.display = 'none';
-            }
+            // 第3關：解鎖龍
+            document.getElementById('summonElite').style.display = maxLevel >= 3 ? 'flex' : 'none';
+            
+            // 第4關：解鎖鷹
+            document.getElementById('summonLegendary').style.display = maxLevel >= 4 ? 'flex' : 'none';
+            
+            // 第5關：解鎖獨角獸
+            document.getElementById('summonMythical').style.display = maxLevel >= 5 ? 'flex' : 'none';
+            
+            // 第6關：解鎖天使
+            document.getElementById('summonDivine').style.display = maxLevel >= 6 ? 'flex' : 'none';
+            
+            // 第7關：解鎖星靈
+            document.getElementById('summonCosmic').style.display = maxLevel >= 7 ? 'flex' : 'none';
+            
+            // 第8關：解鎖雷神
+            document.getElementById('summonEternal').style.display = maxLevel >= 8 ? 'flex' : 'none';
+            
+            // 第9關：解鎖火神
+            document.getElementById('summonSupreme').style.display = maxLevel >= 9 ? 'flex' : 'none';
+            
+            // 第10關：解鎖鑽石王
+            document.getElementById('summonUltimate').style.display = maxLevel >= 10 ? 'flex' : 'none';
         }
 
         // 遊戲主循環
@@ -1092,6 +1193,69 @@
             }, 50);
         }
 
+        // 計算敵人出現機率
+        function getEnemySpawnProbabilities(level) {
+            const enemyTypes = ['enemyBasic', 'enemyStrong', 'enemyElite', 'enemyLegendary', 'enemyMythical', 'enemyDivine', 'enemyCosmic', 'enemyEternal', 'enemySupreme', 'enemyUltimate'];
+            const probabilities = [];
+            
+            // 特殊處理第10關
+            if (level === 10) {
+                // 第10關特殊機率分配
+                probabilities.push(0.467); // 基礎惡魔 46.7%
+                probabilities.push(0.207); // 強化惡魔 20.7%
+                probabilities.push(0.121); // 精英巨魔 12.1%
+                probabilities.push(0.078); // 傳說幽靈 7.8%
+                probabilities.push(0.052); // 神話海怪 5.2%
+                probabilities.push(0.035); // 終極死神 3.5%
+                probabilities.push(0.022); // 宇宙魔王 2.2%
+                probabilities.push(0.013); // 永恆暗影 1.3%
+                probabilities.push(0.003); // 至尊惡魔 0.3%
+                probabilities.push(0.003); // 終極魔神 0.3%
+                return probabilities;
+            }
+            
+            // 計算每種敵人的基礎機率
+            for (let i = 0; i < enemyTypes.length; i++) {
+                if (i + 1 <= level) {
+                    // 原始平均機率 * (10 - 第幾關數字) / 10
+                    const baseProbability = 1 / (i + 1); // 基礎機率
+                    const adjustedProbability = baseProbability * (10 - (i + 1)) / 10;
+                    probabilities.push(adjustedProbability);
+                } else {
+                    probabilities.push(0);
+                }
+            }
+            
+            // 正規化機率，使總和為1
+            const totalProbability = probabilities.reduce((sum, prob) => sum + prob, 0);
+            if (totalProbability > 0) {
+                for (let i = 0; i < probabilities.length; i++) {
+                    probabilities[i] = probabilities[i] / totalProbability;
+                }
+            }
+            
+            return probabilities;
+        }
+
+        // 根據機率選擇敵人類型
+        function selectEnemyType(level) {
+            const enemyTypes = ['enemyBasic', 'enemyStrong', 'enemyElite', 'enemyLegendary', 'enemyMythical', 'enemyDivine', 'enemyCosmic', 'enemyEternal', 'enemySupreme', 'enemyUltimate'];
+            const probabilities = getEnemySpawnProbabilities(level);
+            
+            const random = Math.random();
+            let cumulativeProbability = 0;
+            
+            for (let i = 0; i < enemyTypes.length; i++) {
+                cumulativeProbability += probabilities[i];
+                if (random <= cumulativeProbability && i + 1 <= level) {
+                    return enemyTypes[i];
+                }
+            }
+            
+            // 如果沒有選中任何類型，返回基礎類型
+            return 'enemyBasic';
+        }
+
         // 敵人自動召喚
         function startEnemySpawner() {
             if (enemySpawnInterval) clearInterval(enemySpawnInterval);
@@ -1100,26 +1264,8 @@
             enemySpawnInterval = setInterval(() => {
                 if (gameState.gameOver) return;
                 
-                // 根據關卡決定敵人類型
-                let enemyTypes = ['enemyBasic', 'enemyStrong'];
-                
-                // 第4關開始出現精英敵人
-                if (gameState.currentLevel >= 4) {
-                    enemyTypes.push('enemyElite');
-                }
-                
-                // 第7關開始出現傳說敵人
-                if (gameState.currentLevel >= 7) {
-                    enemyTypes.push('enemyLegendary');
-                }
-                
-                // 第10關開始出現神話敵人
-                if (gameState.currentLevel >= 10) {
-                    enemyTypes.push('enemyMythical', 'enemyDivine');
-                }
-                
-                const randomType = enemyTypes[Math.floor(Math.random() * enemyTypes.length)];
-                createMonster(randomType, false);
+                const selectedType = selectEnemyType(gameState.currentLevel);
+                createMonster(selectedType, false);
             }, spawnDelay);
         }
 
@@ -1257,22 +1403,42 @@
 
             // 更新召喚按鈕狀態
             document.getElementById('summonBasic').disabled = gameState.coins < 10;
-            document.getElementById('summonStrong').disabled = gameState.coins < 25;
-            document.getElementById('summonElite').disabled = gameState.coins < 50;
+            document.getElementById('summonStrong').disabled = gameState.coins < 20;
+            document.getElementById('summonElite').disabled = gameState.coins < 30;
             
             const legendaryBtn = document.getElementById('summonLegendary');
             if (legendaryBtn.style.display !== 'none') {
-                legendaryBtn.disabled = gameState.coins < 80;
+                legendaryBtn.disabled = gameState.coins < 40;
             }
             
             const mythicalBtn = document.getElementById('summonMythical');
             if (mythicalBtn.style.display !== 'none') {
-                mythicalBtn.disabled = gameState.coins < 120;
+                mythicalBtn.disabled = gameState.coins < 50;
             }
             
             const divineBtn = document.getElementById('summonDivine');
             if (divineBtn.style.display !== 'none') {
-                divineBtn.disabled = gameState.coins < 200;
+                divineBtn.disabled = gameState.coins < 60;
+            }
+            
+            const cosmicBtn = document.getElementById('summonCosmic');
+            if (cosmicBtn.style.display !== 'none') {
+                cosmicBtn.disabled = gameState.coins < 70;
+            }
+            
+            const eternalBtn = document.getElementById('summonEternal');
+            if (eternalBtn.style.display !== 'none') {
+                eternalBtn.disabled = gameState.coins < 80;
+            }
+            
+            const supremeBtn = document.getElementById('summonSupreme');
+            if (supremeBtn.style.display !== 'none') {
+                supremeBtn.disabled = gameState.coins < 90;
+            }
+            
+            const ultimateBtn = document.getElementById('summonUltimate');
+            if (ultimateBtn.style.display !== 'none') {
+                ultimateBtn.disabled = gameState.coins < 100;
             }
         }
 
@@ -1371,13 +1537,19 @@
 
             const messageDiv = document.getElementById('message');
             if (isCorrect) {
+                // 確保金幣增加並立即更新UI
+                const oldCoins = gameState.coins;
                 gameState.coins += 10;
+                console.log(`答對了！金幣從 ${oldCoins} 增加到 ${gameState.coins}`);
                 messageDiv.innerHTML = '<div class="message success">✅ 答對了！獲得 10 金幣！</div>';
+                
+                // 立即更新UI，確保金幣顯示正確
+                updateUI();
             } else {
                 messageDiv.innerHTML = '<div class="message error">❌ 答錯了！正確答案是：' + gameState.currentQuestion.options[gameState.currentQuestion.correct] + '</div>';
+                // 答錯也要更新UI，確保其他狀態正確
+                updateUI();
             }
-
-            updateUI();
             
             // 清除之前的計時器（如果存在）
             if (gameState.nextQuestionTimer) {
@@ -1493,8 +1665,10 @@
         // 重新開始遊戲
         function restartGame() {
             gameState.coins = 0;
-            gameState.playerHp = 100;
-            gameState.enemyHp = 100;
+            // 每關塔樓血量增加50：第1關100，第2關150，...，第10關550
+            const baseHp = 50 + (gameState.currentLevel * 50);
+            gameState.playerHp = baseHp;
+            gameState.enemyHp = baseHp;
             gameState.gameOver = false;
             gameState.questionAnswered = false;
 
@@ -1586,10 +1760,10 @@
                             </div>
                             <div style="margin-top: 8px; font-size: 12px; opacity: 0.9;">基礎召喚物，價格便宜，適合大量召喚</div>
                         </div>
-                        <div style="background: linear-gradient(45deg, ${maxLevel >= 1 ? '#a29bfe, #6c5ce7' : '#bdc3c7, #95a5a6'}); border-radius: 15px; padding: 15px; color: white;">
+                        <div style="background: linear-gradient(45deg, ${maxLevel >= 2 ? '#a29bfe, #6c5ce7' : '#bdc3c7, #95a5a6'}); border-radius: 15px; padding: 15px; color: white;">
                             <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
                                 <div style="font-size: 30px;">🐻</div>
-                                <div style="font-size: 16px; font-weight: bold;">戰熊 (25金) - ${maxLevel >= 1 ? '已解鎖' : '🔒 未解鎖'}</div>
+                                <div style="font-size: 16px; font-weight: bold;">戰熊 (20金) - ${maxLevel >= 2 ? '已解鎖' : '🔒 第2關解鎖'}</div>
                             </div>
                             <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;">
                                 <div style="background: rgba(255, 255, 255, 0.2); padding: 6px 8px; border-radius: 6px; text-align: center; font-size: 12px;">
@@ -1604,10 +1778,10 @@
                             </div>
                             <div style="margin-top: 8px; font-size: 12px; opacity: 0.9;">強化召喚物，攻防平衡，性價比高</div>
                         </div>
-                        <div style="background: linear-gradient(45deg, ${maxLevel >= 1 ? '#00b894, #00a085' : '#bdc3c7, #95a5a6'}); border-radius: 15px; padding: 15px; color: white;">
+                        <div style="background: linear-gradient(45deg, ${maxLevel >= 3 ? '#00b894, #00a085' : '#bdc3c7, #95a5a6'}); border-radius: 15px; padding: 15px; color: white;">
                             <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
                                 <div style="font-size: 30px;">🐉</div>
-                                <div style="font-size: 16px; font-weight: bold;">戰龍 (50金) - ${maxLevel >= 1 ? '已解鎖' : '🔒 未解鎖'}</div>
+                                <div style="font-size: 16px; font-weight: bold;">戰龍 (30金) - ${maxLevel >= 3 ? '已解鎖' : '🔒 第3關解鎖'}</div>
                             </div>
                             <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;">
                                 <div style="background: rgba(255, 255, 255, 0.2); padding: 6px 8px; border-radius: 6px; text-align: center; font-size: 12px;">
@@ -1625,7 +1799,7 @@
                         <div style="background: linear-gradient(45deg, ${maxLevel >= 4 ? '#fdcb6e, #e17055' : '#bdc3c7, #95a5a6'}); border-radius: 15px; padding: 15px; color: white;">
                             <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
                                 <div style="font-size: 30px;">🦅</div>
-                                <div style="font-size: 16px; font-weight: bold;">戰鷹 (80金) - ${maxLevel >= 4 ? '已解鎖' : '🔒 第4關解鎖'}</div>
+                                <div style="font-size: 16px; font-weight: bold;">戰鷹 (40金) - ${maxLevel >= 4 ? '已解鎖' : '🔒 第4關解鎖'}</div>
                             </div>
                             <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;">
                                 <div style="background: rgba(255, 255, 255, 0.2); padding: 6px 8px; border-radius: 6px; text-align: center; font-size: 12px;">
@@ -1640,10 +1814,10 @@
                             </div>
                             <div style="margin-top: 8px; font-size: 12px; opacity: 0.9;">傳說召喚物，飛行速度快，高機動性</div>
                         </div>
-                        <div style="background: linear-gradient(45deg, ${maxLevel >= 7 ? '#fd79a8, #e84393' : '#bdc3c7, #95a5a6'}); border-radius: 15px; padding: 15px; color: white;">
+                        <div style="background: linear-gradient(45deg, ${maxLevel >= 5 ? '#fd79a8, #e84393' : '#bdc3c7, #95a5a6'}); border-radius: 15px; padding: 15px; color: white;">
                             <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
                                 <div style="font-size: 30px;">🦄</div>
-                                <div style="font-size: 16px; font-weight: bold;">獨角獸 (120金) - ${maxLevel >= 7 ? '已解鎖' : '🔒 第7關解鎖'}</div>
+                                <div style="font-size: 16px; font-weight: bold;">獨角獸 (50金) - ${maxLevel >= 5 ? '已解鎖' : '🔒 第5關解鎖'}</div>
                             </div>
                             <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;">
                                 <div style="background: rgba(255, 255, 255, 0.2); padding: 6px 8px; border-radius: 6px; text-align: center; font-size: 12px;">
@@ -1658,10 +1832,10 @@
                             </div>
                             <div style="margin-top: 8px; font-size: 12px; opacity: 0.9;">神話召喚物，魔法攻擊，擁有治癒能力</div>
                         </div>
-                        <div style="background: linear-gradient(45deg, ${maxLevel >= 10 ? '#00cec9, #74b9ff' : '#bdc3c7, #95a5a6'}); border-radius: 15px; padding: 15px; color: white;">
+                        <div style="background: linear-gradient(45deg, ${maxLevel >= 6 ? '#00cec9, #74b9ff' : '#bdc3c7, #95a5a6'}); border-radius: 15px; padding: 15px; color: white;">
                             <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
                                 <div style="font-size: 30px;">👼</div>
-                                <div style="font-size: 16px; font-weight: bold;">天使 (200金) - ${maxLevel >= 10 ? '已解鎖' : '🔒 第10關解鎖'}</div>
+                                <div style="font-size: 16px; font-weight: bold;">天使 (60金) - ${maxLevel >= 6 ? '已解鎖' : '🔒 第6關解鎖'}</div>
                             </div>
                             <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;">
                                 <div style="background: rgba(255, 255, 255, 0.2); padding: 6px 8px; border-radius: 6px; text-align: center; font-size: 12px;">
@@ -1676,6 +1850,78 @@
                             </div>
                             <div style="margin-top: 8px; font-size: 12px; opacity: 0.9;">終極召喚物，神聖力量，無敵戰力</div>
                         </div>
+                        <div style="background: linear-gradient(45deg, ${maxLevel >= 7 ? '#ffeaa7, #fab1a0' : '#bdc3c7, #95a5a6'}); border-radius: 15px; padding: 15px; color: white;">
+                            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                                <div style="font-size: 30px;">🌟</div>
+                                <div style="font-size: 16px; font-weight: bold;">星靈 (70金) - ${maxLevel >= 7 ? '已解鎖' : '🔒 第7關解鎖'}</div>
+                            </div>
+                            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;">
+                                <div style="background: rgba(255, 255, 255, 0.2); padding: 6px 8px; border-radius: 6px; text-align: center; font-size: 12px;">
+                                    <div>⚔️ 80</div>
+                                </div>
+                                <div style="background: rgba(255, 255, 255, 0.2); padding: 6px 8px; border-radius: 6px; text-align: center; font-size: 12px;">
+                                    <div>❤️ 350</div>
+                                </div>
+                                <div style="background: rgba(255, 255, 255, 0.2); padding: 6px 8px; border-radius: 6px; text-align: center; font-size: 12px;">
+                                    <div>💥 180</div>
+                                </div>
+                            </div>
+                            <div style="margin-top: 8px; font-size: 12px; opacity: 0.9;">宇宙召喚物，星辰之力，光芒萬丈</div>
+                        </div>
+                        <div style="background: linear-gradient(45deg, ${maxLevel >= 8 ? '#81ecec, #00b894' : '#bdc3c7, #95a5a6'}); border-radius: 15px; padding: 15px; color: white;">
+                            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                                <div style="font-size: 30px;">⚡</div>
+                                <div style="font-size: 16px; font-weight: bold;">雷神 (80金) - ${maxLevel >= 8 ? '已解鎖' : '🔒 第8關解鎖'}</div>
+                            </div>
+                            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;">
+                                <div style="background: rgba(255, 255, 255, 0.2); padding: 6px 8px; border-radius: 6px; text-align: center; font-size: 12px;">
+                                    <div>⚔️ 120</div>
+                                </div>
+                                <div style="background: rgba(255, 255, 255, 0.2); padding: 6px 8px; border-radius: 6px; text-align: center; font-size: 12px;">
+                                    <div>❤️ 500</div>
+                                </div>
+                                <div style="background: rgba(255, 255, 255, 0.2); padding: 6px 8px; border-radius: 6px; text-align: center; font-size: 12px;">
+                                    <div>💥 250</div>
+                                </div>
+                            </div>
+                            <div style="margin-top: 8px; font-size: 12px; opacity: 0.9;">永恆召喚物，雷電之神，毀天滅地</div>
+                        </div>
+                        <div style="background: linear-gradient(45deg, ${maxLevel >= 9 ? '#ff7675, #e17055' : '#bdc3c7, #95a5a6'}); border-radius: 15px; padding: 15px; color: white;">
+                            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                                <div style="font-size: 30px;">🔥</div>
+                                <div style="font-size: 16px; font-weight: bold;">火神 (90金) - ${maxLevel >= 9 ? '已解鎖' : '🔒 第9關解鎖'}</div>
+                            </div>
+                            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;">
+                                <div style="background: rgba(255, 255, 255, 0.2); padding: 6px 8px; border-radius: 6px; text-align: center; font-size: 12px;">
+                                    <div>⚔️ 160</div>
+                                </div>
+                                <div style="background: rgba(255, 255, 255, 0.2); padding: 6px 8px; border-radius: 6px; text-align: center; font-size: 12px;">
+                                    <div>❤️ 700</div>
+                                </div>
+                                <div style="background: rgba(255, 255, 255, 0.2); padding: 6px 8px; border-radius: 6px; text-align: center; font-size: 12px;">
+                                    <div>💥 350</div>
+                                </div>
+                            </div>
+                            <div style="margin-top: 8px; font-size: 12px; opacity: 0.9;">至尊召喚物，烈焰之神，焚燒一切</div>
+                        </div>
+                        <div style="background: linear-gradient(45deg, ${maxLevel >= 10 ? '#fd79a8, #fdcb6e' : '#bdc3c7, #95a5a6'}); border-radius: 15px; padding: 15px; color: white;">
+                            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                                <div style="font-size: 30px;">💎</div>
+                                <div style="font-size: 16px; font-weight: bold;">鑽石王 (100金) - ${maxLevel >= 10 ? '已解鎖' : '🔒 第10關解鎖'}</div>
+                            </div>
+                            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;">
+                                <div style="background: rgba(255, 255, 255, 0.2); padding: 6px 8px; border-radius: 6px; text-align: center; font-size: 12px;">
+                                    <div>⚔️ 250</div>
+                                </div>
+                                <div style="background: rgba(255, 255, 255, 0.2); padding: 6px 8px; border-radius: 6px; text-align: center; font-size: 12px;">
+                                    <div>❤️ 1000</div>
+                                </div>
+                                <div style="background: rgba(255, 255, 255, 0.2); padding: 6px 8px; border-radius: 6px; text-align: center; font-size: 12px;">
+                                    <div>💥 500</div>
+                                </div>
+                            </div>
+                            <div style="margin-top: 8px; font-size: 12px; opacity: 0.9;">終極王者，鑽石之身，無人能敵</div>
+                        </div>
                     </div>
                     <div style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 10px; color: #2c3e50; font-size: 14px;">
                         <strong>🎯 召喚策略：</strong><br>
@@ -1685,7 +1931,7 @@
                         • 👼終極守護：最強召喚物，一夫當關萬夫莫開<br>
                         <br>
                         <strong>💡 解鎖提示：</strong><br>
-                        通關更多關卡解鎖強大召喚物，挑戰更高難度！
+                        每過一關解鎖新召喚物：第2關🐻熊，第3關🐉龍，第4關🦅鷹，第5關🦄獨角獸，第6關👼天使，第7關🌟星靈，第8關⚡雷神，第9關🔥火神，第10關💎鑽石王！
                     </div>
                 </div>
             `;
@@ -1730,7 +1976,7 @@
                         <div style="background: linear-gradient(45deg, #fd79a8, #fdcb6e); border-radius: 15px; padding: 15px; color: white;">
                             <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
                                 <div style="font-size: 30px;">👹</div>
-                                <div style="font-size: 16px; font-weight: bold;">基礎惡魔 (1-10關)</div>
+                                <div style="font-size: 16px; font-weight: bold;">基礎惡魔 (第1關開始)</div>
                             </div>
                             <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;">
                                 <div style="background: rgba(255, 255, 255, 0.2); padding: 6px 8px; border-radius: 6px; text-align: center; font-size: 12px;">
@@ -1747,7 +1993,7 @@
                         <div style="background: linear-gradient(45deg, #e17055, #d63031); border-radius: 15px; padding: 15px; color: white;">
                             <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
                                 <div style="font-size: 30px;">👺</div>
-                                <div style="font-size: 16px; font-weight: bold;">強化惡魔 (1-10關)</div>
+                                <div style="font-size: 16px; font-weight: bold;">強化惡魔 (第2關開始)</div>
                             </div>
                             <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;">
                                 <div style="background: rgba(255, 255, 255, 0.2); padding: 6px 8px; border-radius: 6px; text-align: center; font-size: 12px;">
@@ -1764,7 +2010,7 @@
                         <div style="background: linear-gradient(45deg, #6c5ce7, #a29bfe); border-radius: 15px; padding: 15px; color: white;">
                             <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
                                 <div style="font-size: 30px;">🧌</div>
-                                <div style="font-size: 16px; font-weight: bold;">精英巨魔 (4-10關)</div>
+                                <div style="font-size: 16px; font-weight: bold;">精英巨魔 (第3關開始)</div>
                             </div>
                             <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;">
                                 <div style="background: rgba(255, 255, 255, 0.2); padding: 6px 8px; border-radius: 6px; text-align: center; font-size: 12px;">
@@ -1781,7 +2027,7 @@
                         <div style="background: linear-gradient(45deg, #00b894, #00cec9); border-radius: 15px; padding: 15px; color: white;">
                             <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
                                 <div style="font-size: 30px;">👻</div>
-                                <div style="font-size: 16px; font-weight: bold;">傳說幽靈 (7-10關)</div>
+                                <div style="font-size: 16px; font-weight: bold;">傳說幽靈 (第4關開始)</div>
                             </div>
                             <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;">
                                 <div style="background: rgba(255, 255, 255, 0.2); padding: 6px 8px; border-radius: 6px; text-align: center; font-size: 12px;">
@@ -1798,7 +2044,7 @@
                         <div style="background: linear-gradient(45deg, #fd79a8, #e84393); border-radius: 15px; padding: 15px; color: white;">
                             <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
                                 <div style="font-size: 30px;">🐙</div>
-                                <div style="font-size: 16px; font-weight: bold;">神話海怪 (10關)</div>
+                                <div style="font-size: 16px; font-weight: bold;">神話海怪 (第5關開始)</div>
                             </div>
                             <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;">
                                 <div style="background: rgba(255, 255, 255, 0.2); padding: 6px 8px; border-radius: 6px; text-align: center; font-size: 12px;">
@@ -1815,7 +2061,7 @@
                         <div style="background: linear-gradient(45deg, #2d3436, #636e72); border-radius: 15px; padding: 15px; color: white;">
                             <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
                                 <div style="font-size: 30px;">💀</div>
-                                <div style="font-size: 16px; font-weight: bold;">終極死神 (10關)</div>
+                                <div style="font-size: 16px; font-weight: bold;">終極死神 (第6關開始)</div>
                             </div>
                             <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;">
                                 <div style="background: rgba(255, 255, 255, 0.2); padding: 6px 8px; border-radius: 6px; text-align: center; font-size: 12px;">
@@ -1829,13 +2075,82 @@
                                 </div>
                             </div>
                         </div>
+                        <div style="background: linear-gradient(45deg, #74b9ff, #0984e3); border-radius: 15px; padding: 15px; color: white;">
+                            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                                <div style="font-size: 30px;">🌌</div>
+                                <div style="font-size: 16px; font-weight: bold;">宇宙魔王 (第7關開始)</div>
+                            </div>
+                            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;">
+                                <div style="background: rgba(255, 255, 255, 0.2); padding: 6px 8px; border-radius: 6px; text-align: center; font-size: 12px;">
+                                    <div>⚔️ 65</div>
+                                </div>
+                                <div style="background: rgba(255, 255, 255, 0.2); padding: 6px 8px; border-radius: 6px; text-align: center; font-size: 12px;">
+                                    <div>❤️ 280</div>
+                                </div>
+                                <div style="background: rgba(255, 255, 255, 0.2); padding: 6px 8px; border-radius: 6px; text-align: center; font-size: 12px;">
+                                    <div>💥 140</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="background: linear-gradient(45deg, #a29bfe, #6c5ce7); border-radius: 15px; padding: 15px; color: white;">
+                            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                                <div style="font-size: 30px;">⚫</div>
+                                <div style="font-size: 16px; font-weight: bold;">永恆暗影 (第8關開始)</div>
+                            </div>
+                            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;">
+                                <div style="background: rgba(255, 255, 255, 0.2); padding: 6px 8px; border-radius: 6px; text-align: center; font-size: 12px;">
+                                    <div>⚔️ 90</div>
+                                </div>
+                                <div style="background: rgba(255, 255, 255, 0.2); padding: 6px 8px; border-radius: 6px; text-align: center; font-size: 12px;">
+                                    <div>❤️ 400</div>
+                                </div>
+                                <div style="background: rgba(255, 255, 255, 0.2); padding: 6px 8px; border-radius: 6px; text-align: center; font-size: 12px;">
+                                    <div>💥 200</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="background: linear-gradient(45deg, #e17055, #d63031); border-radius: 15px; padding: 15px; color: white;">
+                            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                                <div style="font-size: 30px;">🔴</div>
+                                <div style="font-size: 16px; font-weight: bold;">至尊惡魔 (第9關開始)</div>
+                            </div>
+                            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;">
+                                <div style="background: rgba(255, 255, 255, 0.2); padding: 6px 8px; border-radius: 6px; text-align: center; font-size: 12px;">
+                                    <div>⚔️ 130</div>
+                                </div>
+                                <div style="background: rgba(255, 255, 255, 0.2); padding: 6px 8px; border-radius: 6px; text-align: center; font-size: 12px;">
+                                    <div>❤️ 550</div>
+                                </div>
+                                <div style="background: rgba(255, 255, 255, 0.2); padding: 6px 8px; border-radius: 6px; text-align: center; font-size: 12px;">
+                                    <div>💥 280</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="background: linear-gradient(45deg, #2d3436, #636e72); border-radius: 15px; padding: 15px; color: white;">
+                            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                                <div style="font-size: 30px;">👿</div>
+                                <div style="font-size: 16px; font-weight: bold;">終極魔神 (第10關開始)</div>
+                            </div>
+                            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;">
+                                <div style="background: rgba(255, 255, 255, 0.2); padding: 6px 8px; border-radius: 6px; text-align: center; font-size: 12px;">
+                                    <div>⚔️ 200</div>
+                                </div>
+                                <div style="background: rgba(255, 255, 255, 0.2); padding: 6px 8px; border-radius: 6px; text-align: center; font-size: 12px;">
+                                    <div>❤️ 800</div>
+                                </div>
+                                <div style="background: rgba(255, 255, 255, 0.2); padding: 6px 8px; border-radius: 6px; text-align: center; font-size: 12px;">
+                                    <div>💥 400</div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 10px; color: #2c3e50; font-size: 14px;">
                         <strong>💡 戰術提示：</strong><br>
-                        • 第4關解鎖🦅鷹，第7關解鎖🦄獨角獸，第10關解鎖👼天使<br>
-                        • 第4關開始出現🧌巨魔，第7關出現👻幽靈，第10關出現🐙海怪和💀死神<br>
-                        • 關卡越高敵人生成越快，合理分配金幣很重要<br>
-                        • 高級召喚物雖然昂貴但能有效對抗強敵
+                        • 每過一關解鎖新敵人：第2關👺惡魔，第3關🧌巨魔，第4關👻幽靈，第5關🐙海怪，第6關💀死神，第7關🌌魔王，第8關⚫暗影，第9關🔴惡魔，第10關💀魔神<br>
+                        • 關卡越高敵人生成越快，從第1關10秒到第10關1秒<br>
+                        • 合理分配金幣很重要，高級召喚物雖然昂貴但能有效對抗強敵<br>
+                        • 建議前期多召喚🐺狼群，後期搭配高級召喚物<br>
+                        • 第7-10關難度極高，需要策略性使用高階召喚物才能獲勝
                     </div>
                 </div>
             `;
@@ -1847,6 +2162,356 @@
                     toggleEnemyEncyclopedia();
                 }
             });
+        }
+
+        // 顯示遊戲規則
+        function showGameRules() {
+            const existingModal = document.querySelector('.game-rules-modal');
+            if (existingModal) {
+                existingModal.remove();
+                return;
+            }
+
+            const modal = document.createElement('div');
+            modal.className = 'game-rules-modal';
+            modal.style.position = 'fixed';
+            modal.style.top = '0';
+            modal.style.left = '0';
+            modal.style.width = '100%';
+            modal.style.height = '100%';
+            modal.style.background = 'rgba(0, 0, 0, 0.8)';
+            modal.style.display = 'flex';
+            modal.style.alignItems = 'center';
+            modal.style.justifyContent = 'center';
+            modal.style.zIndex = '1000';
+            
+            modal.innerHTML = `
+                <div style="background: white; padding: 30px; border-radius: 20px; max-width: 600px; width: 90%; max-height: 80%; overflow-y: auto; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid #f1f2f6; padding-bottom: 15px;">
+                        <h2 style="color: #2c3e50; font-size: 24px; font-weight: bold; margin: 0;">🎮 遊戲規則</h2>
+                        <button onclick="showGameRules()" style="background: linear-gradient(45deg, #e17055, #d63031); color: white; border: none; padding: 8px 12px; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer;">✕</button>
+                    </div>
+                    
+                    <div style="color: #2c3e50; line-height: 1.8; font-size: 16px;">
+                        <div style="background: linear-gradient(45deg, #74b9ff, #0984e3); color: white; padding: 20px; border-radius: 15px; margin-bottom: 20px;">
+                            <h3 style="margin: 0 0 15px 0; font-size: 18px;">🏰 基本玩法</h3>
+                            <div style="font-size: 14px; line-height: 1.6;">
+                                • 答對英文題目獲得金幣💰<br>
+                                • 使用金幣召喚戰鬥單位⚔️<br>
+                                • 摧毀敵方塔樓即可獲勝🏆<br>
+                                • 保護好自己的塔樓❤️
+                            </div>
+                        </div>
+                        
+                        <div style="background: linear-gradient(45deg, #00b894, #00cec9); color: white; padding: 20px; border-radius: 15px; margin-bottom: 20px;">
+                            <h3 style="margin: 0 0 15px 0; font-size: 18px;">🎯 關卡系統</h3>
+                            <div style="font-size: 14px; line-height: 1.6;">
+                                • 共有10個關卡，難度逐漸增加📈<br>
+                                • 通關後解鎖下一關🔓<br>
+                                • 每關解鎖新的召喚單位🆕<br>
+                                • 塔樓血量每關增加50：第1關100→第10關550❤️<br>
+                                • 挑戰更高難度獲得成就感🌟
+                            </div>
+                        </div>
+                        
+                        <div style="background: linear-gradient(45deg, #fd79a8, #e84393); color: white; padding: 20px; border-radius: 15px; margin-bottom: 20px;">
+                            <h3 style="margin: 0 0 15px 0; font-size: 18px;">⚡ 敵人生成速度</h3>
+                            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; font-size: 12px;">
+                                <div style="background: rgba(255, 255, 255, 0.2); padding: 8px; border-radius: 6px; text-align: center;">第1關：10秒</div>
+                                <div style="background: rgba(255, 255, 255, 0.2); padding: 8px; border-radius: 6px; text-align: center;">第2關：9秒</div>
+                                <div style="background: rgba(255, 255, 255, 0.2); padding: 8px; border-radius: 6px; text-align: center;">第3關：8秒</div>
+                                <div style="background: rgba(255, 255, 255, 0.2); padding: 8px; border-radius: 6px; text-align: center;">第4關：7秒</div>
+                                <div style="background: rgba(255, 255, 255, 0.2); padding: 8px; border-radius: 6px; text-align: center;">第5關：6秒</div>
+                                <div style="background: rgba(255, 255, 255, 0.2); padding: 8px; border-radius: 6px; text-align: center;">第6關：5秒</div>
+                                <div style="background: rgba(255, 255, 255, 0.2); padding: 8px; border-radius: 6px; text-align: center;">第7關：4秒</div>
+                                <div style="background: rgba(255, 255, 255, 0.2); padding: 8px; border-radius: 6px; text-align: center;">第8關：3秒</div>
+                                <div style="background: rgba(255, 255, 255, 0.2); padding: 8px; border-radius: 6px; text-align: center;">第9關：2秒</div>
+                                <div style="background: rgba(255, 255, 255, 0.2); padding: 8px; border-radius: 6px; text-align: center;">第10關：1秒</div>
+                            </div>
+                        </div>
+                        
+                        <div style="background: linear-gradient(45deg, #a29bfe, #6c5ce7); color: white; padding: 20px; border-radius: 15px; margin-bottom: 20px;">
+                            <h3 style="margin: 0 0 15px 0; font-size: 18px;">💡 戰略提示</h3>
+                            <div style="font-size: 14px; line-height: 1.6;">
+                                • 前期多召喚🐺狼群，性價比高<br>
+                                • 中期使用🐻🐉混合編隊<br>
+                                • 後期必須依靠🦅🦄精英單位<br>
+                                • 第10關需要👼💎最強召喚物<br>
+                                • 合理分配金幣是勝利關鍵💰
+                            </div>
+                        </div>
+                        
+                        <div style="background: #f8f9fa; padding: 15px; border-radius: 10px; color: #2c3e50; font-size: 14px; text-align: center;">
+                            <strong>🎯 記住：答對題目是一切的基礎！</strong><br>
+                            多練習英文單字，提高答題正確率，才能獲得足夠金幣召喚強力單位！
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.body.appendChild(modal);
+
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    showGameRules();
+                }
+            });
+        }
+
+        // 顯示機率表格
+        function showProbabilityTable() {
+            const existingModal = document.querySelector('.probability-modal');
+            if (existingModal) {
+                existingModal.remove();
+                return;
+            }
+
+            const modal = document.createElement('div');
+            modal.className = 'probability-modal';
+            modal.style.position = 'fixed';
+            modal.style.top = '0';
+            modal.style.left = '0';
+            modal.style.width = '100%';
+            modal.style.height = '100%';
+            modal.style.background = 'rgba(0, 0, 0, 0.8)';
+            modal.style.display = 'flex';
+            modal.style.alignItems = 'center';
+            modal.style.justifyContent = 'center';
+            modal.style.zIndex = '1000';
+            
+            // 生成機率表格
+            let tableHTML = `
+                <div style="background: white; padding: 30px; border-radius: 20px; max-width: 900px; width: 95%; max-height: 90%; overflow-y: auto; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid #f1f2f6; padding-bottom: 15px;">
+                        <h2 style="color: #2c3e50; font-size: 24px; font-weight: bold; margin: 0;">🎯 各關卡敵人出現機率表</h2>
+                        <button onclick="showProbabilityTable()" style="background: linear-gradient(45deg, #e17055, #d63031); color: white; border: none; padding: 8px 12px; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer;">✕</button>
+                    </div>
+                    
+                    <div style="overflow-x: auto;">
+                        <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
+                            <thead>
+                                <tr style="background: linear-gradient(45deg, #74b9ff, #0984e3); color: white;">
+                                    <th style="padding: 10px; border: 1px solid #ddd; text-align: center; font-weight: bold;">關卡</th>
+                                    <th style="padding: 10px; border: 1px solid #ddd; text-align: center; font-weight: bold;">👹<br>基礎惡魔</th>
+                                    <th style="padding: 10px; border: 1px solid #ddd; text-align: center; font-weight: bold;">👺<br>強化惡魔</th>
+                                    <th style="padding: 10px; border: 1px solid #ddd; text-align: center; font-weight: bold;">🧌<br>精英巨魔</th>
+                                    <th style="padding: 10px; border: 1px solid #ddd; text-align: center; font-weight: bold;">👻<br>傳說幽靈</th>
+                                    <th style="padding: 10px; border: 1px solid #ddd; text-align: center; font-weight: bold;">🐙<br>神話海怪</th>
+                                    <th style="padding: 10px; border: 1px solid #ddd; text-align: center; font-weight: bold;">💀<br>終極死神</th>
+                                    <th style="padding: 10px; border: 1px solid #ddd; text-align: center; font-weight: bold;">🌌<br>宇宙魔王</th>
+                                    <th style="padding: 10px; border: 1px solid #ddd; text-align: center; font-weight: bold;">⚫<br>永恆暗影</th>
+                                    <th style="padding: 10px; border: 1px solid #ddd; text-align: center; font-weight: bold;">🔴<br>至尊惡魔</th>
+                                    <th style="padding: 10px; border: 1px solid #ddd; text-align: center; font-weight: bold;">👿<br>終極魔神</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+            `;
+            
+            // 計算每關的機率
+            for (let level = 1; level <= 10; level++) {
+                const probabilities = getEnemySpawnProbabilities(level);
+                tableHTML += `<tr style="background: ${level % 2 === 0 ? '#f8f9fa' : 'white'};">`;
+                tableHTML += `<td style="padding: 8px; border: 1px solid #ddd; text-align: center; font-weight: bold; background: linear-gradient(45deg, #fd79a8, #fdcb6e); color: white;">第${level}關</td>`;
+                
+                for (let i = 0; i < 10; i++) {
+                    const percentage = (probabilities[i] * 100).toFixed(1);
+                    const isAvailable = i + 1 <= level;
+                    const cellStyle = isAvailable ? 
+                        `padding: 8px; border: 1px solid #ddd; text-align: center; background: ${percentage > 0 ? 'linear-gradient(45deg, #00b894, #00cec9)' : '#ecf0f1'}; color: ${percentage > 0 ? 'white' : '#7f8c8d'}; font-weight: bold;` :
+                        `padding: 8px; border: 1px solid #ddd; text-align: center; background: #bdc3c7; color: #7f8c8d;`;
+                    
+                    tableHTML += `<td style="${cellStyle}">`;
+                    if (isAvailable && percentage > 0) {
+                        tableHTML += `${percentage}%`;
+                    } else if (isAvailable) {
+                        tableHTML += `0%`;
+                    } else {
+                        tableHTML += `🔒`;
+                    }
+                    tableHTML += `</td>`;
+                }
+                tableHTML += `</tr>`;
+            }
+            
+            tableHTML += `
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div style="margin-top: 20px; padding: 20px; background: #f8f9fa; border-radius: 10px; color: #2c3e50; font-size: 14px; line-height: 1.6;">
+                        <h3 style="color: #2c3e50; margin-top: 0;">📊 機率計算說明：</h3>
+                        <p><strong>🔢 計算公式：</strong> 原始平均機率 × (10 - 敵人等級) ÷ 10，然後正規化</p>
+                        <p><strong>🎯 設計理念：</strong> 關卡越高，低等敵人出現機率越低，高等敵人出現機率越高</p>
+                        <p><strong>⚖️ 平衡機制：</strong> 確保每關都有適當的挑戰性，同時保持遊戲的可玩性</p>
+                        
+                        <h3 style="color: #2c3e50; margin-bottom: 10px;">💡 戰略建議：</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px;">
+                            <div style="background: linear-gradient(45deg, #74b9ff, #0984e3); color: white; padding: 10px; border-radius: 8px; font-size: 12px;">
+                                <strong>第1-3關：</strong><br>
+                                主要面對基礎敵人<br>
+                                建議多用🐺狼群戰術
+                            </div>
+                            <div style="background: linear-gradient(45deg, #fd79a8, #e84393); color: white; padding: 10px; border-radius: 8px; font-size: 12px;">
+                                <strong>第4-6關：</strong><br>
+                                中等敵人增多<br>
+                                需要🐻🐉混合編隊
+                            </div>
+                            <div style="background: linear-gradient(45deg, #00b894, #00cec9); color: white; padding: 10px; border-radius: 8px; font-size: 12px;">
+                                <strong>第7-9關：</strong><br>
+                                高等敵人頻繁出現<br>
+                                必須使用🦅🦄精英單位
+                            </div>
+                            <div style="background: linear-gradient(45deg, #e17055, #d63031); color: white; padding: 10px; border-radius: 8px; font-size: 12px;">
+                                <strong>第10關：</strong><br>
+                                終極挑戰關卡<br>
+                                需要👼💎最強召喚物
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            modal.innerHTML = tableHTML;
+            document.body.appendChild(modal);
+
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    showProbabilityTable();
+                }
+            });
+        }
+
+        // 顯示重置確認對話框
+        function showResetConfirmation() {
+            const existingModal = document.querySelector('.reset-confirmation-modal');
+            if (existingModal) {
+                existingModal.remove();
+                return;
+            }
+
+            const modal = document.createElement('div');
+            modal.className = 'reset-confirmation-modal';
+            modal.style.position = 'fixed';
+            modal.style.top = '0';
+            modal.style.left = '0';
+            modal.style.width = '100%';
+            modal.style.height = '100%';
+            modal.style.background = 'rgba(0, 0, 0, 0.8)';
+            modal.style.display = 'flex';
+            modal.style.alignItems = 'center';
+            modal.style.justifyContent = 'center';
+            modal.style.zIndex = '1000';
+            
+            modal.innerHTML = `
+                <div style="background: white; padding: 40px; border-radius: 20px; max-width: 500px; width: 90%; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); text-align: center;">
+                    <div style="font-size: 60px; margin-bottom: 20px;">⚠️</div>
+                    <h2 style="color: #2c3e50; font-size: 24px; font-weight: bold; margin: 0 0 20px 0;">重置遊戲進度</h2>
+                    <p style="color: #7f8c8d; font-size: 16px; line-height: 1.6; margin-bottom: 30px;">
+                        確定要重置所有遊戲進度嗎？<br>
+                        <strong style="color: #e74c3c;">此操作將會：</strong><br>
+                        • 清除所有已通關的關卡記錄<br>
+                        • 回到第1關重新開始<br>
+                        • 重新鎖定所有召喚物<br>
+                        <br>
+                        <strong style="color: #e74c3c;">此操作無法復原！</strong>
+                    </p>
+                    <div style="display: flex; gap: 15px; justify-content: center;">
+                        <button onclick="resetGameProgress()" style="background: linear-gradient(45deg, #e17055, #d63031); color: white; border: none; padding: 12px 25px; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; transition: all 0.3s ease;">
+                            🔄 確定重置
+                        </button>
+                        <button onclick="showResetConfirmation()" style="background: linear-gradient(45deg, #74b9ff, #0984e3); color: white; border: none; padding: 12px 25px; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; transition: all 0.3s ease;">
+                            ❌ 取消
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            document.body.appendChild(modal);
+
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    showResetConfirmation();
+                }
+            });
+        }
+
+        // 重置遊戲進度
+        function resetGameProgress() {
+            // 重置遊戲狀態
+            gameState.completedLevels = [];
+            gameState.currentLevel = 1;
+            
+            // 關閉確認對話框
+            const modal = document.querySelector('.reset-confirmation-modal');
+            if (modal) modal.remove();
+            
+            // 更新關卡按鈕顯示
+            initLevelButtons();
+            
+            // 更新召喚按鈕（重新鎖定高級召喚物）
+            updateSummonButtons();
+            
+            // 重新開始遊戲
+            restartGame();
+            
+            // 顯示重置成功訊息
+            const messageDiv = document.getElementById('message');
+            messageDiv.innerHTML = '<div class="message success">🔄 遊戲進度已重置！回到第1關重新開始！</div>';
+            
+            // 3秒後清除訊息
+            setTimeout(() => {
+                messageDiv.innerHTML = '';
+            }, 3000);
+        }
+
+        // 秘密代碼檢查功能
+        function checkSecretCode(event) {
+            if (event.key === 'Enter') {
+                triggerSecretCode();
+            }
+        }
+
+        // 觸發秘密代碼功能（可通過Enter鍵或點擊金幣圖示觸發）
+        function triggerSecretCode() {
+            const input = document.getElementById('secretInput');
+            const code = input.value.toLowerCase().trim();
+            
+            if (code === 'sjps') {
+                // 解鎖所有關卡
+                gameState.completedLevels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+                
+                // 更新關卡按鈕顯示
+                initLevelButtons();
+                
+                // 更新召喚按鈕（解鎖所有召喚物）
+                updateSummonButtons();
+                
+                // 顯示成功訊息
+                input.value = '';
+                input.placeholder = '🎉 已解鎖所有關卡！';
+                input.style.background = 'linear-gradient(45deg, #00b894, #00cec9)';
+                input.style.color = 'white';
+                
+                // 3秒後恢復原狀
+                setTimeout(() => {
+                    input.placeholder = '...';
+                    input.style.background = '';
+                    input.style.color = '';
+                }, 3000);
+            } else if (code !== '') {
+                // 錯誤代碼
+                input.value = '';
+                input.placeholder = '❌ 代碼錯誤';
+                input.style.background = 'linear-gradient(45deg, #e17055, #d63031)';
+                input.style.color = 'white';
+                
+                // 2秒後恢復原狀
+                setTimeout(() => {
+                    input.placeholder = '...';
+                    input.style.background = '';
+                    input.style.color = '';
+                }, 2000);
+            }
         }
 
         // 鍵盤事件監聽
@@ -1864,5 +2529,5 @@
             document.getElementById('gameScreen').style.display = 'none';
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'992ea20dc6418273',t:'MTc2MTE5NTIzMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'992ef1f070d18f0c',t:'MTc2MTE5ODUwMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
