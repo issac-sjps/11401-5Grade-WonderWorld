@@ -51,27 +51,91 @@
 
         .link-button {
             display: inline-block;
-            padding: 1rem 2rem;
-            background: linear-gradient(45deg, #4facfe 0%, #00f2fe 100%);
-            color: white;
+            padding: 0;
             text-decoration: none;
-            border-radius: 50px;
+            border-radius: 20px;
             font-size: 1.1rem;
             font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 8px 15px rgba(79, 172, 254, 0.3);
-            min-width: 200px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            min-width: 220px;
             text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .button-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            padding: 1.25rem 2rem;
+            position: relative;
+            z-index: 2;
+            color: white;
+        }
+
+        .button-icon {
+            font-size: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .button-text {
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .test-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .vocab-button {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            box-shadow: 0 10px 30px rgba(240, 147, 251, 0.4);
+        }
+
+        .sentence-button {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            box-shadow: 0 10px 30px rgba(79, 172, 254, 0.4);
+        }
+
+        .link-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
         }
 
         .link-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 25px rgba(79, 172, 254, 0.4);
-            background: linear-gradient(45deg, #43a3f5 0%, #00e8f5 100%);
+            transform: translateY(-5px) scale(1.02);
+        }
+
+        .test-button:hover {
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.6);
+        }
+
+        .vocab-button:hover {
+            box-shadow: 0 15px 40px rgba(240, 147, 251, 0.6);
+        }
+
+        .sentence-button:hover {
+            box-shadow: 0 15px 40px rgba(79, 172, 254, 0.6);
+        }
+
+        .link-button:hover::before {
+            left: 100%;
+        }
+
+        .link-button:hover .button-icon {
+            transform: scale(1.2) rotate(5deg);
         }
 
         .link-button:active {
-            transform: translateY(-1px);
+            transform: translateY(-2px) scale(0.98);
         }
 
         .subtitle {
@@ -93,7 +157,15 @@
             
             .link-button {
                 font-size: 1rem;
-                padding: 0.875rem 1.5rem;
+                min-width: 280px;
+            }
+            
+            .button-content {
+                padding: 1rem 1.5rem;
+            }
+            
+            .links-container {
+                gap: 1rem;
             }
         }
 
@@ -101,6 +173,8 @@
             .links-container {
                 flex-direction: row;
                 justify-content: center;
+                flex-wrap: wrap;
+                gap: 1.5rem;
             }
         }
     </style>
@@ -114,17 +188,33 @@
             <a href="https://issac-sjps.github.io/11401-5Grade-WonderWorld/mid-final-test" 
                target="_blank" 
                rel="noopener noreferrer" 
-               class="link-button">
-                📝 期中期末測驗
+               class="link-button test-button">
+                <div class="button-content">
+                    <span class="button-icon">📝</span>
+                    <span class="button-text">期中期末測驗</span>
+                </div>
             </a>
             
             <a href="https://issac-sjps.github.io/11401-5Grade-WonderWorld/Vocabulary" 
                target="_blank" 
                rel="noopener noreferrer" 
-               class="link-button">
-                📚 單字學習
+               class="link-button vocab-button">
+                <div class="button-content">
+                    <span class="button-icon">📚</span>
+                    <span class="button-text">單字學習</span>
+                </div>
+            </a>
+            
+            <a href="https://issac-sjps.github.io/11401-5Grade-WonderWorld/SentencePractice" 
+               target="_blank" 
+               rel="noopener noreferrer" 
+               class="link-button sentence-button">
+                <div class="button-content">
+                    <span class="button-icon">✍️</span>
+                    <span class="button-text">句子練習</span>
+                </div>
             </a>
         </div>
     </main>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9926bfdec099074c',t:'MTc2MTExMjU2Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'992df17a82e4074c',t:'MTc2MTE4Nzk5OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
