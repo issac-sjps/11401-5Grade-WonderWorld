@@ -837,6 +837,10 @@
 
             <section class="question-panel">
                 <div class="question" id="question">
+                    <div class="question-coins" style="background: linear-gradient(45deg, #f39c12, #e67e22); color: white; padding: 8px 15px; border-radius: 20px; font-size: 16px; font-weight: bold; box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2); display: flex; align-items: center; gap: 8px;">
+                        <span>💰</span>
+                        <span id="questionCoins">0</span>
+                    </div>
                     <span id="questionText">載入題目中...</span>
                     <button class="pronunciation-btn" id="questionPronunciation" onclick="pronounceWord(gameState.currentQuestion.word)">
                         <span>🔊</span>
@@ -1244,6 +1248,7 @@
         // 更新UI
         function updateUI() {
             document.getElementById('coins').textContent = gameState.coins;
+            document.getElementById('questionCoins').textContent = gameState.coins;
             document.getElementById('playerHp').textContent = gameState.playerHp;
             document.getElementById('enemyHp').textContent = gameState.enemyHp;
             document.getElementById('playerTowerHp').textContent = gameState.playerHp;
@@ -1859,5 +1864,5 @@
             document.getElementById('gameScreen').style.display = 'none';
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'992e9b6ba1b9808e',t:'MTc2MTE5NDk1OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'992ea20dc6418273',t:'MTc2MTE5NTIzMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
