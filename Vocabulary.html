@@ -1,11 +1,11 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-TW">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>11401-5Grade-WonderWorld 主題單字複習</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>11401-5Grade-WonderWorld 主題單字複習</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
         body {
             box-sizing: border-box;
             font-family: 'Microsoft JhengHei', sans-serif;
@@ -36,176 +36,107 @@
             60% { transform: translateY(-5px); }
         }
     </style>
-</head>
-<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-full">
-    <div id="app" class="container mx-auto px-4 py-8 max-w-4xl">
-        <!-- 首頁 -->
-        <div id="homepage" class="text-center">
-            <h1 class="text-4xl font-bold text-indigo-800 mb-2">🎯 11401-5Grade-WonderWorld 主題單字複習</h1>
-            <p class="text-gray-600 mb-8">選擇一個類別開始練習吧！</p>
-            
-            <!-- 管理按鈕 -->
-            <div class="flex justify-center gap-4 mb-8">
-                <button id="show-records-btn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-lg shadow-lg transition-colors duration-200">
-                    📊 查看作答紀錄
-                </button>
-                <button id="clear-records-btn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-6 rounded-lg shadow-lg transition-colors duration-200">
-                    🗑️ 清除所有紀錄
-                </button>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- 類別卡片會動態生成 -->
-            </div>
-        </div>
-
-        <!-- 遊戲頁面 -->
-        <div id="gamepage" class="hidden">
-            <!-- 遊戲標題和進度 -->
-            <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 id="category-title" class="text-2xl font-bold text-indigo-800"></h2>
-                    <div class="flex items-center gap-4">
-                        <button id="show-bank-btn" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg shadow-lg transition-colors duration-200">
-                            顯示題庫 (教師用)
-                        </button>
-                        <div class="text-right">
-                            <div id="question-counter" class="text-lg font-semibold text-gray-700"></div>
-                            <div id="accuracy-rate" class="text-sm text-green-600"></div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- 進度條 -->
-                <div class="w-full bg-gray-200 rounded-full h-3 mb-4">
-                    <div id="progress-bar" class="progress-bar bg-gradient-to-r from-green-400 to-blue-500 h-3 rounded-full" style="width: 0%"></div>
-                </div>
-            </div>
-
-            <!-- 題目區域 -->
-            <div class="bg-white rounded-lg shadow-lg p-8 mb-6 text-center fade-in">
-                <div class="flex items-center justify-center gap-4 mb-6">
-                    <div id="question-word" class="text-4xl font-bold text-indigo-800"></div>
-                    <button id="question-pronunciation" class="bg-blue-500 hover:bg-blue-600 text-white rounded-full p-3 transition-colors duration-200 shadow-lg">
-                        🔊
-                    </button>
-                </div>
-                <div id="options-container" class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto">
-                    <!-- 選項會動態生成 -->
-                </div>
-            </div>
-
-            <!-- 結果顯示 -->
-            <div id="result-message" class="hidden bg-white rounded-lg shadow-lg p-6 mb-6 text-center">
-                <div id="result-text" class="text-xl font-semibold mb-4"></div>
-                <div id="correct-answer" class="text-gray-600 mb-4"></div>
-            </div>
-
-            <!-- 控制按鈕 -->
-            <div class="text-center">
-                <button id="next-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg transition-colors duration-200">
-                    下一題 (或按空白鍵)
-                </button>
-            </div>
-        </div>
-
-        <!-- 密碼輸入模態框 -->
-        <div id="password-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div class="bg-white rounded-lg shadow-xl p-8 max-w-md w-full mx-4">
-                <h3 class="text-2xl font-bold text-gray-800 mb-4 text-center">🔐 教師驗證</h3>
-                <p class="text-gray-600 mb-6 text-center">請輸入密碼以查看題庫</p>
-                <input type="password" id="password-input" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:outline-none text-center text-lg" placeholder="請輸入密碼" maxlength="6">
-                <div class="flex justify-center space-x-4 mt-6">
-                    <button id="password-confirm" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-6 rounded-lg transition-colors duration-200">
-                        確認
-                    </button>
-                    <button id="password-cancel" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-6 rounded-lg transition-colors duration-200">
-                        取消
-                    </button>
-                </div>
-                <div id="password-error" class="hidden text-red-500 text-center mt-4">密碼錯誤，請重新輸入</div>
-            </div>
-        </div>
-
-        <!-- 題庫顯示頁面 -->
-        <div id="question-bank" class="hidden">
-            <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 id="bank-category-title" class="text-2xl font-bold text-purple-800"></h2>
-                    <button id="close-bank-btn" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-200">
-                        關閉題庫
-                    </button>
-                </div>
-                <div id="word-list" class="space-y-3 max-h-96 overflow-y-auto">
-                    <!-- 單字列表會動態生成 -->
-                </div>
-            </div>
-        </div>
-
-        <!-- 作答紀錄頁面 -->
-        <div id="records-page" class="hidden">
-            <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl font-bold text-green-800">📊 學生作答紀錄</h2>
-                    <button id="close-records-btn" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-200">
-                        關閉紀錄
-                    </button>
-                </div>
-                
-                <!-- 統計摘要 -->
-                <div id="records-summary" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                    <!-- 統計卡片會動態生成 -->
-                </div>
-                
-                <!-- 詳細紀錄 -->
-                <div class="mb-4">
-                    <h3 class="text-lg font-semibold text-gray-700 mb-3">詳細作答紀錄</h3>
-                    <div id="records-list" class="space-y-3 max-h-96 overflow-y-auto">
-                        <!-- 紀錄列表會動態生成 -->
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 清除確認模態框 -->
-        <div id="clear-confirm-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div class="bg-white rounded-lg shadow-xl p-8 max-w-md w-full mx-4">
-                <h3 class="text-2xl font-bold text-gray-800 mb-4 text-center">⚠️ 確認清除</h3>
-                <p class="text-gray-600 mb-6 text-center">確定要清除所有作答紀錄嗎？<br>此操作無法復原！</p>
-                <div class="flex justify-center space-x-4">
-                    <button id="confirm-clear" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-6 rounded-lg transition-colors duration-200">
-                        確認清除
-                    </button>
-                    <button id="cancel-clear" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-6 rounded-lg transition-colors duration-200">
-                        取消
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- 結果頁面 -->
-        <div id="resultpage" class="hidden text-center">
-            <div class="bg-white rounded-lg shadow-lg p-8 mb-6">
-                <h2 class="text-3xl font-bold text-indigo-800 mb-4">🎉 遊戲完成！</h2>
-                <div id="final-category" class="text-xl text-gray-700 mb-4"></div>
-                <div id="final-score" class="text-2xl font-bold text-green-600 mb-6"></div>
-                
-                <div class="flex justify-center space-x-4">
-                    <button id="restart-btn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition-colors duration-200">
-                        重新作答
-                    </button>
-                    <button id="view-records-btn" class="bg-orange-600 hover:bg-orange-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition-colors duration-200">
-                        📊 查看紀錄
-                    </button>
-                    <button id="home-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition-colors duration-200">
-                        回到首頁
-                    </button>
-                </div>
-            </div>
-        </div>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <script src="/_sdk/element_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-full">
+  <div id="app" class="container mx-auto px-4 py-8 max-w-4xl"><!-- 首頁 -->
+   <div id="homepage" class="text-center">
+    <h1 class="text-4xl font-bold text-indigo-800 mb-2">🎯 11401-5Grade-WonderWorld 主題單字複習</h1>
+    <p class="text-gray-600 mb-8">選擇一個類別開始練習吧！</p><!-- 管理按鈕 -->
+    <div class="flex justify-center gap-4 mb-8"><button id="show-records-btn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-lg shadow-lg transition-colors duration-200"> 📊 查看作答紀錄 </button> <button id="clear-records-btn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-6 rounded-lg shadow-lg transition-colors duration-200"> 🗑️ 清除所有紀錄 </button>
     </div>
-
-    <script>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"><!-- 類別卡片會動態生成 -->
+    </div>
+   </div><!-- 遊戲頁面 -->
+   <div id="gamepage" class="hidden"><!-- 遊戲標題和進度 -->
+    <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+     <div class="flex justify-between items-center mb-4">
+      <div class="flex items-center gap-4"><button id="game-home-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-200"> 🏠 回首頁 </button>
+       <h2 id="category-title" class="text-2xl font-bold text-indigo-800"></h2>
+      </div>
+      <div class="flex items-center gap-4"><button id="show-bank-btn" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg shadow-lg transition-colors duration-200"> 顯示題庫 (教師用) </button>
+       <div class="text-right">
+        <div id="question-counter" class="text-lg font-semibold text-gray-700"></div>
+        <div id="accuracy-rate" class="text-sm text-green-600"></div>
+       </div>
+      </div>
+     </div><!-- 進度條 -->
+     <div class="w-full bg-gray-200 rounded-full h-3 mb-4">
+      <div id="progress-bar" class="progress-bar bg-gradient-to-r from-green-400 to-blue-500 h-3 rounded-full" style="width: 0%"></div>
+     </div>
+    </div><!-- 題目區域 -->
+    <div class="bg-white rounded-lg shadow-lg p-8 mb-6 text-center fade-in">
+     <div class="flex items-center justify-center gap-4 mb-6">
+      <div id="question-word" class="text-4xl font-bold text-indigo-800"></div><button id="question-pronunciation" class="bg-blue-500 hover:bg-blue-600 text-white rounded-full p-3 transition-colors duration-200 shadow-lg"> 🔊 </button>
+     </div>
+     <div id="options-container" class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto"><!-- 選項會動態生成 -->
+     </div>
+    </div><!-- 結果顯示 -->
+    <div id="result-message" class="hidden bg-white rounded-lg shadow-lg p-6 mb-6 text-center">
+     <div id="result-text" class="text-xl font-semibold mb-4"></div>
+     <div id="correct-answer" class="text-gray-600 mb-4"></div>
+    </div><!-- 控制按鈕 -->
+    <div class="text-center"><button id="next-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg transition-colors duration-200"> 下一題 (或按空白鍵) </button>
+    </div>
+   </div><!-- 密碼輸入模態框 -->
+   <div id="password-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg shadow-xl p-8 max-w-md w-full mx-4">
+     <h3 class="text-2xl font-bold text-gray-800 mb-4 text-center">🔐 教師驗證</h3>
+     <p class="text-gray-600 mb-6 text-center">請輸入密碼以查看題庫</p><input type="password" id="password-input" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:outline-none text-center text-lg" placeholder="請輸入密碼" maxlength="6">
+     <div class="flex justify-center space-x-4 mt-6"><button id="password-confirm" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-6 rounded-lg transition-colors duration-200"> 確認 </button> <button id="password-cancel" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-6 rounded-lg transition-colors duration-200"> 取消 </button>
+     </div>
+     <div id="password-error" class="hidden text-red-500 text-center mt-4">
+      密碼錯誤，請重新輸入
+     </div>
+    </div>
+   </div><!-- 題庫顯示頁面 -->
+   <div id="question-bank" class="hidden">
+    <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+     <div class="flex justify-between items-center mb-4">
+      <div class="flex items-center gap-4"><button id="bank-home-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-200"> 🏠 回首頁 </button>
+       <h2 id="bank-category-title" class="text-2xl font-bold text-purple-800"></h2>
+      </div><button id="close-bank-btn" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-200"> 關閉題庫 </button>
+     </div>
+     <div id="word-list" class="space-y-3 max-h-96 overflow-y-auto"><!-- 單字列表會動態生成 -->
+     </div>
+    </div>
+   </div><!-- 作答紀錄頁面 -->
+   <div id="records-page" class="hidden">
+    <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+     <div class="flex justify-between items-center mb-6">
+      <h2 class="text-2xl font-bold text-green-800">📊 學生作答紀錄</h2><button id="close-records-btn" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-200"> 關閉紀錄 </button>
+     </div><!-- 統計摘要 -->
+     <div id="records-summary" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6"><!-- 統計卡片會動態生成 -->
+     </div><!-- 詳細紀錄 -->
+     <div class="mb-4">
+      <h3 class="text-lg font-semibold text-gray-700 mb-3">詳細作答紀錄</h3>
+      <div id="records-list" class="space-y-3 max-h-96 overflow-y-auto"><!-- 紀錄列表會動態生成 -->
+      </div>
+     </div>
+    </div>
+   </div><!-- 清除確認模態框 -->
+   <div id="clear-confirm-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg shadow-xl p-8 max-w-md w-full mx-4">
+     <h3 class="text-2xl font-bold text-gray-800 mb-4 text-center">⚠️ 確認清除</h3>
+     <p class="text-gray-600 mb-6 text-center">確定要清除所有作答紀錄嗎？<br>
+      此操作無法復原！</p>
+     <div class="flex justify-center space-x-4"><button id="confirm-clear" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-6 rounded-lg transition-colors duration-200"> 確認清除 </button> <button id="cancel-clear" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-6 rounded-lg transition-colors duration-200"> 取消 </button>
+     </div>
+    </div>
+   </div><!-- 結果頁面 -->
+   <div id="resultpage" class="hidden text-center">
+    <div class="bg-white rounded-lg shadow-lg p-8 mb-6">
+     <h2 class="text-3xl font-bold text-indigo-800 mb-4">🎉 遊戲完成！</h2>
+     <div id="final-category" class="text-xl text-gray-700 mb-4"></div>
+     <div id="final-score" class="text-2xl font-bold text-green-600 mb-6"></div>
+     <div class="flex justify-center space-x-4"><button id="restart-btn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition-colors duration-200"> 重新作答 </button> <button id="view-records-btn" class="bg-orange-600 hover:bg-orange-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition-colors duration-200"> 📊 查看紀錄 </button> <button id="home-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition-colors duration-200"> 回到首頁 </button>
+     </div>
+    </div>
+   </div>
+  </div>
+  <script>
         // 單字資料
         const vocabulary = {
             '節慶': [
@@ -450,13 +381,24 @@
             const container = document.querySelector('#homepage .grid');
             container.innerHTML = '';
 
+            // 獲取練習次數統計和最高分
+            const practiceStats = getCategoryPracticeStats();
+            const highestScores = getCategoryHighestScores();
+
             Object.keys(vocabulary).forEach(category => {
+                const practiceCount = practiceStats[category] || 0;
+                const highestScore = highestScores[category] || 0;
+                const hasPracticed = practiceCount > 0;
+                
                 const card = document.createElement('div');
-                card.className = 'category-card bg-white rounded-lg shadow-lg p-6 cursor-pointer border-2 border-transparent hover:border-indigo-300';
+                card.className = `category-card ${hasPracticed ? 'bg-green-50 border-green-200' : 'bg-white'} rounded-lg shadow-lg p-6 cursor-pointer border-2 ${hasPracticed ? 'hover:border-green-400' : 'border-transparent hover:border-indigo-300'} relative`;
                 card.innerHTML = `
+                    ${practiceCount > 0 ? `<div class="absolute -top-2 -right-2 bg-orange-500 text-white text-xs font-bold rounded-full w-8 h-8 flex items-center justify-center shadow-lg">${practiceCount}</div>` : ''}
                     <div class="text-4xl mb-3">${categoryIcons[category]}</div>
-                    <h3 class="text-xl font-bold text-gray-800 mb-2">${category}</h3>
+                    <h3 class="text-xl font-bold ${hasPracticed ? 'text-green-800' : 'text-gray-800'} mb-2">${category}</h3>
                     <p class="text-gray-600 text-sm">${vocabulary[category].length} 個單字</p>
+                    ${practiceCount > 0 ? `<p class="text-orange-600 text-xs mt-1 font-medium">已練習 ${practiceCount} 次</p>` : ''}
+                    ${highestScore > 0 ? `<p class="text-green-700 text-xs mt-1 font-bold">🏆 最高分: ${Math.round(highestScore * 20 / 100)}/20</p>` : ''}
                 `;
                 card.addEventListener('click', () => startGame(category));
                 container.appendChild(card);
@@ -487,8 +429,11 @@
             const words = vocabulary[category];
             const questions = [];
             
+            // 先將單字陣列隨機打亂
+            const shuffledWords = [...words].sort(() => Math.random() - 0.5);
+            
             for (let i = 0; i < count; i++) {
-                const word = words[i % words.length];
+                const word = shuffledWords[i % shuffledWords.length];
                 const wrongOptions = getRandomWrongOptions(category, word.meaning);
                 const options = [word.meaning, ...wrongOptions].sort(() => Math.random() - 0.5);
                 
@@ -502,18 +447,32 @@
             return questions;
         }
 
-        // 獲取錯誤選項
+        // 獲取錯誤選項（從同一類別中選取）
         function getRandomWrongOptions(category, correctAnswer) {
-            const allMeanings = [];
-            Object.values(vocabulary).forEach(words => {
-                words.forEach(word => {
-                    if (word.meaning !== correctAnswer) {
-                        allMeanings.push(word.meaning);
+            const categoryWords = vocabulary[category];
+            const wrongMeanings = categoryWords
+                .filter(word => word.meaning !== correctAnswer)
+                .map(word => word.meaning);
+            
+            // 如果同類別的選項不足3個，從其他類別補充
+            if (wrongMeanings.length < 3) {
+                const allOtherMeanings = [];
+                Object.entries(vocabulary).forEach(([cat, words]) => {
+                    if (cat !== category) {
+                        words.forEach(word => {
+                            if (word.meaning !== correctAnswer) {
+                                allOtherMeanings.push(word.meaning);
+                            }
+                        });
                     }
                 });
-            });
+                
+                const shuffledOthers = allOtherMeanings.sort(() => Math.random() - 0.5);
+                const needed = 3 - wrongMeanings.length;
+                wrongMeanings.push(...shuffledOthers.slice(0, needed));
+            }
             
-            const shuffled = allMeanings.sort(() => Math.random() - 0.5);
+            const shuffled = wrongMeanings.sort(() => Math.random() - 0.5);
             return shuffled.slice(0, 3);
         }
 
@@ -562,9 +521,11 @@
                 pronunciationBtn.innerHTML = '🔊';
                 pronunciationBtn.onclick = (e) => {
                     e.stopPropagation();
-                    // 找到對應的英文單字來發音
-                    const englishWord = findEnglishWord(option);
-                    speakText(englishWord);
+                    // 找到對應的英文單字來發音（確保發音的是英文）
+                    const englishWord = findEnglishWordByMeaning(option);
+                    if (englishWord) {
+                        speakText(englishWord);
+                    }
                 };
                 
                 optionDiv.appendChild(button);
@@ -578,7 +539,7 @@
         }
 
         // 根據中文意思找到對應的英文單字
-        function findEnglishWord(chineseMeaning) {
+        function findEnglishWordByMeaning(chineseMeaning) {
             for (const category in vocabulary) {
                 for (const wordObj of vocabulary[category]) {
                     if (wordObj.meaning === chineseMeaning) {
@@ -586,7 +547,7 @@
                     }
                 }
             }
-            return chineseMeaning; // 如果找不到就直接返回原文
+            return null; // 如果找不到就返回null，避免發音中文
         }
 
         // 選擇答案
@@ -676,6 +637,36 @@
         // 獲取所有紀錄
         function getAllRecords() {
             return JSON.parse(localStorage.getItem('gameRecords') || '[]');
+        }
+
+        // 獲取各類別練習次數統計
+        function getCategoryPracticeStats() {
+            const records = getAllRecords();
+            const stats = {};
+            
+            records.forEach(record => {
+                if (stats[record.category]) {
+                    stats[record.category]++;
+                } else {
+                    stats[record.category] = 1;
+                }
+            });
+            
+            return stats;
+        }
+
+        // 獲取各類別最高分統計
+        function getCategoryHighestScores() {
+            const records = getAllRecords();
+            const scores = {};
+            
+            records.forEach(record => {
+                if (!scores[record.category] || record.accuracy > scores[record.category]) {
+                    scores[record.category] = record.accuracy;
+                }
+            });
+            
+            return scores;
         }
 
         // 清除所有紀錄
@@ -850,6 +841,8 @@
                 document.getElementById('gamepage').classList.add('hidden');
                 document.getElementById('records-page').classList.add('hidden');
                 document.getElementById('homepage').classList.remove('hidden');
+                // 重新生成類別卡片以更新練習次數
+                generateCategoryCards();
             });
             
             // 題庫相關事件
@@ -869,12 +862,29 @@
                 document.getElementById('question-bank').classList.add('hidden');
             });
             
+            document.getElementById('bank-home-btn').addEventListener('click', () => {
+                document.getElementById('question-bank').classList.add('hidden');
+                document.getElementById('gamepage').classList.add('hidden');
+                document.getElementById('homepage').classList.remove('hidden');
+                // 重新生成類別卡片以更新練習次數
+                generateCategoryCards();
+            });
+            
+            document.getElementById('game-home-btn').addEventListener('click', () => {
+                document.getElementById('gamepage').classList.add('hidden');
+                document.getElementById('homepage').classList.remove('hidden');
+                // 重新生成類別卡片以更新練習次數
+                generateCategoryCards();
+            });
+            
             // 作答紀錄相關事件
             document.getElementById('show-records-btn').addEventListener('click', showRecords);
             document.getElementById('view-records-btn').addEventListener('click', showRecords);
             document.getElementById('close-records-btn').addEventListener('click', () => {
                 document.getElementById('records-page').classList.add('hidden');
                 document.getElementById('homepage').classList.remove('hidden');
+                // 重新生成類別卡片以更新練習次數
+                generateCategoryCards();
             });
             
             // 清除紀錄相關事件
@@ -885,6 +895,8 @@
             document.getElementById('confirm-clear').addEventListener('click', () => {
                 clearAllRecords();
                 document.getElementById('clear-confirm-modal').classList.add('hidden');
+                // 重新生成首頁類別卡片以更新練習次數
+                generateCategoryCards();
                 // 如果正在查看紀錄頁面，重新載入
                 if (!document.getElementById('records-page').classList.contains('hidden')) {
                     showRecords();
@@ -914,5 +926,5 @@
         // 啟動遊戲
         initGame();
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9926bb149266074c',t:'MTc2MTExMjM2OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9989b19683c38265',t:'MTc2MjE1MDA3MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
