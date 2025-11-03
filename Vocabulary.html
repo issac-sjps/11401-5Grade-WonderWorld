@@ -429,22 +429,21 @@
             const words = vocabulary[category];
             const questions = [];
             
-            // 先將單字陣列隨機打亂
-            const shuffledWords = [...words].sort(() => Math.random() - 0.5);
-            
             for (let i = 0; i < count; i++) {
-                const word = shuffledWords[i % shuffledWords.length];
-                const wrongOptions = getRandomWrongOptions(category, word.meaning);
-                const options = [word.meaning, ...wrongOptions].sort(() => Math.random() - 0.5);
+                // 每次都重新隨機選擇單字，確保完全隨機
+                const randomWord = words[Math.floor(Math.random() * words.length)];
+                const wrongOptions = getRandomWrongOptions(category, randomWord.meaning);
+                const options = [randomWord.meaning, ...wrongOptions].sort(() => Math.random() - 0.5);
                 
                 questions.push({
-                    word: word.word,
-                    correct: word.meaning,
+                    word: randomWord.word,
+                    correct: randomWord.meaning,
                     options: options
                 });
             }
             
-            return questions;
+            // 最後再將整個題目陣列打亂一次，確保完全隨機
+            return questions.sort(() => Math.random() - 0.5);
         }
 
         // 獲取錯誤選項（從同一類別中選取）
@@ -926,5 +925,5 @@
         // 啟動遊戲
         initGame();
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9989b19683c38265',t:'MTc2MjE1MDA3MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'998a9c17f10f4a2a',t:'MTc2MjE1OTY3Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
