@@ -170,9 +170,107 @@
             color: #718096;
         }
         
+        .quiz-content {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 30px;
+            margin: 20px 0;
+        }
+        
         .training-area {
             text-align: center;
-            margin: 40px 0;
+        }
+        
+        .reference-panel {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 15px;
+            padding: 20px;
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+        
+        .reference-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #4a5568;
+            margin-bottom: 15px;
+            text-align: center;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 10px;
+        }
+        
+        .pattern-group {
+            margin-bottom: 20px;
+        }
+        
+        .pattern-header {
+            font-size: 1rem;
+            font-weight: bold;
+            color: #2d3748;
+            margin-bottom: 8px;
+            padding: 8px 12px;
+            background: #4299e1;
+            color: white;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .word-list {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        
+        .word-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 10px;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+        
+        .word-item:hover {
+            background: #ebf8ff;
+            border-color: #4299e1;
+        }
+        
+        .word-item.current {
+            background: white;
+            border-color: #e2e8f0;
+            font-weight: normal;
+        }
+        
+        .word-english {
+            font-weight: 600;
+            color: #2d3748;
+        }
+        
+        .word-chinese {
+            font-size: 0.8rem;
+            color: #718096;
+        }
+        
+        .word-sound-btn {
+            background: #4299e1;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            min-width: 35px;
+        }
+        
+        .word-sound-btn:hover {
+            background: #3182ce;
+            transform: scale(1.05);
         }
         
         .current-word {
@@ -406,6 +504,18 @@
             font-size: 1.2rem;
         }
         
+        @media (max-width: 900px) {
+            .quiz-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .reference-panel {
+                position: static;
+                order: -1;
+            }
+        }
+        
         @media (max-width: 600px) {
             .container {
                 padding: 20px;
@@ -426,6 +536,20 @@
             
             .groups-grid {
                 grid-template-columns: 1fr;
+            }
+            
+            .reference-panel {
+                padding: 15px;
+            }
+            
+            .word-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+            
+            .word-sound-btn {
+                align-self: flex-end;
             }
         }
     </style>
@@ -453,15 +577,23 @@
       a_e, ai, ay
      </div>
     </div>
-    <div class="training-area">
-     <div class="score"><span>進度: <span id="progress">0/20</span></span> | <span>正確: <span id="correct">0</span></span> | <span>準確率: <span id="accuracy">0%</span></span>
+    <div class="quiz-content">
+     <div class="training-area">
+      <div class="score"><span>進度: <span id="progress">0/20</span></span> | <span>正確: <span id="correct">0</span></span> | <span>準確率: <span id="accuracy">0%</span></span>
+      </div>
+      <div class="current-word" id="currentWord">
+       準備開始訓練
+      </div><button class="play-btn" id="playBtn">🔊 播放發音</button>
+      <div class="options" id="options"></div>
+      <div class="feedback" id="feedback"></div>
+      <div style="text-align: center;"><button class="btn btn-primary" id="nextBtn" disabled>下一題 (或按下空白鍵)</button>
+      </div>
      </div>
-     <div class="current-word" id="currentWord">
-      準備開始訓練
-     </div><button class="play-btn" id="playBtn">🔊 播放發音</button>
-     <div class="options" id="options"></div>
-     <div class="feedback" id="feedback"></div>
-     <div style="text-align: center;"><button class="btn btn-primary" id="nextBtn" disabled>下一題 (或按下空白鍵)</button>
+     <div class="reference-panel">
+      <div class="reference-title">
+       📚 題庫參考
+      </div>
+      <div id="referenceContent"></div>
      </div>
     </div>
     <div class="quiz-actions"><button class="btn btn-secondary" id="backHomeBtn">🏠 回到首頁</button> <button class="btn btn-success" id="restartBtn">🔄 重新開始</button>
@@ -603,6 +735,7 @@
         const clearModal = document.getElementById('clearModal');
         const confirmClear = document.getElementById('confirmClear');
         const cancelClear = document.getElementById('cancelClear');
+        const referenceContent = document.getElementById('referenceContent');
 
         // 初始化
         function init() {
@@ -697,6 +830,9 @@
             sessionStartTime = new Date();
             updateScore();
             
+            // 創建參考面板
+            createReferencePanel();
+            
             // 切換到作答頁面
             showPage('quiz');
             nextQuestion();
@@ -773,6 +909,53 @@
             }
         }
 
+        function createReferencePanel() {
+            const group = phonicsGroups[currentGroup];
+            let html = '';
+            
+            // 按拼寫模式分組
+            group.patterns.forEach(pattern => {
+                const patternWords = group.words.filter(word => word.pattern === pattern);
+                
+                html += `<div class="pattern-group">`;
+                html += `<div class="pattern-header">${pattern}</div>`;
+                html += `<div class="word-list">`;
+                
+                patternWords.forEach(word => {
+                    html += `
+                        <div class="word-item" data-word="${word.word}">
+                            <div>
+                                <div class="word-english">${word.word}</div>
+                                <div class="word-chinese">${word.chinese}</div>
+                            </div>
+                            <button class="word-sound-btn" onclick="playWordSound('${word.word}')">🔊</button>
+                        </div>
+                    `;
+                });
+                
+                html += `</div></div>`;
+            });
+            
+            referenceContent.innerHTML = html;
+        }
+        
+        function updateCurrentWordHighlight() {
+            // 移除所有高亮
+            document.querySelectorAll('.word-item').forEach(item => {
+                item.classList.remove('current');
+            });
+            
+            // 高亮當前單字 - 用藍色標示這是當前題目，不透露答案
+            if (currentWord) {
+                const currentItem = document.querySelector(`[data-word="${currentWord.word}"]`);
+                if (currentItem) {
+                    currentItem.classList.add('current');
+                    // 滾動到當前單字
+                    currentItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
+            }
+        }
+
         function getRandomWord() {
             const words = phonicsGroups[currentGroup].words;
             const availableWords = words.filter(word => !usedWords.includes(word.word));
@@ -802,6 +985,9 @@
             nextBtn.disabled = true;
             feedbackEl.textContent = '';
             feedbackEl.className = 'feedback';
+            
+            // 更新參考面板中的當前單字高亮
+            updateCurrentWordHighlight();
             
             createOptions();
         }
@@ -961,6 +1147,19 @@
                 feedbackEl.className = 'feedback incorrect';
             }
         }
+        
+        function playWordSound(word) {
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(word);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.8;
+                utterance.pitch = 1;
+                speechSynthesis.speak(utterance);
+            } else {
+                feedbackEl.textContent = '抱歉，您的瀏覽器不支援語音播放功能';
+                feedbackEl.className = 'feedback incorrect';
+            }
+        }
 
         function showRecord() {
             // 先儲存當前組別的資料
@@ -1068,5 +1267,5 @@
         // 啟動應用程式
         init();
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'998fea554766843a',t:'MTc2MjIxNTMxMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'998ff8d36678843a',t:'MTc2MjIxNTkwMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
