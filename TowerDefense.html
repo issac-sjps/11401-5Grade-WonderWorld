@@ -1,10 +1,10 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-TW">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>英文單字塔防遊戲</title>
-    <style>
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>英文單字塔防遊戲</title>
+  <style>
         body {
             box-sizing: border-box;
             margin: 0;
@@ -651,304 +651,202 @@
             }
         }
     </style>
-</head>
-<body>
-    <div class="container">
-        <!-- 首頁畫面 -->
-        <div class="home-screen" id="homeScreen">
-            <h1 class="game-title">🏰 英文單字塔防遊戲</h1>
-            
-            <div class="unit-selection">
-                <div class="exam-section">
-                    <h3 class="exam-title">📊 遊戲資訊</h3>
-                    <div class="exam-units">
-                        <div class="unit-card" onclick="showGameRules()">
-                            <h3 class="unit-title">🎮 遊戲規則</h3>
-                            <div class="unit-description">
-                                了解遊戲基本玩法和獲勝條件<br>
-                                掌握關卡機制和戰鬥系統
-                            </div>
-                        </div>
-                        
-                        <div class="unit-card" onclick="showProbabilityTable()">
-                            <h3 class="unit-title">🎯 各關卡敵人出現機率表</h3>
-                            <div class="unit-description">
-                                查看每一關卡中不同敵人的出現機率分布<br>
-                                了解遊戲平衡機制和戰略規劃
-                            </div>
-                        </div>
-                        
-                        <div class="unit-card" onclick="togglePlayerEncyclopedia()">
-                            <h3 class="unit-title">⚔️ 我方召喚圖鑑</h3>
-                            <div class="unit-description">
-                                查看所有可召喚的戰鬥單位詳細資料<br>
-                                包含攻擊力、生命值、花費和解鎖條件
-                            </div>
-                        </div>
-                        
-                        <div class="unit-card" onclick="toggleEnemyEncyclopedia()">
-                            <h3 class="unit-title">👹 敵方怪獸圖鑑</h3>
-                            <div class="unit-description">
-                                了解各種敵方怪獸的能力和特性<br>
-                                制定最佳戰略來對抗不同類型的敵人
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="exam-section">
-                    <h3 class="exam-title">📝 期中考範圍</h3>
-                    <div class="exam-units">
-                        <div class="unit-card" onclick="selectUnit(1)">
-                            <h3 class="unit-title">☕ 單元一：飲品</h3>
-                            <div class="unit-description">
-                                學習各種飲品單字：coffee、tea、cola、lemonade等<br>
-                                包含自然發音：e_e、ea、ee
-                            </div>
-                        </div>
-                        
-                        <div class="unit-card" onclick="selectUnit(2)">
-                            <h3 class="unit-title">🍎 單元二：水果</h3>
-                            <div class="unit-description">
-                                學習水果複數形式：apples、bananas、grapes等<br>
-                                包含自然發音：i_e、ie、igh
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="exam-section">
-                    <h3 class="exam-title">📋 期末考範圍</h3>
-                    <div class="exam-units">
-                        <div class="unit-card" onclick="selectUnit(3)">
-                            <h3 class="unit-title">📅 單元三：星期</h3>
-                            <div class="unit-description">
-                                學習一週七天：Sunday、Monday、Tuesday等<br>
-                                包含自然發音：o_e、oa、ow
-                            </div>
-                        </div>
-                        
-                        <div class="unit-card" onclick="selectUnit(4)">
-                            <h3 class="unit-title">📚 單元四：科目</h3>
-                            <div class="unit-description">
-                                學習學校科目：math、English、science等<br>
-                                包含所有格：his、her、our、their
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <script src="/_sdk/element_sdk.js" type="text/javascript"></script>
+  <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
+ </head>
+ <body>
+  <div class="container"><!-- 首頁畫面 -->
+   <div class="home-screen" id="homeScreen">
+    <h1 class="game-title">🏰 英文單字塔防遊戲</h1>
+    <div class="unit-selection">
+     <div class="exam-section">
+      <h3 class="exam-title">📊 遊戲資訊</h3>
+      <div class="exam-units">
+       <div class="unit-card" onclick="showGameRules()">
+        <h3 class="unit-title">🎮 遊戲規則</h3>
+        <div class="unit-description">
+         了解遊戲基本玩法和獲勝條件<br>
+          掌握關卡機制和戰鬥系統
         </div>
-
-        <!-- 遊戲畫面 -->
-        <div class="game-screen" id="gameScreen">
-            <header class="game-header">
-                <div class="header-top">
-                    <div style="display: flex; flex-direction: column; gap: 5px;">
-                        <button class="back-btn" onclick="backToHome()">🏠 返回首頁</button>
-                    </div>
-                    <div class="level-selector">
-                        <span style="font-weight: bold; color: #2c3e50;">關卡選擇：</span>
-                        <div id="levelButtons"></div>
-                    </div>
-                    <div style="display: flex; gap: 10px;">
-                        <button class="encyclopedia-btn" onclick="togglePlayerEncyclopedia()">
-                            <span>⚔️</span>
-                            <span>我方圖鑑</span>
-                        </button>
-                        <button class="encyclopedia-btn" onclick="toggleEnemyEncyclopedia()">
-                            <span>📖</span>
-                            <span>敵方圖鑑</span>
-                        </button>
-                        <button class="encyclopedia-btn" onclick="showResetConfirmation()" style="background: linear-gradient(45deg, #e17055, #d63031);">
-                            <span>🔄</span>
-                            <span>重置進度</span>
-                        </button>
-                    </div>
-                </div>
-                <div class="stats">
-                    <div class="stat-item coins">
-                        <input type="text" id="secretInput" placeholder="..." style="width: 60px; padding: 2px 4px; border: 1px solid #ddd; border-radius: 4px; font-size: 10px; opacity: 0.3; transition: opacity 0.3s ease; margin-right: 8px;" onkeypress="checkSecretCode(event)" onfocus="this.style.opacity='1'" onblur="this.style.opacity='0.3'">
-                        <span onclick="triggerSecretCode()" style="cursor: pointer; transition: all 0.2s ease; user-select: none;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'" title="點擊執行秘密代碼">💰</span>
-                        <span id="coins">0</span>
-                    </div>
-                    <div class="stat-item hp">
-                        <span>我方 ❤️</span>
-                        <span id="playerHp">100</span>
-                    </div>
-                    <div class="stat-item enemy-hp">
-                        <span>敵方 💜</span>
-                        <span id="enemyHp">100</span>
-                    </div>
-                    <div class="stat-item level-info">
-                        <span>🎯</span>
-                        <span id="levelInfo">第1關</span>
-                    </div>
-                </div>
-            </header>
-
-            <section class="battlefield">
-                <div class="towers">
-                    <div class="tower player-tower">
-                        <div class="tower-hp" id="playerTowerHp">100</div>
-                        <span style="font-size: 30px;">🏰</span>
-                    </div>
-                    <div class="battlefield-center" id="battlefield">
-                    </div>
-                    <div class="tower enemy-tower">
-                        <div class="tower-hp" id="enemyTowerHp">100</div>
-                        <span style="font-size: 30px;">🏴</span>
-                    </div>
-                </div>
-                <div class="controls" id="summonControls">
-                    <button class="summon-btn" id="summonBasic" onclick="summonMonster('basic')">
-                        <div class="monster-info">
-                            <div class="monster-header">
-                                <span>🐺</span>
-                                <span>召喚狼 (10金)</span>
-                            </div>
-                            <div class="monster-stats">
-                                <span>⚔️ 8</span>
-                                <span>❤️ 30</span>
-                            </div>
-                        </div>
-                    </button>
-                    <button class="summon-btn" id="summonStrong" onclick="summonMonster('strong')">
-                        <div class="monster-info">
-                            <div class="monster-header">
-                                <span>🐻</span>
-                                <span>召喚熊 (20金)</span>
-                            </div>
-                            <div class="monster-stats">
-                                <span>⚔️ 12</span>
-                                <span>❤️ 50</span>
-                            </div>
-                        </div>
-                    </button>
-                    <button class="summon-btn" id="summonElite" onclick="summonMonster('elite')">
-                        <div class="monster-info">
-                            <div class="monster-header">
-                                <span>🐉</span>
-                                <span>召喚龍 (30金)</span>
-                            </div>
-                            <div class="monster-stats">
-                                <span>⚔️ 20</span>
-                                <span>❤️ 80</span>
-                            </div>
-                        </div>
-                    </button>
-                    <button class="summon-btn" id="summonLegendary" onclick="summonMonster('legendary')" style="display: none;">
-                        <div class="monster-info">
-                            <div class="monster-header">
-                                <span>🦅</span>
-                                <span>召喚鷹 (40金)</span>
-                            </div>
-                            <div class="monster-stats">
-                                <span>⚔️ 30</span>
-                                <span>❤️ 120</span>
-                            </div>
-                        </div>
-                    </button>
-                    <button class="summon-btn" id="summonMythical" onclick="summonMonster('mythical')" style="display: none;">
-                        <div class="monster-info">
-                            <div class="monster-header">
-                                <span>🦄</span>
-                                <span>召喚獨角獸 (50金)</span>
-                            </div>
-                            <div class="monster-stats">
-                                <span>⚔️ 40</span>
-                                <span>❤️ 180</span>
-                            </div>
-                        </div>
-                    </button>
-                    <button class="summon-btn" id="summonDivine" onclick="summonMonster('divine')" style="display: none;">
-                        <div class="monster-info">
-                            <div class="monster-header">
-                                <span>👼</span>
-                                <span>召喚天使 (60金)</span>
-                            </div>
-                            <div class="monster-stats">
-                                <span>⚔️ 60</span>
-                                <span>❤️ 250</span>
-                            </div>
-                        </div>
-                    </button>
-                    <button class="summon-btn" id="summonCosmic" onclick="summonMonster('cosmic')" style="display: none;">
-                        <div class="monster-info">
-                            <div class="monster-header">
-                                <span>🌟</span>
-                                <span>召喚星靈 (70金)</span>
-                            </div>
-                            <div class="monster-stats">
-                                <span>⚔️ 80</span>
-                                <span>❤️ 350</span>
-                            </div>
-                        </div>
-                    </button>
-                    <button class="summon-btn" id="summonEternal" onclick="summonMonster('eternal')" style="display: none;">
-                        <div class="monster-info">
-                            <div class="monster-header">
-                                <span>⚡</span>
-                                <span>召喚雷神 (80金)</span>
-                            </div>
-                            <div class="monster-stats">
-                                <span>⚔️ 120</span>
-                                <span>❤️ 500</span>
-                            </div>
-                        </div>
-                    </button>
-                    <button class="summon-btn" id="summonSupreme" onclick="summonMonster('supreme')" style="display: none;">
-                        <div class="monster-info">
-                            <div class="monster-header">
-                                <span>🔥</span>
-                                <span>召喚火神 (90金)</span>
-                            </div>
-                            <div class="monster-stats">
-                                <span>⚔️ 160</span>
-                                <span>❤️ 700</span>
-                            </div>
-                        </div>
-                    </button>
-                    <button class="summon-btn" id="summonUltimate" onclick="summonMonster('ultimate')" style="display: none;">
-                        <div class="monster-info">
-                            <div class="monster-header">
-                                <span>💎</span>
-                                <span>召喚鑽石王 (100金)</span>
-                            </div>
-                            <div class="monster-stats">
-                                <span>⚔️ 250</span>
-                                <span>❤️ 1000</span>
-                            </div>
-                        </div>
-                    </button>
-                </div>
-            </section>
-
-            <section class="question-panel">
-                <div class="question" id="question">
-                    <div class="question-coins" style="background: linear-gradient(45deg, #f39c12, #e67e22); color: white; padding: 8px 15px; border-radius: 20px; font-size: 16px; font-weight: bold; box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2); display: flex; align-items: center; gap: 8px;">
-                        <span>💰</span>
-                        <span id="questionCoins">0</span>
-                    </div>
-                    <span id="questionText">載入題目中...</span>
-                    <button class="pronunciation-btn" id="questionPronunciation" onclick="pronounceWord(gameState.currentQuestion.word)">
-                        <span>🔊</span>
-                        <span>發音</span>
-                    </button>
-                </div>
-                <div class="options" id="options"></div>
-                <div id="message"></div>
-                <div style="text-align: center; margin-top: 20px;">
-                    <button class="next-question-btn" id="nextQuestionBtn" onclick="skipToNextQuestion()">
-                        <span>⏭️</span>
-                        <span>下一題 (或按下空白鍵)</span>
-                    </button>
-                </div>
-            </section>
+       </div>
+       <div class="unit-card" onclick="showProbabilityTable()">
+        <h3 class="unit-title">🎯 各關卡敵人出現機率表</h3>
+        <div class="unit-description">
+         查看每一關卡中不同敵人的出現機率分布<br>
+          了解遊戲平衡機制和戰略規劃
         </div>
+       </div>
+       <div class="unit-card" onclick="togglePlayerEncyclopedia()">
+        <h3 class="unit-title">⚔️ 我方召喚圖鑑</h3>
+        <div class="unit-description">
+         查看所有可召喚的戰鬥單位詳細資料<br>
+          包含攻擊力、生命值、花費和解鎖條件
+        </div>
+       </div>
+       <div class="unit-card" onclick="toggleEnemyEncyclopedia()">
+        <h3 class="unit-title">👹 敵方怪獸圖鑑</h3>
+        <div class="unit-description">
+         了解各種敵方怪獸的能力和特性<br>
+          制定最佳戰略來對抗不同類型的敵人
+        </div>
+       </div>
+      </div>
+     </div>
+     <div class="exam-section">
+      <h3 class="exam-title">📝 期中考範圍</h3>
+      <div class="exam-units">
+       <div class="unit-card" onclick="selectUnit(1)">
+        <h3 class="unit-title">☕ 單元一：飲品</h3>
+        <div class="unit-description">
+         學習各種飲品單字：coffee、tea、cola、lemonade等<br>
+          包含自然發音：e_e、ea、ee
+        </div>
+       </div>
+       <div class="unit-card" onclick="selectUnit(2)">
+        <h3 class="unit-title">🍎 單元二：水果</h3>
+        <div class="unit-description">
+         學習水果複數形式：apples、bananas、grapes等<br>
+          包含自然發音：i_e、ie、igh
+        </div>
+       </div>
+      </div>
+     </div>
+     <div class="exam-section">
+      <h3 class="exam-title">📋 期末考範圍</h3>
+      <div class="exam-units">
+       <div class="unit-card" onclick="selectUnit(3)">
+        <h3 class="unit-title">📅 單元三：星期</h3>
+        <div class="unit-description">
+         學習一週七天：Sunday、Monday、Tuesday等<br>
+          包含自然發音：o_e、oa、ow
+        </div>
+       </div>
+       <div class="unit-card" onclick="selectUnit(4)">
+        <h3 class="unit-title">📚 單元四：科目</h3>
+        <div class="unit-description">
+         學習學校科目：math、English、science等<br>
+          包含所有格：his、her、our、their
+        </div>
+       </div>
+      </div>
+     </div>
     </div>
-
-    <script>
+   </div><!-- 遊戲畫面 -->
+   <div class="game-screen" id="gameScreen">
+    <header class="game-header">
+     <div class="header-top">
+      <div style="display: flex; flex-direction: column; gap: 5px;"><button class="back-btn" onclick="backToHome()">🏠 返回首頁</button>
+      </div>
+      <div class="level-selector"><span style="font-weight: bold; color: #2c3e50;">關卡選擇：</span>
+       <div id="levelButtons"></div>
+      </div>
+      <div style="display: flex; gap: 10px;"><button class="encyclopedia-btn" onclick="togglePlayerEncyclopedia()"> <span>⚔️</span> <span>我方圖鑑</span> </button> <button class="encyclopedia-btn" onclick="toggleEnemyEncyclopedia()"> <span>📖</span> <span>敵方圖鑑</span> </button> <button class="encyclopedia-btn" onclick="showResetConfirmation()" style="background: linear-gradient(45deg, #e17055, #d63031);"> <span>🔄</span> <span>重置進度</span> </button>
+      </div>
+     </div>
+     <div class="stats">
+      <div class="stat-item coins"><input type="text" id="secretInput" placeholder="..." style="width: 60px; padding: 2px 4px; border: 1px solid #ddd; border-radius: 4px; font-size: 10px; opacity: 0.3; transition: opacity 0.3s ease; margin-right: 8px;" onkeypress="checkSecretCode(event)" onfocus="this.style.opacity='1'" onblur="this.style.opacity='0.3'"> <span onclick="triggerSecretCode()" style="cursor: pointer; transition: all 0.2s ease; user-select: none;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'" title="點擊執行秘密代碼">💰</span> <span id="coins">0</span>
+      </div>
+      <div class="stat-item hp"><span>我方 ❤️</span> <span id="playerHp">100</span>
+      </div>
+      <div class="stat-item enemy-hp"><span>敵方 💜</span> <span id="enemyHp">100</span>
+      </div>
+      <div class="stat-item level-info"><span>🎯</span> <span id="levelInfo">第1關</span>
+      </div>
+     </div>
+    </header>
+    <section class="battlefield">
+     <div class="towers">
+      <div class="tower player-tower">
+       <div class="tower-hp" id="playerTowerHp">
+        100
+       </div><span style="font-size: 30px;">🏰</span>
+      </div>
+      <div class="battlefield-center" id="battlefield">
+      </div>
+      <div class="tower enemy-tower">
+       <div class="tower-hp" id="enemyTowerHp">
+        100
+       </div><span style="font-size: 30px;">🏴</span>
+      </div>
+     </div>
+     <div class="controls" id="summonControls"><button class="summon-btn" id="summonBasic" onclick="summonMonster('basic')">
+       <div class="monster-info">
+        <div class="monster-header"><span>🐺</span> <span>召喚狼 (10金)</span>
+        </div>
+        <div class="monster-stats"><span>⚔️ 8</span> <span>❤️ 30</span>
+        </div>
+       </div></button> <button class="summon-btn" id="summonStrong" onclick="summonMonster('strong')">
+       <div class="monster-info">
+        <div class="monster-header"><span>🐻</span> <span>召喚熊 (20金)</span>
+        </div>
+        <div class="monster-stats"><span>⚔️ 12</span> <span>❤️ 50</span>
+        </div>
+       </div></button> <button class="summon-btn" id="summonElite" onclick="summonMonster('elite')">
+       <div class="monster-info">
+        <div class="monster-header"><span>🐉</span> <span>召喚龍 (30金)</span>
+        </div>
+        <div class="monster-stats"><span>⚔️ 20</span> <span>❤️ 80</span>
+        </div>
+       </div></button> <button class="summon-btn" id="summonLegendary" onclick="summonMonster('legendary')" style="display: none;">
+       <div class="monster-info">
+        <div class="monster-header"><span>🦅</span> <span>召喚鷹 (40金)</span>
+        </div>
+        <div class="monster-stats"><span>⚔️ 30</span> <span>❤️ 120</span>
+        </div>
+       </div></button> <button class="summon-btn" id="summonMythical" onclick="summonMonster('mythical')" style="display: none;">
+       <div class="monster-info">
+        <div class="monster-header"><span>🦄</span> <span>召喚獨角獸 (50金)</span>
+        </div>
+        <div class="monster-stats"><span>⚔️ 40</span> <span>❤️ 180</span>
+        </div>
+       </div></button> <button class="summon-btn" id="summonDivine" onclick="summonMonster('divine')" style="display: none;">
+       <div class="monster-info">
+        <div class="monster-header"><span>👼</span> <span>召喚天使 (60金)</span>
+        </div>
+        <div class="monster-stats"><span>⚔️ 60</span> <span>❤️ 250</span>
+        </div>
+       </div></button> <button class="summon-btn" id="summonCosmic" onclick="summonMonster('cosmic')" style="display: none;">
+       <div class="monster-info">
+        <div class="monster-header"><span>🌟</span> <span>召喚星靈 (70金)</span>
+        </div>
+        <div class="monster-stats"><span>⚔️ 80</span> <span>❤️ 350</span>
+        </div>
+       </div></button> <button class="summon-btn" id="summonEternal" onclick="summonMonster('eternal')" style="display: none;">
+       <div class="monster-info">
+        <div class="monster-header"><span>⚡</span> <span>召喚雷神 (80金)</span>
+        </div>
+        <div class="monster-stats"><span>⚔️ 120</span> <span>❤️ 500</span>
+        </div>
+       </div></button> <button class="summon-btn" id="summonSupreme" onclick="summonMonster('supreme')" style="display: none;">
+       <div class="monster-info">
+        <div class="monster-header"><span>🔥</span> <span>召喚火神 (90金)</span>
+        </div>
+        <div class="monster-stats"><span>⚔️ 160</span> <span>❤️ 700</span>
+        </div>
+       </div></button> <button class="summon-btn" id="summonUltimate" onclick="summonMonster('ultimate')" style="display: none;">
+       <div class="monster-info">
+        <div class="monster-header"><span>💎</span> <span>召喚鑽石王 (100金)</span>
+        </div>
+        <div class="monster-stats"><span>⚔️ 250</span> <span>❤️ 1000</span>
+        </div>
+       </div></button>
+     </div>
+    </section>
+    <section class="question-panel">
+     <div class="question" id="question">
+      <div class="question-coins" style="background: linear-gradient(45deg, #f39c12, #e67e22); color: white; padding: 8px 15px; border-radius: 20px; font-size: 16px; font-weight: bold; box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2); display: flex; align-items: center; gap: 8px;"><span>💰</span> <span id="questionCoins">0</span>
+      </div><span id="questionText">載入題目中...</span> <button class="pronunciation-btn" id="questionPronunciation" onclick="pronounceWord(gameState.currentQuestion.word)"> <span>🔊</span> <span>發音</span> </button>
+     </div>
+     <div class="options" id="options"></div>
+     <div id="message"></div>
+     <div style="text-align: center; margin-top: 20px;"><button class="next-question-btn" id="nextQuestionBtn" onclick="skipToNextQuestion()"> <span>⏭️</span> <span>下一題 (或按下空白鍵)</span> </button>
+     </div>
+    </section>
+   </div>
+  </div>
+  <script>
         // 遊戲狀態
         let gameState = {
             coins: 0,
@@ -962,7 +860,8 @@
             completedLevels: [],
             nextQuestionTimer: null,
             questionOrder: [],
-            currentQuestionIndex: 0
+            currentQuestionIndex: 0,
+            coinsInitialized: false  // 追蹤金幣是否已初始化
         };
 
         // 怪獸類型
@@ -1066,6 +965,7 @@
         function selectUnit(unitNumber) {
             gameState.currentUnit = unitNumber;
             gameState.currentLevel = 1;
+            gameState.coinsInitialized = false;  // 重新選擇單元時重置金幣初始化狀態
             document.getElementById('homeScreen').style.display = 'none';
             document.getElementById('gameScreen').style.display = 'block';
             initLevelButtons();
@@ -1122,8 +1022,14 @@
 
         // 初始化遊戲
         function initGame() {
-            // 應用金幣修改器
-            gameState.coins = gameModifiers.richMode ? 100 : 0;
+            // 應用金幣修改器（只在第一次進入遊戲或重置時清零，否則保持累計）
+            if (gameState.currentLevel === 1 && !gameState.coinsInitialized) {
+                gameState.coins = gameModifiers.richMode ? 100 : 0;
+                gameState.coinsInitialized = true;
+            } else if (gameModifiers.richMode && gameState.coins < 100) {
+                // 金幣模式下確保至少有100金幣
+                gameState.coins = Math.max(gameState.coins, 100);
+            }
             
             // 應用血量修改器
             let baseHp;
@@ -1566,7 +1472,7 @@
 
             const messageDiv = document.getElementById('message');
             if (isCorrect) {
-                // 確保金幣增加並立即更新UI
+                // 答對獲得10金幣
                 const oldCoins = gameState.coins;
                 gameState.coins += 10;
                 console.log(`答對了！金幣從 ${oldCoins} 增加到 ${gameState.coins}`);
@@ -1575,8 +1481,18 @@
                 // 立即更新UI，確保金幣顯示正確
                 updateUI();
             } else {
-                messageDiv.innerHTML = '<div class="message error">❌ 答錯了！正確答案是：' + gameState.currentQuestion.options[gameState.currentQuestion.correct] + '</div>';
-                // 答錯也要更新UI，確保其他狀態正確
+                // 答錯扣除1金幣（但不會低於0）
+                const oldCoins = gameState.coins;
+                gameState.coins = Math.max(0, gameState.coins - 1);
+                console.log(`答錯了！金幣從 ${oldCoins} 減少到 ${gameState.coins}`);
+                
+                if (oldCoins > 0) {
+                    messageDiv.innerHTML = '<div class="message error">❌ 答錯了！扣除 1 金幣！正確答案是：' + gameState.currentQuestion.options[gameState.currentQuestion.correct] + '</div>';
+                } else {
+                    messageDiv.innerHTML = '<div class="message error">❌ 答錯了！金幣已為0，無法扣除！正確答案是：' + gameState.currentQuestion.options[gameState.currentQuestion.correct] + '</div>';
+                }
+                
+                // 答錯也要更新UI，確保金幣顯示正確
                 updateUI();
             }
             
@@ -1743,8 +1659,11 @@
 
         // 重新開始遊戲
         function restartGame() {
-            // 應用金幣修改器
-            gameState.coins = gameModifiers.richMode ? 100 : 0;
+            // 重新開始時保持金幣累計，不重置金幣
+            // 只有在金幣模式下且金幣不足100時才補充到100
+            if (gameModifiers.richMode && gameState.coins < 100) {
+                gameState.coins = Math.max(gameState.coins, 100);
+            }
             
             // 應用血量修改器
             let baseHp;
@@ -2529,6 +2448,8 @@
             // 重置遊戲狀態
             gameState.completedLevels = [];
             gameState.currentLevel = 1;
+            gameState.coins = 0;  // 重置時清零金幣
+            gameState.coinsInitialized = false;  // 重置金幣初始化狀態
             
             // 重置所有修改器
             gameModifiers.unlockAll = false;
@@ -2698,5 +2619,5 @@
             document.getElementById('gameScreen').style.display = 'none';
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'992f12e297bb6b6f',t:'MTc2MTE5OTg1Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9992373345964a07',t:'MTc2MjIzOTQzMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
