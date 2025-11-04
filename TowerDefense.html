@@ -1481,13 +1481,15 @@
                 // 立即更新UI，確保金幣顯示正確
                 updateUI();
             } else {
-                // 答錯扣除1金幣（但不會低於0）
+                // 答錯扣除3金幣（但不會低於0）
                 const oldCoins = gameState.coins;
-                gameState.coins = Math.max(0, gameState.coins - 1);
+                gameState.coins = Math.max(0, gameState.coins - 3);
                 console.log(`答錯了！金幣從 ${oldCoins} 減少到 ${gameState.coins}`);
                 
-                if (oldCoins > 0) {
-                    messageDiv.innerHTML = '<div class="message error">❌ 答錯了！扣除 1 金幣！正確答案是：' + gameState.currentQuestion.options[gameState.currentQuestion.correct] + '</div>';
+                if (oldCoins >= 3) {
+                    messageDiv.innerHTML = '<div class="message error">❌ 答錯了！扣除 3 金幣！正確答案是：' + gameState.currentQuestion.options[gameState.currentQuestion.correct] + '</div>';
+                } else if (oldCoins > 0) {
+                    messageDiv.innerHTML = '<div class="message error">❌ 答錯了！扣除 ' + oldCoins + ' 金幣（金幣不足3個）！正確答案是：' + gameState.currentQuestion.options[gameState.currentQuestion.correct] + '</div>';
                 } else {
                     messageDiv.innerHTML = '<div class="message error">❌ 答錯了！金幣已為0，無法扣除！正確答案是：' + gameState.currentQuestion.options[gameState.currentQuestion.correct] + '</div>';
                 }
@@ -2619,5 +2621,5 @@
             document.getElementById('gameScreen').style.display = 'none';
         });
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9992373345964a07',t:'MTc2MjIzOTQzMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9992426d065e808e',t:'MTc2MjIzOTg4OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
