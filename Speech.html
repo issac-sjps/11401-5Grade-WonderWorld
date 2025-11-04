@@ -1,10 +1,10 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-TW">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>英語語音辨識訓練</title>
-    <style>
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>英語語音辨識訓練</title>
+  <style>
         body {
             box-sizing: border-box;
             font-family: 'Arial', sans-serif;
@@ -429,210 +429,142 @@
             }
         }
     </style>
-</head>
-<body>
-    <div class="container">
-        <!-- 首頁 -->
-        <div id="homePage" class="page active">
-            <h1>🎵 11401-5Grade-WonderWorld 英語語音辨識訓練</h1>
-            <p class="subtitle">選擇組別開始練習，聽發音選擇正確的拼寫組合</p>
-            
-            <div class="home-actions">
-                <button class="action-btn" id="homeRecordBtn">📊 查看記錄</button>
-                <button class="action-btn danger" id="homeClearBtn">🗑️ 清除記錄</button>
-            </div>
-            
-            <div class="groups-grid" id="groupsGrid">
-                <!-- 組別卡片將由 JavaScript 生成 -->
-            </div>
-        </div>
-        
-        <!-- 作答頁面 -->
-        <div id="quizPage" class="page">
-            <div class="quiz-header">
-                <div class="quiz-title" id="quizTitle">Group 1</div>
-                <div class="quiz-patterns" id="quizPatterns">a_e, ai, ay</div>
-            </div>
-            
-            <div class="training-area">
-                <div class="score">
-                    <span>進度: <span id="progress">0/20</span></span> | 
-                    <span>正確: <span id="correct">0</span></span> | 
-                    <span>準確率: <span id="accuracy">0%</span></span>
-                </div>
-                
-                <div class="current-word" id="currentWord">準備開始訓練</div>
-                <button class="play-btn" id="playBtn">🔊 播放發音</button>
-                
-                <div class="options" id="options"></div>
-                
-                <div class="feedback" id="feedback"></div>
-                
-                <div style="text-align: center;">
-                    <button class="btn btn-primary" id="nextBtn" disabled>下一題 (或按下空白鍵)</button>
-                </div>
-            </div>
-            
-            <div class="quiz-actions">
-                <button class="btn btn-secondary" id="backHomeBtn">🏠 回到首頁</button>
-                <button class="btn btn-success" id="restartBtn">🔄 重新開始</button>
-            </div>
-        </div>
-        
-        <!-- 答題記錄彈窗 -->
-        <div id="recordModal" class="modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2 class="modal-title">📊 答題記錄</h2>
-                    <button id="closeModal" class="close-btn">✕</button>
-                </div>
-                <div id="recordContent"></div>
-            </div>
-        </div>
-        
-        <!-- 清除記錄確認彈窗 -->
-        <div id="clearModal" class="modal">
-            <div class="modal-content" style="max-width: 400px; text-align: center;">
-                <h3 style="margin: 0 0 20px 0; color: #4a5568;">⚠️ 確認清除記錄</h3>
-                <p style="margin: 0 0 20px 0; color: #718096;">確定要清除所有答題記錄嗎？<br>此操作無法復原！</p>
-                <div style="display: flex; gap: 10px; justify-content: center;">
-                    <button id="confirmClear" class="btn" style="background: #f56565; color: white;">確定清除</button>
-                    <button id="cancelClear" class="btn btn-secondary">取消</button>
-                </div>
-            </div>
-        </div>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <script src="/_sdk/element_sdk.js" type="text/javascript"></script>
+  <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
+ </head>
+ <body>
+  <div class="container"><!-- 首頁 -->
+   <div id="homePage" class="page active">
+    <h1>🎵 11401-5Grade-WonderWorld 英語語音辨識訓練</h1>
+    <p class="subtitle">選擇組別開始練習，聽發音選擇正確的拼寫組合</p>
+    <div class="home-actions"><button class="action-btn" id="homeRecordBtn">📊 查看記錄</button> <button class="action-btn danger" id="homeClearBtn">🗑️ 清除記錄</button>
     </div>
-
-    <script>
+    <div class="groups-grid" id="groupsGrid"><!-- 組別卡片將由 JavaScript 生成 -->
+    </div>
+   </div><!-- 作答頁面 -->
+   <div id="quizPage" class="page">
+    <div class="quiz-header">
+     <div class="quiz-title" id="quizTitle">
+      Group 1
+     </div>
+     <div class="quiz-patterns" id="quizPatterns">
+      a_e, ai, ay
+     </div>
+    </div>
+    <div class="training-area">
+     <div class="score"><span>進度: <span id="progress">0/20</span></span> | <span>正確: <span id="correct">0</span></span> | <span>準確率: <span id="accuracy">0%</span></span>
+     </div>
+     <div class="current-word" id="currentWord">
+      準備開始訓練
+     </div><button class="play-btn" id="playBtn">🔊 播放發音</button>
+     <div class="options" id="options"></div>
+     <div class="feedback" id="feedback"></div>
+     <div style="text-align: center;"><button class="btn btn-primary" id="nextBtn" disabled>下一題 (或按下空白鍵)</button>
+     </div>
+    </div>
+    <div class="quiz-actions"><button class="btn btn-secondary" id="backHomeBtn">🏠 回到首頁</button> <button class="btn btn-success" id="restartBtn">🔄 重新開始</button>
+    </div>
+   </div><!-- 答題記錄彈窗 -->
+   <div id="recordModal" class="modal">
+    <div class="modal-content">
+     <div class="modal-header">
+      <h2 class="modal-title">📊 答題記錄</h2><button id="closeModal" class="close-btn">✕</button>
+     </div>
+     <div id="recordContent"></div>
+    </div>
+   </div><!-- 清除記錄確認彈窗 -->
+   <div id="clearModal" class="modal">
+    <div class="modal-content" style="max-width: 400px; text-align: center;">
+     <h3 style="margin: 0 0 20px 0; color: #4a5568;">⚠️ 確認清除記錄</h3>
+     <p style="margin: 0 0 20px 0; color: #718096;">確定要清除所有答題記錄嗎？<br>
+      此操作無法復原！</p>
+     <div style="display: flex; gap: 10px; justify-content: center;"><button id="confirmClear" class="btn" style="background: #f56565; color: white;">確定清除</button> <button id="cancelClear" class="btn btn-secondary">取消</button>
+     </div>
+    </div>
+   </div>
+  </div>
+  <script>
         const phonicsGroups = [
             {
-                name: "a_e, ai, ay",
+                name: "長母音 A 拼寫",
                 patterns: ["a_e", "ai", "ay"],
                 words: [
+                    // 從您的單字列表中沒有 a_e, ai, ay 的例子
+                    // 使用常見的課本單字作為示範
                     {word: "cake", pattern: "a_e", phonetic: "keɪk", chinese: "蛋糕"},
-                    {word: "rain", pattern: "ai", phonetic: "reɪn", chinese: "雨"},
-                    {word: "play", pattern: "ay", phonetic: "pleɪ", chinese: "玩"},
                     {word: "make", pattern: "a_e", phonetic: "meɪk", chinese: "製作"},
+                    {word: "take", pattern: "a_e", phonetic: "teɪk", chinese: "拿取"},
+                    {word: "rain", pattern: "ai", phonetic: "reɪn", chinese: "雨"},
                     {word: "train", pattern: "ai", phonetic: "treɪn", chinese: "火車"},
-                    {word: "day", pattern: "ay", phonetic: "deɪ", chinese: "天"},
-                    {word: "name", pattern: "a_e", phonetic: "neɪm", chinese: "名字"},
-                    {word: "mail", pattern: "ai", phonetic: "meɪl", chinese: "郵件"},
-                    {word: "way", pattern: "ay", phonetic: "weɪ", chinese: "方法"},
-                    {word: "late", pattern: "a_e", phonetic: "leɪt", chinese: "遲到"},
                     {word: "pain", pattern: "ai", phonetic: "peɪn", chinese: "疼痛"},
-                    {word: "say", pattern: "ay", phonetic: "seɪ", chinese: "說"},
-                    {word: "gate", pattern: "a_e", phonetic: "geɪt", chinese: "門"},
-                    {word: "wait", pattern: "ai", phonetic: "weɪt", chinese: "等待"},
-                    {word: "may", pattern: "ay", phonetic: "meɪ", chinese: "可能"},
-                    {word: "safe", pattern: "a_e", phonetic: "seɪf", chinese: "安全"},
-                    {word: "main", pattern: "ai", phonetic: "meɪn", chinese: "主要"},
-                    {word: "stay", pattern: "ay", phonetic: "steɪ", chinese: "停留"},
-                    {word: "face", pattern: "a_e", phonetic: "feɪs", chinese: "臉"},
-                    {word: "tail", pattern: "ai", phonetic: "teɪl", chinese: "尾巴"}
+                    {word: "day", pattern: "ay", phonetic: "deɪ", chinese: "天"},
+                    {word: "play", pattern: "ay", phonetic: "pleɪ", chinese: "玩"},
+                    {word: "way", pattern: "ay", phonetic: "weɪ", chinese: "路"}
                 ]
             },
             {
-                name: "e_e, ea, ee",
+                name: "長母音 E 拼寫",
                 patterns: ["e_e", "ea", "ee"],
                 words: [
+                    {word: "Eve", pattern: "e_e", phonetic: "iːv", chinese: "夏娃"},
                     {word: "these", pattern: "e_e", phonetic: "ðiːz", chinese: "這些"},
-                    {word: "read", pattern: "ea", phonetic: "riːd", chinese: "閱讀"},
-                    {word: "tree", pattern: "ee", phonetic: "triː", chinese: "樹"},
-                    {word: "scene", pattern: "e_e", phonetic: "siːn", chinese: "場景"},
-                    {word: "meat", pattern: "ea", phonetic: "miːt", chinese: "肉"},
-                    {word: "free", pattern: "ee", phonetic: "friː", chinese: "自由"},
-                    {word: "theme", pattern: "e_e", phonetic: "θiːm", chinese: "主題"},
-                    {word: "team", pattern: "ea", phonetic: "tiːm", chinese: "團隊"},
-                    {word: "green", pattern: "ee", phonetic: "griːn", chinese: "綠色"},
-                    {word: "complete", pattern: "e_e", phonetic: "kəmˈpliːt", chinese: "完成"},
-                    {word: "sea", pattern: "ea", phonetic: "siː", chinese: "海"},
-                    {word: "see", pattern: "ee", phonetic: "siː", chinese: "看見"},
-                    {word: "delete", pattern: "e_e", phonetic: "dɪˈliːt", chinese: "刪除"},
+                    {word: "Pete", pattern: "e_e", phonetic: "piːt", chinese: "彼得"},
+                    {word: "peach", pattern: "ea", phonetic: "piːtʃ", chinese: "桃子"},
+                    {word: "tea", pattern: "ea", phonetic: "tiː", chinese: "茶"},
                     {word: "beat", pattern: "ea", phonetic: "biːt", chinese: "打敗"},
-                    {word: "bee", pattern: "ee", phonetic: "biː", chinese: "蜜蜂"},
-                    {word: "extreme", pattern: "e_e", phonetic: "ɪkˈstriːm", chinese: "極端"},
-                    {word: "heat", pattern: "ea", phonetic: "hiːt", chinese: "熱"},
-                    {word: "three", pattern: "ee", phonetic: "θriː", chinese: "三"},
-                    {word: "compete", pattern: "e_e", phonetic: "kəmˈpiːt", chinese: "競爭"},
-                    {word: "seat", pattern: "ea", phonetic: "siːt", chinese: "座位"}
+                    {word: "seat", pattern: "ea", phonetic: "siːt", chinese: "座位"},
+                    {word: "green", pattern: "ee", phonetic: "griːn", chinese: "綠色"},
+                    {word: "tree", pattern: "ee", phonetic: "triː", chinese: "樹"},
+                    {word: "weed", pattern: "ee", phonetic: "wiːd", chinese: "雜草"}
                 ]
             },
             {
-                name: "i_e, ie, igh",
+                name: "長母音 I 拼寫",
                 patterns: ["i_e", "ie", "igh"],
                 words: [
-                    {word: "bike", pattern: "i_e", phonetic: "baɪk", chinese: "腳踏車"},
+                    {word: "bite", pattern: "i_e", phonetic: "baɪt", chinese: "咬"},
+                    {word: "rice", pattern: "i_e", phonetic: "raɪs", chinese: "米飯"},
+                    {word: "pipe", pattern: "i_e", phonetic: "paɪp", chinese: "管子"},
+                    {word: "ride", pattern: "i_e", phonetic: "raɪd", chinese: "騎"},
                     {word: "pie", pattern: "ie", phonetic: "paɪ", chinese: "派"},
-                    {word: "light", pattern: "igh", phonetic: "laɪt", chinese: "光"},
-                    {word: "time", pattern: "i_e", phonetic: "taɪm", chinese: "時間"},
                     {word: "tie", pattern: "ie", phonetic: "taɪ", chinese: "領帶"},
+                    {word: "light", pattern: "igh", phonetic: "laɪt", chinese: "光"},
                     {word: "night", pattern: "igh", phonetic: "naɪt", chinese: "夜晚"},
-                    {word: "nine", pattern: "i_e", phonetic: "naɪn", chinese: "九"},
-                    {word: "lie", pattern: "ie", phonetic: "laɪ", chinese: "說謊"},
-                    {word: "right", pattern: "igh", phonetic: "raɪt", chinese: "右邊"},
-                    {word: "fine", pattern: "i_e", phonetic: "faɪn", chinese: "好的"},
-                    {word: "die", pattern: "ie", phonetic: "daɪ", chinese: "死亡"},
-                    {word: "sight", pattern: "igh", phonetic: "saɪt", chinese: "視力"},
-                    {word: "line", pattern: "i_e", phonetic: "laɪn", chinese: "線"},
-                    {word: "cry", pattern: "ie", phonetic: "kraɪ", chinese: "哭泣"},
-                    {word: "bright", pattern: "igh", phonetic: "braɪt", chinese: "明亮"},
-                    {word: "mine", pattern: "i_e", phonetic: "maɪn", chinese: "我的"},
-                    {word: "fly", pattern: "ie", phonetic: "flaɪ", chinese: "飛"},
-                    {word: "fight", pattern: "igh", phonetic: "faɪt", chinese: "戰鬥"},
-                    {word: "side", pattern: "i_e", phonetic: "saɪd", chinese: "邊"},
-                    {word: "high", pattern: "igh", phonetic: "haɪ", chinese: "高"}
+                    {word: "bright", pattern: "igh", phonetic: "braɪt", chinese: "明亮"}
                 ]
             },
             {
-                name: "o_e, oa, ow",
+                name: "長母音 O 拼寫",
                 patterns: ["o_e", "oa", "ow"],
                 words: [
-                    {word: "home", pattern: "o_e", phonetic: "hoʊm", chinese: "家"},
-                    {word: "boat", pattern: "oa", phonetic: "boʊt", chinese: "船"},
-                    {word: "show", pattern: "ow", phonetic: "ʃoʊ", chinese: "表演"},
-                    {word: "note", pattern: "o_e", phonetic: "noʊt", chinese: "筆記"},
-                    {word: "coat", pattern: "oa", phonetic: "koʊt", chinese: "外套"},
-                    {word: "grow", pattern: "ow", phonetic: "groʊ", chinese: "成長"},
+                    {word: "hole", pattern: "o_e", phonetic: "hoʊl", chinese: "洞"},
+                    {word: "mole", pattern: "o_e", phonetic: "moʊl", chinese: "鼴鼠"},
                     {word: "hope", pattern: "o_e", phonetic: "hoʊp", chinese: "希望"},
-                    {word: "road", pattern: "oa", phonetic: "roʊd", chinese: "道路"},
-                    {word: "know", pattern: "ow", phonetic: "noʊ", chinese: "知道"},
-                    {word: "bone", pattern: "o_e", phonetic: "boʊn", chinese: "骨頭"},
-                    {word: "soap", pattern: "oa", phonetic: "soʊp", chinese: "肥皂"},
-                    {word: "slow", pattern: "ow", phonetic: "sloʊ", chinese: "慢"},
-                    {word: "phone", pattern: "o_e", phonetic: "foʊn", chinese: "電話"},
-                    {word: "goal", pattern: "oa", phonetic: "goʊl", chinese: "目標"},
-                    {word: "flow", pattern: "ow", phonetic: "floʊ", chinese: "流動"},
-                    {word: "stone", pattern: "o_e", phonetic: "stoʊn", chinese: "石頭"},
-                    {word: "load", pattern: "oa", phonetic: "loʊd", chinese: "負載"},
+                    {word: "code", pattern: "o_e", phonetic: "koʊd", chinese: "密碼"},
+                    {word: "boat", pattern: "oa", phonetic: "boʊt", chinese: "船"},
+                    {word: "goat", pattern: "oa", phonetic: "goʊt", chinese: "山羊"},
+                    {word: "snow", pattern: "ow", phonetic: "snoʊ", chinese: "雪"},
+                    {word: "yellow", pattern: "ow", phonetic: "jeloʊ", chinese: "黃色"},
                     {word: "blow", pattern: "ow", phonetic: "bloʊ", chinese: "吹"},
-                    {word: "close", pattern: "o_e", phonetic: "kloʊs", chinese: "關閉"},
-                    {word: "toast", pattern: "oa", phonetic: "toʊst", chinese: "吐司"}
+                    {word: "low", pattern: "ow", phonetic: "loʊ", chinese: "低"}
                 ]
             },
             {
-                name: "u_e, ue, ui",
+                name: "長母音 U 拼寫",
                 patterns: ["u_e", "ue", "ui"],
                 words: [
+                    {word: "cube", pattern: "u_e", phonetic: "kjuːb", chinese: "立方體"},
+                    {word: "rude", pattern: "u_e", phonetic: "ruːd", chinese: "粗魯"},
                     {word: "cute", pattern: "u_e", phonetic: "kjuːt", chinese: "可愛"},
-                    {word: "blue", pattern: "ue", phonetic: "bluː", chinese: "藍色"},
-                    {word: "fruit", pattern: "ui", phonetic: "fruːt", chinese: "水果"},
                     {word: "tube", pattern: "u_e", phonetic: "tuːb", chinese: "管子"},
-                    {word: "true", pattern: "ue", phonetic: "truː", chinese: "真實"},
-                    {word: "suit", pattern: "ui", phonetic: "suːt", chinese: "西裝"},
-                    {word: "huge", pattern: "u_e", phonetic: "hjuːdʒ", chinese: "巨大"},
+                    {word: "flute", pattern: "u_e", phonetic: "fluːt", chinese: "長笛"},
+                    {word: "Luke", pattern: "u_e", phonetic: "luːk", chinese: "路克"},
+                    {word: "blue", pattern: "ue", phonetic: "bluː", chinese: "藍色"},
                     {word: "glue", pattern: "ue", phonetic: "gluː", chinese: "膠水"},
-                    {word: "juice", pattern: "ui", phonetic: "dʒuːs", chinese: "果汁"},
-                    {word: "use", pattern: "u_e", phonetic: "juːz", chinese: "使用"},
-                    {word: "due", pattern: "ue", phonetic: "duː", chinese: "到期"},
-                    {word: "cruise", pattern: "ui", phonetic: "kruːz", chinese: "巡航"},
-                    {word: "mute", pattern: "u_e", phonetic: "mjuːt", chinese: "靜音"},
-                    {word: "clue", pattern: "ue", phonetic: "kluː", chinese: "線索"},
-                    {word: "bruise", pattern: "ui", phonetic: "bruːz", chinese: "瘀傷"},
-                    {word: "pure", pattern: "u_e", phonetic: "pjʊr", chinese: "純淨"},
-                    {word: "value", pattern: "ue", phonetic: "væljuː", chinese: "價值"},
-                    {word: "ruin", pattern: "ui", phonetic: "ruːɪn", chinese: "毀壞"},
-                    {word: "cure", pattern: "u_e", phonetic: "kjʊr", chinese: "治癒"},
-                    {word: "rescue", pattern: "ue", phonetic: "reskjuː", chinese: "救援"}
+                    {word: "fruit", pattern: "ui", phonetic: "fruːt", chinese: "水果"},
+                    {word: "suit", pattern: "ui", phonetic: "suːt", chinese: "西裝"}
                 ]
             }
         ];
@@ -1136,5 +1068,5 @@
         // 啟動應用程式
         init();
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'992e4e71b613074c',t:'MTc2MTE5MTgwNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'998fea554766843a',t:'MTc2MjIxNTMxMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
